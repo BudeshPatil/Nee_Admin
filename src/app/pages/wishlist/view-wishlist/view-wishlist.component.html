@@ -1,0 +1,84 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <h3 class="mb-0">Wishlist List</h3>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input class="form-control mt-4" type="text" (keyup)="searchWishlist()" name="search"
+                                    [(ngModel)]="searchText" autocomplete="off"
+                                    placeholder="&#61442;  Start searching a Wishlist by name">
+                            </div>
+                            <div class="col-md-6"><button type="button" class="btn btn-button pull-right ml-auto mt-4"
+                                    routerLink="/wishlist/add">Add Wishlist</button></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Product Name</th>
+                                    <th>User Name</th>
+                                    <th>Created At</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <td colspan="5" *ngIf="!wishlistData">
+                                    <div class="alert alert-dismissable" style="text-align: center;">
+                                        Wishlist List is Empty
+                                    </div>
+                                </td>
+                                <tr *ngFor="let cData of wishlistData | filter:searchText; let i = index">
+                                    <td *ngIf="currentPage == 1">{{i+1}}</td>
+                                    <td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+                                    <td>{{cData.product_name}}</td>
+                                    <td>{{cData.user_name}}</td>
+                                    <td>{{cData.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+                                    <td>
+                                        <a style="cursor:pointer;padding-left: 15px;" (click)="open(content,cData)"><i
+                                                class="mdi mdi-close-box" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pcommece-pagination" *ngIf="totalRecord > 0 && !searchText">
+                            <app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+                                (changePage)="onListChangePage($event)"></app-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #content let-modal style="z-index: 0;">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-title">Wishlist deletion</h4>
+            <button type="button" class="btn btn-button" aria-describedby="modal-title"
+                (click)="modal.dismiss('Cross click')">close</button>
+        </div>
+        <div class="modal-body">
+            <p *ngIf="selectedData">
+                <strong>Are you sure you want to delete <span
+                        class="text-primary">"{{selectedData.product_name}}"</span> Wishlist Data?</strong>
+            </p>
+            <p>
+                All information associated to this Wishlist Image will be permanently deleted.
+                <span class="text-danger">This operation can not be undone.</span>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
+            <button type="button" class="btn btn-button" (click)="deleteWishlist()">Ok</button>
+        </div>
+    </ng-template>

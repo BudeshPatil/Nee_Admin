@@ -1,0 +1,105 @@
+<div class="container-fluid mt--7">
+	<div class="row">
+		<div class="col-lg-12 grid-margin stretch-card">
+			<div class="card shadow">
+				<div class="card-header border-0">
+					<h3 class="mb-0">ShopBy List</h3>
+				</div>
+				<div class="card-body">
+					<div class="col-md-12 mb-4">
+						<div class="row">
+							<div class="col-md-6">
+								<input class="form-control" type="text" (keyup)="searchShopby()" name="search" [(ngModel)]="searchText"
+									autocomplete="off" placeholder="&#61442;  Start searching a Shopby by name">
+							</div>
+							<div class="col-md-6">
+								<button type="button" class="nav-link btn btn-button ml-auto" routerLink="/shopby/add">Add
+									New Shopby</button>
+							</div>
+						</div>
+					</div>
+					<div class="table-responsive">
+						<table class="table align-items-center table-flush">
+							<thead>
+								<tr>
+									<th>SL No</th>
+									<th>Shopby Name</th>
+									<th>Format</th>
+									<th>Shopby Image/Video</th>
+									<th>Status</th>
+									<th>Created At</th>
+									<th>Updated At</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<td colspan="6" *ngIf="msg_danger">
+									<div class="alert alert-dismissable" style="text-align: center;">
+										Shopby List is Empty
+									</div>
+								</td>
+								<tr *ngFor="let listShopby of ShopbyData | filter:searchText; let i = index">
+									<td *ngIf="currentPage == 1">{{i+1}}</td>
+									<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+									<td>{{listShopby.name}}</td>
+									<td *ngIf="listShopby.media_data">{{listShopby.media_data[0].file_type}}</td>
+									<td *ngIf="listShopby.media_data">
+										<img *ngIf="listShopby.media_data && listShopby.media_data[0].file_type =='image'"
+											src="{{imagePath}}/shopby/{{listShopby.media_data[0].src}}" alt="logo"
+											style="height: 100px;width: 100px;">
+										<video *ngIf="listShopby.media_data && listShopby.media_data[0].file_type =='video'" width="100"
+											height="100" controls>
+											<source src="{{imagePath}}/shopby/{{listShopby.media_data[0].src}}" type="video/mp4">
+										</video>
+									</td>
+									<td>{{listShopby.status == true ? 'Active':'Deactive'}}</td>
+									<td>{{listShopby.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+									<td>{{listShopby.updated_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+									<td>
+										<a routerLink="/shopby/edit/{{listShopby._id}}" style="cursor:pointer"><i
+												class="mdi mdi-lead-pencil" aria-hidden="true"></i>
+										</a>
+										<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listShopby)"><i
+												class="mdi mdi-close-box" aria-hidden="true"></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-12 mb-4">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="pcommece-pagination" *ngIf="totalRecord > 0 && !searchText">
+									<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+										(changePage)="onListChangePage($event)"></app-pagination>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Shopby Delete Popup -->
+	<ng-template #content let-modal style="z-index: 0;">
+		<div class="modal-header">
+			<h4 class="modal-title" id="modal-title">Shopby deletion</h4>
+			<!-- <button type="button" class="btn btn-danger" aria-describedby="modal-title"
+				(click)="modal.dismiss('Cross click')">close</button> -->
+		</div>
+		<div class="modal-body">
+			<p *ngIf="selectedShopby">
+				<strong>Are you sure you want to delete <span class="text-primary">"{{selectedShopby.name}}"</span>
+					Shopby?</strong>
+			</p>
+			<p>
+				All information associated to this Shopby will be permanently deleted.
+				<span class="text-danger">This operation can not be undone.</span>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-danger" (click)="modal.dismiss('cancel click')">Cancel</button>
+			<button type="button" class="btn btn-button" (click)="deleteShopby()">Ok</button>
+		</div>
+	</ng-template>

@@ -1,0 +1,45 @@
+::ng-deep {
+	.pcommece-pagination {
+		display: inline-block;
+		width: 100%;
+		text-align: center;
+		// background-color: #373330;
+    .pagination{
+      justify-content: center;
+      margin-top: 1rem;
+      align-items: center;
+    }
+	}
+
+	.btn-primary {
+		color: #ffffff;
+		background-color: #ff5e14;
+		border-color: #ff5e14;
+	}
+
+	.title {
+		font-size: 30px;
+	}
+	.box-title {
+		font-size: 60px;
+	}
+
+	.cdis {
+		display: flex;
+		align-items: center;
+		margin-bottom: 15px;
+	}
+	.cdis button {
+		margin-left: 10px;
+	}
+
+	.modal-backdrop {
+		position: inherit !important;
+	}
+
+	::ng-deep {
+		.modal-backdrop {
+			z-index: 0 !important;
+		}
+	}
+}

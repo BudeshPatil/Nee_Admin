@@ -1,0 +1,45 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+      <div class="col">
+          <div class="card shadow">
+              <div class="card-header border-0">
+                  <h3 class="mb-0">Last Search List</h3>
+              </div>
+              <div class="table-responsive">
+                  <table class="table align-items-center table-flush">
+                      <thead>
+                          <tr>
+                              <th>SL No</th>
+                              <th>Name</th>
+                              <th>Price</th>
+                              <th>Visitors</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <td colspan="5" *ngIf="lastsearchterm.length == 0">
+                              <div class="alert alert-dismissable" style="text-align: center;">
+                                  Last Search List is Empty
+                              </div>
+                          </td>
+                          <tr *ngFor="let term of lastsearchterm ">
+                              <th scope="row">
+                                {{term.sequence_number}}
+                              </th>
+                              <td>
+                                {{term.search_term}}
+                              </td>
+                              <td>
+                                {{term.uses}}
+                              </td>
+                              <td>
+                                {{term.results}}
+                              </td>
+                            </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>

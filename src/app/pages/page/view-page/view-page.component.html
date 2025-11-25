@@ -1,0 +1,65 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-0">SEO Pages</h3>
+        </div>
+        <div class="card-body">
+          <div class="col-md-12 mb-4">
+            <div class="row">
+              <div class="col-md-6">
+                <input class="form-control mt-4" type="text" (keyup)="searchPage()" name="search"
+                  [(ngModel)]="searchText" autocomplete="off" placeholder="&#61442;  Start searching a Pages by name">
+              </div>
+              <div class="col-md-6"><button type="button" class="btn btn-button pull-right ml-auto mt-4"
+                  routerLink="/page/addpage">Add Page</button></div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead>
+                <tr>
+                  <th>SL No</th>
+                  <th>Page Name</th>
+                  <th>Meta Title</th>
+                  <th>Meta Description</th>
+                  <th>Meta Keywords</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <td colspan="5" *ngIf="msg_danger">
+                  <div class="alert alert-dismissable" style="text-align: center;">
+                    Page List is Empty
+                  </div>
+                </td>
+                <tr *ngFor="let listPage of pageData | filter:searchText; let i = index">
+                  <td *ngIf="currentPage == 1">{{i+1}}</td>
+                  <td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+                  <td>{{listPage.page_name}}</td>
+                  <td>{{listPage.meta_title}}</td>
+                  <td>{{listPage.meta_description}}</td>
+                  <td>{{listPage.meta_keywords}}</td>
+                  <td>
+                    <a routerLink="/page/edit/{{listPage._id}}" style="cursor:pointer"><i class="mdi mdi-lead-pencil"
+                        aria-hidden="true"></i>
+                    </a>
+                    <a style="cursor:pointer;padding-left: 15px;" (click)="deletePage(listPage._id)"><i
+                        class="mdi mdi-close-box" aria-hidden="true"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="pcommece-pagination" *ngIf="totalRecord > 0 && !searchText">
+              <app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+                (changePage)="onListChangePage($event)"></app-pagination>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

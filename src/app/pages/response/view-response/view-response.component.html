@@ -1,0 +1,111 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+	<!-- Table -->
+	<div class="row">
+		<div class="col">
+			<div class="card shadow">
+				<div class="card-header border-0">
+					<h3 class="mb-0">Response List</h3>
+				</div>
+				<div class="card-body">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-6">
+								<!-- <input class="form-control mt-4" type="text" (keyup)="searchResponse()" name="search" [(ngModel)]="searchText"
+                                        autocomplete="off" placeholder="&#61442;  Start searching a Response by name"> -->
+							</div>
+						</div>
+						<div class="col-md-6">
+							<h4 class="title"></h4>
+						</div>
+					</div>
+					<div class="table-responsive">
+						<table class="table align-items-center table-flush">
+							<thead>
+								<tr>
+									<th>SL No</th>
+									<th>Modal</th>
+									<th>Log Type</th>
+									<th>Code</th>
+									<th>Message</th>
+									<th>Admin User</th>
+									<th>Status</th>
+									<th>Created At</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<td colspan="5" *ngIf="msg_danger">
+									<div class="alert alert-dismissable" style="text-align: center;">
+										Response List is Empty
+									</div>
+								</td>
+								<tr *ngFor="let listResponse of ResponseData; let i = index">
+									<td *ngIf="currentPage == 1">{{i+1}}</td>
+									<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+									<td>{{listResponse.model}}</td>
+									<td>{{listResponse.log_type}}</td>
+									<td *ngIf="!listResponse.errorCode">{{listResponse.successCode}}</td>
+									<td *ngIf="!listResponse.successCode">{{listResponse.errorCode}}</td>
+									<td>{{listResponse.message}}</td>
+									<td *ngIf="listResponse.user[0]">{{listResponse.user[0]}}</td>
+									<td *ngIf="listResponse.customer[0]">{{listResponse.customer[0]}}</td>
+									<td>{{listResponse.status == 'true' ? 'Enabled':'Disable' }}</td>
+									<td>{{listResponse.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+									<td>
+										<a style="cursor:pointer" (click)="open(response,listResponse)"><i class="mdi mdi-lead-pencil"
+												aria-hidden="true"></i>
+										</a>
+										<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listResponse)"><i
+												class="mdi mdi-close-box" aria-hidden="true"></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="pcommece-pagination" *ngIf="totalRecord > 0 ">
+							<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+								(changePage)="onListChangePage($event)"></app-pagination>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<ng-template #content let-modal style="z-index: 0;">
+		<div class="modal-header">
+			<h4 class="modal-title" id="modal-title">Response</h4>
+			<button type="button" class="btn btn-button" aria-describedby="modal-title"
+				(click)="modal.dismiss('Cross click')">close</button>
+		</div>
+		<div class="modal-body">
+			<p *ngIf="selectedResponse">
+				<strong>Are you sure you want to delete <span class="text-primary">"{{selectedResponse.name}}"</span>
+					Response?</strong>
+			</p>
+			<p>
+				All information associated to this Response will be permanently deleted.
+				<span class="text-danger">This operation can not be undone.</span>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
+			<button type="button" class="btn btn-button" (click)="deleteResponse()">Ok</button>
+		</div>
+	</ng-template>
+
+	<ng-template #response let-modal style="z-index: 0;">
+		<div class="modal-header">
+			<h4 class="modal-title" id="modal-title">Response</h4>
+			<button type="button" class="btn btn-button" aria-describedby="modal-title"
+				(click)="modal.dismiss('Cross click')">close</button>
+		</div>
+		<div class="modal-body">
+			<p *ngIf="selectedResponse">
+				<strong>{{selectedResponse}}</strong>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
+		</div>
+	</ng-template>

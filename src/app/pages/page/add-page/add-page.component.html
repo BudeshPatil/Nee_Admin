@@ -1,0 +1,69 @@
+<div class="content-wrapper" >
+	<div class="page-header">
+		<h3 class="page-title"> Page </h3>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Page</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Edit Page</li>
+			</ol>
+		</nav>
+	</div>
+	<div class="row justify-content-center">
+    <div class="col-md-8 col-sm-10 col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-header">
+            <h4 class="card-title mb-0" *ngIf="id">Edit Page</h4>
+            <h4 class="card-title mb-0" *ngIf="!id">Add New Page</h4>
+        </div>
+        <div class="card-body">
+        
+          <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+						{{throw_msg}}
+					</div>
+					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+						{{throw_msg}}
+					</div>
+           <!-- form start -->  
+           <form [formGroup]="addPageForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+              <div class="box-body">
+                  <div class="form-group"> 
+                      <label for="exampleInputEmail1">Name</label>
+                      <input type="text" name="page_name" autocomplete="off" formControlName="page_name"
+                          class="form-control" placeholder="Page Name">
+                      <span *ngIf="submitted && hasError('page_name','required')" class="alert-danger">Page Name is
+                          required</span>
+                  </div>
+              
+                  <div class="form-group"> 
+                      <label for="exampleInputEmail1">Meta Title</label>
+                      <input type="text" name="meta_title" autocomplete="off" formControlName="meta_title"
+                          class="form-control" placeholder="Meta Title">
+                      <span *ngIf="submitted && hasError('meta_title','required')" class="alert-danger">Meta Title is
+                          required</span>
+                  </div>
+                  <div class="form-group"> 
+                      <label for="exampleInputEmail1">Meta Description</label>
+                      <input type="text" name="meta_description" autocomplete="off" formControlName="meta_description"
+                          class="form-control" placeholder="Meta Description">
+                      <span *ngIf="submitted && hasError('meta_description','required')" class="alert-danger">Meta Description is
+                          required</span>
+                  </div>
+                  <div class="form-group"> 
+                      <label for="exampleInputEmail1">Meta Keywords</label>
+                      <textarea rows="4" type="text" name="meta_keywords" autocomplete="off" formControlName="meta_keywords"
+                          class="form-control" placeholder="Meta Keywords"></textarea>
+                      <span *ngIf="submitted && hasError('meta_keywords','required')" class="alert-danger">Meta Keywords is
+                          required</span>
+                  </div>
+                 
+            </div>
+             <div class="box-footer d-flex">
+                  <button type="submit" class="btn btn-button mr-2">Submit</button>
+                  <button type="cancel" (click)="onCancel()" class="btn btn-button">Cancel</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

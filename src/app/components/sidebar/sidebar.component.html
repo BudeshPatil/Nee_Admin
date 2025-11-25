@@ -1,0 +1,231 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+	<div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top text-center">
+		<a class="sidebar-brand brand-logo text-decoration-none  pl-0" href="index.html">Ghost Rentals</a>
+		<a class="sidebar-brand brand-logo-mini pl-0" href="index.html"><img src="assets/images/ghoastrental-logo.png"
+				alt="logo" /></a>
+	</div>
+	<ul class="nav">
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/' || currentLocation =='dashboard'">
+			<a class="nav-link" href="index.html">
+				<span class="menu-icon">
+					<i class="mdi mdi-speedometer"></i>
+				</span>
+				<span class="menu-title">Dashboard</span>
+			</a>
+		</li>
+		<!-- Divider -->
+		<!-- <hr class="my-3"> -->
+		<h6 class="navbar-heading text-muted">Home Page</h6>
+		<li class="nav-item menu-items"> <a class="nav-link"
+				[class.active]="currentRoute === '/banner' || currentLocation =='banner'" href="{{baseUrl}}banner/view/">
+				<span class="menu-icon">
+					<i class="mdi mdi-laptop"></i>
+				</span> Banners</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/cartype' || currentLocation =='cartype'">
+			<a class="nav-link" href="{{baseUrl}}cartype/">
+				<span class="menu-icon">
+					<i class="mdi mdi-format-list-bulleted-type"></i>
+				</span>
+				<span class="menu-title">Car Types</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items"> <a class="nav-link"
+				[class.active]="currentRoute === '/displayonhomevehicle' || currentLocation =='displayonhomevehicle'"
+				href="{{baseUrl}}displayonhomevehicle/view/">
+				<span class="menu-icon">
+					<i class="mdi mdi-laptop"></i>
+				</span> Our Luxury Cars</a></li>
+		<li class="nav-item menu-items"> <a class="nav-link"
+				[class.active]="currentRoute === '/displayonhomeyatchs' || currentLocation =='displayonhomeyatchs'"
+				href="{{baseUrl}}displayonhomeyatchs/view/">
+				<span class="menu-icon">
+					<i class="mdi mdi-page-last"></i>
+				</span> Our Luxury Yachts </a></li>
+		<li class="nav-item menu-items"> <a class="nav-link"
+				[class.active]="currentRoute === '/featured' || currentLocation =='featured'" href="{{baseUrl}}featured/view/">
+				<span class="menu-icon">
+					<i class="mdi mdi-page-last"></i>
+				</span> Trending Cars</a></li>
+		<!-- <hr class="my-3"> -->
+
+		<!-- Heading -->
+		<h6 class="navbar-heading text-muted">Model/Types</h6>
+		<!-- <li class="nav-item menu-items"
+			[class.active]="currentRoute === '/banner' || currentLocation =='banner' || currentLocation =='displayonhome' || currentLocation =='featured' || currentLocation =='event' || currentLocation =='blog' || currentLocation =='shopby'">
+			<a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+				<span class="menu-icon">
+					<i class="mdi mdi-laptop"></i>
+				</span>
+				<span class="menu-title">Home Page</span>
+				<i class="menu-arrow"></i>
+			</a>
+			<div class="collapse" id="ui-basic">
+				<ul class="nav flex-column sub-menu">
+					<li class="nav-item"> <a class="nav-link"
+							[class.active]="currentRoute === '/banner' || currentLocation =='banner'" href="{{baseUrl}}banner/view/">
+							<span class="menu-icon">
+								<i class="mdi mdi-page-last"></i>
+							</span> Banners</a>
+					</li>
+					<li class="nav-item"> <a class="nav-link"
+							[class.active]="currentRoute === '/displayonhomevehicle' || currentLocation =='displayonhomevehicle'"
+							href="{{baseUrl}}displayonhomevehicle/view/">
+							<span class="menu-icon">
+								<i class="mdi mdi-page-last"></i>
+							</span> Home Car</a></li>
+					<li class="nav-item"> <a class="nav-link"
+							[class.active]="currentRoute === '/displayonhomeyatchs' || currentLocation =='displayonhomeyatchs'"
+							href="{{baseUrl}}displayonhomeyatchs/view/">
+							<span class="menu-icon">
+								<i class="mdi mdi-page-last"></i>
+							</span> Home Yatchs</a></li>
+					<li class="nav-item"> <a class="nav-link"
+							[class.active]="currentRoute === '/featured' || currentLocation =='featured'"
+							href="{{baseUrl}}featured/view/">
+							<span class="menu-icon">
+								<i class="mdi mdi-page-last"></i>
+							</span> Trending Cars</a></li>
+					<li class="nav-item"> <a class="nav-link"
+							[class.active]="currentRoute === '/event' || currentLocation =='event'" href="{{baseUrl}}event/view/">
+							<span class="menu-icon">
+								<i class="mdi mdi-page-last"></i>
+							</span> Events</a>
+					</li>
+					<li class="nav-item"> <a class="nav-link"
+							[class.active]="currentRoute === '/blog' || currentLocation =='blog'" href="{{baseUrl}}blog/view/">
+							<span class="menu-icon">
+								<i class="mdi mdi-page-last"></i>
+							</span> News</a></li>
+				</ul>
+			</div>
+		</li> -->
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/bodytype' || currentLocation =='bodytype'">
+			<a class="nav-link" href="{{baseUrl}}bodytype/">
+				<span class="menu-icon">
+					<i class="mdi mdi-launch"></i>
+				</span>
+				<span class="menu-title">Body Type</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/brand' || currentLocation =='brand'">
+			<a class="nav-link" href="{{baseUrl}}brand/">
+				<span class="menu-icon">
+					<i class="mdi mdi-leaf"></i>
+				</span>
+				<span class="menu-title">Brands</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/model' || currentLocation =='model'">
+			<a class="nav-link" href="{{baseUrl}}model/">
+				<span class="menu-icon">
+					<i class="mdi mdi-adjust"></i>
+				</span>
+				<span class="menu-title">Model</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/feature' || currentLocation =='feature'">
+			<a class="nav-link" href="{{baseUrl}}feature/">
+				<span class="menu-icon">
+					<i class="mdi mdi-arrow-expand-all"></i>
+				</span>
+				<span class="menu-title">Features</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/colour' || currentLocation =='colour'">
+			<a class="nav-link" href="{{baseUrl}}colour/">
+				<span class="menu-icon">
+					<i class="mdi mdi-basket-fill"></i>
+				</span>
+				<span class="menu-title">Colour</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/location' || currentLocation =='location'">
+			<a class="nav-link" href="{{baseUrl}}location/">
+				<span class="menu-icon">
+					<i class="mdi mdi-map-marker"></i>
+				</span>
+				<span class="menu-title">Location</span>
+			</a>
+		</li>
+
+		<h6 class="navbar-heading text-muted">Products</h6>
+
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/vehicle' || currentLocation =='vehicle'">
+			<a class="nav-link" href="{{baseUrl}}vehicle/">
+				<span class="menu-icon">
+					<i class="mdi mdi-bank"></i>
+				</span>
+				<span class="menu-title">Vehicle(Car/Yachts)</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/additional' || currentLocation =='additional'">
+			<a class="nav-link" href="{{baseUrl}}additional/">
+				<span class="menu-icon">
+					<i class="mdi mdi-arrow-expand-all"></i>
+				</span>
+				<span class="menu-title">Special Add-ons</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/page' || currentLocation =='page'">
+			<a class="nav-link" href="{{baseUrl}}page/view">
+				<span class="menu-icon">
+					<i class="mdi mdi-book-open-page-variant"></i>
+				</span>
+				<span class="menu-title">SEO Pages</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/testimonial' || currentLocation =='testimonial'">
+			<a class="nav-link" href="{{baseUrl}}testimonial/">
+				<span class="menu-icon">
+					<i class="mdi mdi-format-text"></i>
+				</span>
+				<span class="menu-title">Testimonial</span>
+			</a>
+		</li>
+		<li class="nav-item menu-items" [class.active]="currentRoute === '/auth' || currentLocation =='auth'">
+			<a class="nav-link" [class.active]="currentRoute === '/auth' || currentLocation =='auth'"
+				href="{{baseUrl}}auth/view-user">
+				<span class="menu-icon">
+					<i class="mdi mdi-account"></i>
+				</span>
+				<span class="menu-title">Admin Users</span>
+			</a>
+		</li>
+		<h6 class="navbar-heading text-muted">Configuration</h6>
+		<li class="nav-item lastoption"> 
+			<a class="nav-link" [class.active]="currentRoute === '/config' || currentLocation =='config'"
+				href="{{baseUrl}}config"> <span class="menu-icon">
+					<i class="mdi mdi-settings"></i>
+				</span>
+				<span class="menu-title">Setting</span>
+			</a>
+		</li>
+
+		<!-- <li class="nav-item menu-items"
+			[class.active]="currentRoute === '/auth' || currentLocation =='config' || currentLocation =='contact' || currentLocation =='subscriber'">
+			<a class="nav-link" data-toggle="collapse" href="#others" aria-expanded="false" aria-controls="others">
+				<span class="menu-icon">
+					<i class="mdi mdi-store"></i>
+				</span>
+				<span class="menu-title">System</span>
+				<i class="menu-arrow"></i>
+			</a>
+			<div class="collapse" id="others">
+				<ul class="nav flex-column sub-menu">
+					<li class="nav-item"> <a class="nav-link"
+							[class.active]="currentRoute === '/config' || currentLocation =='config'" href="{{baseUrl}}config"> Config
+						</a>
+					</li>
+					<li class="nav-item"> <a class="nav-link"
+							[class.active]="currentRoute === '/contact' || currentLocation =='contact'"
+							href="{{baseUrl}}contact/list/">
+							Contact </a></li>
+					<li class="nav-item"> <a class="nav-link"
+							[class.active]="currentRoute === '/subscriber' || currentLocation =='subscriber'"
+							href="{{baseUrl}}subscriber/view/"> Subscriber </a></li>
+				</ul>
+			</div>
+		</li> -->
+	</ul>
+</nav>

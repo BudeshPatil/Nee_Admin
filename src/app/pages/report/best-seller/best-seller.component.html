@@ -1,0 +1,37 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+      <div class="col">
+          <div class="card shadow">
+              <div class="card-header border-0">
+                  <h3 class="mb-0">Best Sellers List</h3>
+              </div>
+              <div class="table-responsive">
+                  <table class="table align-items-center table-flush">
+                      <thead>
+                          <tr>
+                              <th>SL No</th>
+                              <th>Name</th>
+                              <th>Price</th>
+                              <th>Visitors</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <td colspan="5" *ngIf="bestsellerProducts.length == 0">
+                              <div class="alert alert-dismissable" style="text-align: center;">
+                                  Best Seller List is Empty
+                              </div>
+                          </td>
+                          <tr *ngFor="let cData of bestsellerProducts let i = index">
+                              <td>{{i+1}}</td>
+                              <td>{{cData.product.name}}</td>
+                              <td>{{cData.price}}</td>
+                              <td>{{cData.uses}}</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>

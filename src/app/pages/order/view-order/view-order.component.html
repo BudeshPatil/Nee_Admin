@@ -1,0 +1,125 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+	<!-- Table -->
+	<div class="row">
+		<div class="col">
+			<div class="card shadow">
+				<div class="card-header border-0">
+					<h3 class="mb-0">Order List</h3>
+				</div>
+				<div class="card-body">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-6">
+								<input class="form-control mt-4" type="text" (keyup)="searchOrder()" name="search"
+									[(ngModel)]="searchText" autocomplete="off" placeholder="&#61442;  Start searching a Order by name">
+							</div>
+							<div class="col-md-6"><button type="button" class="btn btn-button pull-right mt-4 ml-auto"
+									routerLink="/order/add">Add Order</button></div>
+						</div>
+						<div class="col-md-6">
+							<h4 class="title"></h4>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table align-items-center table-flush">
+							<tr>
+								<th>Sl No</th>
+								<th>Order Id</th>
+								<th>Order Number</th>
+								<th>Order Date</th>
+								<th>Order Amount</th>
+								<th>Order Status</th>
+								<th>Invoice</th>
+								<th>Action</th>
+							</tr>
+							<td colspan="8" *ngIf="!orderData">
+								<div class="alert alert-dismissable" style="text-align: center;">
+									Order List is Empty
+								</div>
+							</td>
+							<tr *ngFor="let listOrder of orderData | filter:searchText; let i = index">
+								<td *ngIf="currentPage == 1">{{i+1}}</td>
+								<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+								<td>#{{listOrder.order_id}}</td>
+								<td>{{listOrder.order_number}}</td>
+								<td>{{listOrder.created_at | date: "d MMM y" }}</td>
+								<td>AED {{listOrder.order_amount}}</td>
+								<td *ngIf="ShowOrderStatus == false">
+									<span *ngIf="listOrder.order_status == 'Pending'"
+										style="color: #008000;">{{listOrder.order_status}}</span>
+									<span *ngIf="listOrder.order_status == 'processing'"
+										style="color: #008000;">{{listOrder.order_status}}</span>
+									<span *ngIf="listOrder.order_status == 'on_hold'"
+										style="color: #FFA500;">{{listOrder.order_status}}</span>
+									<span *ngIf="listOrder.order_status == 'failed'"
+										style="color: #FF0000;">{{listOrder.order_status}}</span>
+									<span *ngIf="listOrder.order_status == 'shipping'"
+										style="color: #435f43;">{{listOrder.order_status}}</span>
+									<span *ngIf="listOrder.order_status == 'completed'"
+										style="color: #0000FF;">{{listOrder.order_status}}</span>
+									<span *ngIf="listOrder.order_status == 'canceled'"
+										style="color: #808080;">{{listOrder.order_status}}</span>
+									<span *ngIf="listOrder.order_status == 'refunded'"
+										style="color: #808080;">{{listOrder.order_status}}</span>
+									&nbsp;<a style="cursor:pointer" (click)="ShowStatusBox()"><i class="mdi mdi-lead-pencil"
+											aria-hidden="true"></i></a>
+								</td>
+								<td *ngIf="ShowOrderStatus">
+									<select name="order_status" class="form-control" (change)="UpdateOrderStatus($event,listOrder._id)">
+										<option value="">Select Status</option>
+										<option value="processing">Processing</option>
+										<option value="on_hold">On Hold</option>
+										<option value="failed">Failed</option>
+										<option value="shipping">Shipping</option>
+										<option value="completed">Completed</option>
+										<option value="canceled">Canceled</option>
+										<option value="refunded">refunded</option>
+									</select>
+								</td>
+								<td><a
+										*ngIf="listOrder.order_status == 'processing' || listOrder.order_status == 'shipping' || listOrder.order_status == 'completed' || listOrder.order_status == 'refunded'"
+										style="cursor:pointer;padding-left: 15px;" (click)="downloadInvoice(listOrder.order_id)"><i
+											class="fas fa-file-invoice"></i></a></td>
+								<td>
+									<a routerLink="/order/viewsummary/{{listOrder._id}}" style="cursor:pointer">View order
+									</a>
+									<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listOrder)"><i
+											class="mdi mdi-close-box" aria-hidden="true"></i></a>
+								</td>
+							</tr>
+						</table>
+						<div class="pcommece-pagination" *ngIf="totalRecord > 0 && !searchText">
+							<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+								(changePage)="onListChangePage($event)"></app-pagination>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #content let-modal style="z-index: 0;">
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-title">Order</h4>
+		<button type="button" class="btn btn-button" aria-describedby="modal-title"
+			(click)="modal.dismiss('Cross click')">close</button>
+	</div>
+	<div class="modal-body">
+		<p *ngIf="selectedOrder">
+			<strong>Are you sure you want to delete <span class="text-primary">"{{selectedOrder.order_id}}"</span>
+				Order?</strong>
+		</p>
+		<p>
+			All information associated to this Order will be permanently deleted.
+			<span class="text-danger">This operation can not be undone.</span>
+		</p>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
+		<button type="button" class="btn btn-button" (click)="deleteOrder()">Ok</button>
+	</div>
+</ng-template>

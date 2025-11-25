@@ -1,0 +1,229 @@
+<div class="content-wrapper">
+	<div class="page-header">
+		<h3 class="page-title"> Config </h3>
+		<!-- <nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Config</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Edit Config</li>
+			</ol>
+		</nav> -->
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-md-8 col-sm-10 col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title mb-0">Edit Config</h4>
+				</div>
+				<div class="card-body">
+				
+					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+						{{throw_msg}}
+					</div>
+					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+						{{throw_msg}}
+					</div>
+					<form [formGroup]="addconfigForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+						<div class="box-body">
+							<h4 class="mt-4">Contact Form Email Config</h4>
+							<hr>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Name</label>
+								<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+									placeholder="Config Name">
+								<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Config Name
+									is
+									required</span>
+							</div>
+
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Contact Email</label>
+								<input type="text" name="contactEmail" autocomplete="off" formControlName="contactEmail"
+									class="form-control" placeholder="Contact Email">
+								<span *ngIf="submitted && hasError('contactEmail','required')" class="alert-danger">Contact Email is
+									required</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Conatct Email Password</label>
+								<input type="text" name="contactEmailPassword" autocomplete="off" formControlName="contactEmailPassword"
+									class="form-control" placeholder="Conatct Email Password">
+								<span *ngIf="submitted && hasError('contactEmailPassword','required')" class="alert-danger">Conatct
+									Email Password</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Contact Email Subject</label>
+								<input type="text" name="contactEmailSubject" autocomplete="off" formControlName="contactEmailSubject"
+									class="form-control" placeholder="Contact Email Subject">
+								<span *ngIf="submitted && hasError('contactEmailSubject','required')" class="alert-danger">contact Email
+									Subject is required</span>
+							</div>
+							<h4 class="mt-4">Career Form Email Config</h4>
+							<hr>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Career Email</label>
+								<input type="text" name="careerEmail" autocomplete="off" formControlName="careerEmail"
+									class="form-control" placeholder="Career Email">
+								<span *ngIf="submitted && hasError('careerEmail','required')" class="alert-danger">Career Email is
+									required</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Career Email Password</label>
+								<input type="text" name="careerEmailPassword" autocomplete="off" formControlName="careerEmailPassword"
+									class="form-control" placeholder="Career Email Password">
+								<span *ngIf="submitted && hasError('careerEmailPassword','required')" class="alert-danger">Career Email
+									Password is required</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Career Email Subject</label>
+								<input type="text" name="careerEmailSubject" autocomplete="off" formControlName="careerEmailSubject"
+									class="form-control" placeholder="Career Email Subject">
+								<span *ngIf="submitted && hasError('careerEmailSubject','required')" class="alert-danger">Career Email
+									Subject is required</span>
+							</div>
+							<hr>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Gmail User</label>
+								<input type="text" name="gmail_user" autocomplete="off" formControlName="gmail_user"
+									class="form-control" placeholder="Gmail User">
+								<span *ngIf="submitted && hasError('gmail_user','required')" class="alert-danger">Gmail
+									User
+									is required</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Gmail APP Password</label>
+								<input type="text" name="gmail_password" autocomplete="off" formControlName="gmail_password"
+									class="form-control" placeholder="Gmail Password">
+								<span *ngIf="submitted && hasError('gmail_password','required')" class="alert-danger">Gmail
+									Password is required</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Status</label>
+								<select name="status" formControlName="status" class="form-control">
+									<option value="">Select Status</option>
+									<option value="active">Active</option>
+									<option value="deactive">Deactive</option>
+								</select>
+								<span *ngIf="submitted && hasError('status','required')" class="alert-danger">Please
+									Select
+									Art</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">QRcode URL</label>
+								<input type="text" name="qrcode_url" autocomplete="off" formControlName="qrcode_url"
+									class="form-control" placeholder="QRcode URL">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Calendly Link</label>
+								<input type="text" name="calendly_link" autocomplete="off" formControlName="calendly_link"
+									class="form-control" placeholder="Calendly Link">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="exampleInputEmail1">Upload Document</label><br>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadFile($event)"
+									[uploadInput]="uploadInput" /><br>
+								<a *ngIf="document" href="{{imagePath}}config/{{document}}" target="_blank">{{document}}</a>
+							</div>
+							<hr>
+							<h4 class="mb-4">SMTP Configuration</h4>
+							<div class="form-group col-lg-12">
+								<label for="smtp_status">SMTP Enable/Disable</label>
+								<select name="smtp_status" formControlName="smtp_status" class="form-control">
+									<option value="">Select Status</option>
+									<option value="active">Active</option>
+									<option value="deactive">Deactive</option>
+								</select>
+								<span *ngIf="submitted && hasError('smtp_status','required')" class="alert-danger">Please
+									Select
+									Smtp Status</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="smtp_host">Smtp Host</label>
+								<input type="text" name="smtp_host" autocomplete="off" formControlName="smtp_host" class="form-control"
+									placeholder="SMTP HostName">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="smtp_port">Smtp Port</label>
+								<input type="text" name="smtp_port" autocomplete="off" formControlName="smtp_port" class="form-control"
+									placeholder="SMTP Port">
+							</div>
+
+							<div class="form-group col-lg-12">
+								<label for="smtp_secure"> Secure</label>
+								<select name="smtp_secure" formControlName="smtp_secure" class="form-control">
+									<option value="">Select Status</option>
+									<option value="active">Active</option>
+									<option value="deactive">Deactive</option>
+								</select>
+								<span *ngIf="submitted && hasError('smtp_secure','required')" class="alert-danger">Please Select Smtp
+									Secure</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="smtp_user">Username</label>
+								<input type="text" name="smtp_user" autocomplete="off" formControlName="smtp_user" class="form-control"
+									placeholder="SMTP Usename">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="smtp_password">Password</label>
+								<input type="text" name="smtp_password" autocomplete="off" formControlName="smtp_password"
+									class="form-control" placeholder="SMTP Password">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="smtp_user">Email </label>
+								<input type="text" name="smtp_test_email" autocomplete="off" id="smtp_test_email" class="form-control"
+									placeholder="Test Email" #smtp_test_email>
+							</div>
+							<div class="form-group col-lg-12">
+								<button type="button" (click)="onTestEmail(smtp_test_email.value)" class="btn btn-button">Test
+									Mail</button>
+							</div>
+							<hr>
+							<div class="form-group col-lg-12">
+								<label for="contact_email">Contact Email</label>
+								<input type="text" name="contact_email" autocomplete="off" formControlName="contact_email"
+									class="form-control" placeholder="Contact Email">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="support_email">Support Email</label>
+								<input type="text" name="support_email" autocomplete="off" formControlName="support_email"
+									class="form-control" placeholder="Support Email">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="sales_email">Sales Email</label>
+								<input type="text" name="sales_email" autocomplete="off" formControlName="sales_email"
+									class="form-control" placeholder="Sales Email">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="orders_email">Orders Email</label>
+								<input type="text" name="orders_email" autocomplete="off" formControlName="orders_email"
+									class="form-control" placeholder="Orders Email">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="inclusive_tax">Inclusive of Tax</label>
+								<select name="inclusive_tax" formControlName="inclusive_tax" class="form-control">
+									<option value="">Select</option>
+									<option value="true">Yes</option>
+									<option value="false">No</option>
+								</select>
+								<span *ngIf="submitted && hasError('inclusive_tax','required')" class="alert-danger">Please Select
+									Inclusive of Tax</span>
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="tax_rate">Tax Rate/Percentage</label>
+								<input type="text" name="tax_rate" autocomplete="off" formControlName="tax_rate" class="form-control"
+									placeholder="Tax Rate/Percentage">
+							</div>
+							<div class="form-group col-lg-12">
+								<label for="currency_type">Currency Type</label>
+								<input type="text" name="currency_type" autocomplete="off" formControlName="currency_type"
+									class="form-control" placeholder="Currency Type">
+							</div>
+
+						</div>
+						<div class="box-footer col-lg-12">
+							<button type="submit" class="btn btn-button">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

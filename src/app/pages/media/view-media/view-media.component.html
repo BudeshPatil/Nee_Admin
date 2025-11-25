@@ -1,0 +1,98 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+	<!-- Table -->
+	<div class="row">
+		<div class="col">
+			<div class="card shadow">
+				<div class="card-header border-0">
+					<h3 class="mb-0">Media List</h3>
+				</div>
+				<div class="card-body">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-6">
+								<!-- <input class="form-control mt-4" type="text" (keyup)="searchMedia()" name="search" [(ngModel)]="searchText"
+                                        autocomplete="off" placeholder="&#61442;  Start searching a Media by name"> -->
+							</div>
+							<div class="col-md-6"><button type="button" class="btn btn-button ml-auto mb-4" routerLink="/media/add">Add
+									Media</button></div>
+						</div>
+					</div>
+					<div class="table-responsive">
+						<table class="table align-items-center table-flush">
+							<thead>
+								<tr>
+									<th>SL No</th>
+									<th>Media Name</th>
+									<th>Media Image</th>
+									<th>Media File Type</th>
+									<th>Media Format</th>
+									<th>Status</th>
+									<th>Created At</th>
+									<th>Src</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<td colspan="5" *ngIf="msg_danger">
+									<div class="alert alert-dismissable" style="text-align: center;">
+										Media List is Empty
+									</div>
+								</td>
+								<tr *ngFor="let listMedia of MediaData; let i = index">
+									<td *ngIf="currentPage == 1">{{i+1}}</td>
+									<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+									<td>{{listMedia.name}}</td>
+									<td>
+										<img *ngIf="listMedia.file_type == 'image'" src="{{listMedia.src}}" alt="logo"
+											style="height: 100px;width: 100px;">
+										<video *ngIf="listMedia.file_type == 'video'" width="100" height="100" controls>
+											<source src="{{listMedia.src}}" type="video/mp4">
+										</video>
+									</td>
+									<td>{{listMedia.file_type}}</td>
+									<td>{{listMedia.format}}</td>
+									<td>{{listMedia.status == true ? 'Enabled':'Disable' }}</td>
+									<td>{{listMedia.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+									<td><button ngxClipboard [cbContent]="listMedia.src" class="btn-smallbutton">Copy</button></td>
+									<td>
+										<a routerLink="/media/edit/{{listMedia._id}}" style="cursor:pointer"><i class="mdi mdi-lead-pencil"
+												aria-hidden="true"></i>
+										</a>
+										<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listMedia)"><i
+												class="mdi mdi-close-box" aria-hidden="true"></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="pcommece-pagination" *ngIf="totalRecord > 0 ">
+							<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+								(changePage)="onListChangePage($event)"></app-pagination>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<ng-template #content let-modal style="z-index: 0;">
+		<div class="modal-header">
+			<h4 class="modal-title" id="modal-title">Media</h4>
+			<button type="button" class="btn btn-button" aria-describedby="modal-title"
+				(click)="modal.dismiss('Cross click')">close</button>
+		</div>
+		<div class="modal-body">
+			<p *ngIf="selectedMedia">
+				<strong>Are you sure you want to delete <span class="text-primary">"{{selectedMedia.name}}"</span>
+					Media?</strong>
+			</p>
+			<p>
+				All information associated to this Media will be permanently deleted.
+				<span class="text-danger">This operation can not be undone.</span>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
+			<button type="button" class="btn btn-button" (click)="deleteMedia()">Ok</button>
+		</div>
+	</ng-template>

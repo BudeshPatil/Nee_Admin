@@ -1,0 +1,86 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+      <div class="col">
+          <div class="card shadow">
+              <div class="card-header border-0">
+                  <h3 class="mb-0">Users List</h3>
+              </div>
+              <div class="card-body">
+              <div class="col-md-12">
+                  <div class="row">
+                      <div class="col-md-6">
+                          <h4 class="title">
+                              <input class="form-control mt-4 mb-4" type="text" (keyup)="searchUser()" name="search" [(ngModel)]="searchText"
+                                        autocomplete="off" placeholder="&#61442;  Start searching for a User by name or email">
+                          </h4>
+                      </div>
+                      <div class="col-md-6"><button type="button" class="btn btn-button pull-right ml-auto mt-4 mb-4"
+                              routerLink="/auth/add-user">Add User</button></div>
+                  </div>
+              </div>
+              <div class="table-responsive">
+                  <table class="table align-items-center table-flush">
+                      <thead>
+                          <tr>
+                              <th>SL No</th>
+                              <th>User Name</th>
+                              <th>Email</th>
+                              <th>Role</th>
+                              <th>Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <td colspan="5" *ngIf="msg_danger">
+                              <div class="alert alert-dismissable" style="text-align: center;">
+                                  Career List is Empty
+                              </div>
+                          </td>
+                          <tr *ngFor="let cData of userData | active: searchText; let i = index">
+                              <td *ngIf="currentPage == 1">{{i+1}}</td>
+                              <td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+                              <td>{{cData.username}}</td>
+                              <td>{{cData.email}}</td>
+                              <td>{{cData.role}}</td>
+                              <td>
+                                  <a routerLink="/auth/edit-profile/{{cData._id}}" style="cursor:pointer"><i
+                                          class="mdi mdi-lead-pencil" aria-hidden="true"></i>
+                                  </a>
+                                  <a style="cursor:pointer;padding-left: 15px;" (click)="deleteCareer(cData._id)"><i
+                                          class="mdi mdi-close-box" aria-hidden="true"></i></a>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  <div class="pcommece-pagination" *ngIf="totalRecord > 0 && !searchText">
+                      <app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+                          (changePage)="onListChangePage($event)"></app-pagination>
+                  </div>
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<ng-template #content let-modal style="z-index: 0;">
+  <div class="modal-header">
+      <h4 class="modal-title" id="modal-title">User deletion</h4>
+      <button type="button" class="btn btn-button" aria-describedby="modal-title"
+          (click)="modal.dismiss('Cross click')">close</button>
+  </div>
+  <div class="modal-body">
+      <p *ngIf="selectedUser">
+          <strong>Are you sure you want to delete <span class="text-primary">"{{selectedUser.name}}"</span> Blog Data?</strong>
+      </p>
+      <p>
+          All information associated to this Blog Image will be permanently deleted.
+          <span class="text-danger">This operation can not be undone.</span>
+      </p>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
+      <button type="button" class="btn btn-button" (click)="deleteUser()">Ok</button>
+  </div>
+</ng-template>

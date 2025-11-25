@@ -1,0 +1,208 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title"> Page </h3>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Page</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Page</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-sm-10 col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="id">Edit Page</h4>
+          <h4 class="card-title" *ngIf="!id">Add New Page</h4>
+          <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+            {{throw_msg}}
+          </div>
+          <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+            {{throw_msg}}
+          </div>
+          <!-- form start -->
+          <form [formGroup]="addPageForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+            <div class="box-body">
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Name</label>
+                <input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+                  placeholder="Page Name">
+                <span *ngIf="submitted && hasError('name','required')" class="alert-danger">Page Name is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Global Spot League</label>
+                <input type="text" name="global_spot_league" autocomplete="off" formControlName="global_spot_league"
+                  class="form-control" placeholder="Global Spot League Title">
+                <span *ngIf="submitted && hasError('name','required')" class="alert-danger">Global Spot League Title is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Top League Title 1</label>
+                <input type="text" name="top_league_title1" autocomplete="off" formControlName="top_league_title1"
+                  class="form-control" placeholder="Top League Title 1">
+                <span *ngIf="submitted && hasError('top_league_title1','required')" class="alert-danger">Top League
+                  Title 1 is
+                  required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Spot League Description 1</label>
+                <textarea name="top_league_description1" autocomplete="off" formControlName="top_league_description1"
+                  class="form-control" placeholder="Spot League Description 1"></textarea>
+                <span *ngIf="submitted && hasError('top_league_description1','required')" class="alert-danger">Spot
+                  League Description 1 is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Top League Title 2</label>
+                <input type="text" name="top_league_title2" autocomplete="off" formControlName="top_league_title2"
+                  class="form-control" placeholder="Top League Title 2">
+                <span *ngIf="submitted && hasError('top_league_title2','required')" class="alert-danger">Top League
+                  Title 2 is
+                  required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Spot League Description 2</label>
+                <textarea name="top_league_description2" autocomplete="off" formControlName="top_league_description2"
+                  class="form-control" placeholder="Spot League Description 2"></textarea>
+                <span *ngIf="submitted && hasError('top_league_description2','required')" class="alert-danger">Spot
+                  League Description 2 is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Top League Title 3</label>
+                <input type="text" name="top_league_title3" autocomplete="off" formControlName="top_league_title3"
+                  class="form-control" placeholder="Top League Title 3">
+                <span *ngIf="submitted && hasError('top_league_title3','required')" class="alert-danger">Top League
+                  Title 3 is
+                  required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Spot League Description 3</label>
+                <textarea name="top_league_description3" autocomplete="off" formControlName="top_league_description3"
+                  class="form-control" placeholder="Spot League Description 3"></textarea>
+                <span *ngIf="submitted && hasError('top_league_description3','required')" class="alert-danger">Spot
+                  League Description 3 is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Top League Title 4</label>
+                <input type="text" name="top_league_title4" autocomplete="off" formControlName="top_league_title4"
+                  class="form-control" placeholder="Top League Title 4">
+                <span *ngIf="submitted && hasError('top_league_title4','required')" class="alert-danger">Top League
+                  Title 4 is
+                  required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Spot League Description 4</label>
+                <textarea name="top_league_description4" autocomplete="off" formControlName="top_league_description4"
+                  class="form-control" placeholder="Spot League Description 4"></textarea>
+                <span *ngIf="submitted && hasError('top_league_description4','required')" class="alert-danger">Spot
+                  League Description 4 is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Top League Title 5</label>
+                <input type="text" name="top_league_title5" autocomplete="off" formControlName="top_league_title5"
+                  class="form-control" placeholder="Top League Title 5">
+                <span *ngIf="submitted && hasError('top_league_title5','required')" class="alert-danger">Top League
+                  Title 5 is
+                  required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Spot League Description 5</label>
+                <textarea name="top_league_description5" autocomplete="off" formControlName="top_league_description5"
+                  class="form-control" placeholder="Spot League Description 5"></textarea>
+                <span *ngIf="submitted && hasError('top_league_description5','required')" class="alert-danger">Spot
+                  League Description 5 is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Active User</label>
+                <input type="text" name="active_user" autocomplete="off" formControlName="active_user"
+                  class="form-control" placeholder="Active User">
+                <span *ngIf="submitted && hasError('active_user','required')" class="alert-danger">Active User is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Total Active User</label>
+                <input type="text" name="total_active_user" autocomplete="off" formControlName="total_active_user"
+                  class="form-control" placeholder="Total Active User">
+                <span *ngIf="submitted && hasError('active_user','required')" class="alert-danger">Total Active User is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Download</label>
+                <input type="text" name="download" autocomplete="off" formControlName="download" class="form-control"
+                  placeholder="Download">
+                <span *ngIf="submitted && hasError('download','required')" class="alert-danger">Download is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Total Download</label>
+                <input type="text" name="total_download" autocomplete="off" formControlName="total_download"
+                  class="form-control" placeholder="Total Download">
+                <span *ngIf="submitted && hasError('active_user','required')" class="alert-danger">Total Download is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Winning Credit</label>
+                <input type="text" name="winning_credit" autocomplete="off" formControlName="winning_credit"
+                  class="form-control" placeholder="Winning Credit">
+                <span *ngIf="submitted && hasError('winning_credit','required')" class="alert-danger">Winning Credit is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Total Winning Credit</label>
+                <input type="text" name="total_winning_credit" autocomplete="off" formControlName="total_winning_credit"
+                  class="form-control" placeholder="Total Winning Credit">
+                <span *ngIf="submitted && hasError('total_winning_credit','required')" class="alert-danger">Total
+                  Winning Credit is
+                  required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Meta Title</label>
+                <input type="text" name="meta_title" autocomplete="off" formControlName="meta_title"
+                  class="form-control" placeholder="Meta Title">
+                <span *ngIf="submitted && hasError('meta_title','required')" class="alert-danger">Meta Title is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Meta Keywords</label>
+                <input type="text" name="meta_keywords" autocomplete="off" formControlName="meta_keywords"
+                  class="form-control" placeholder="Meta Keywords">
+                <span *ngIf="submitted && hasError('meta_keywords','required')" class="alert-danger">Meta Keywords is
+                  required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Meta Keywords</label>
+                <input type="text" name="meta_description" autocomplete="off" formControlName="meta_description"
+                  class="form-control" placeholder="Meta Keywords">
+                <span *ngIf="submitted && hasError('meta_description','required')" class="alert-danger">Meta Keywords is
+                  required</span>
+              </div>
+
+            </div>
+            <div class="box-footer">
+              <button type="submit" class="btn btn-button">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

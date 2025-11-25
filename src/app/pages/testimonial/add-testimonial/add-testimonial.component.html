@@ -1,0 +1,128 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title"> Testimonial </h3>
+    <!-- <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Testimonial</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Testimonial</li>
+      </ol>
+    </nav> -->
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-sm-10 col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title mb-0" *ngIf="id">Edit Testimonial</h4>
+          <h4 class="card-title mb-0" *ngIf="!id">Add New Testimonial</h4>
+        </div>
+        <div class="card-body">
+         
+          <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+            {{throw_msg}}
+          </div>
+          <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+            {{throw_msg}}
+          </div>
+          <!-- form start -->
+          <form [formGroup]="addTestimonialForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+            <div class="box-body">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Name</label>
+                <input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+                  placeholder="Testimonial Name">
+                <span *ngIf="submitted && hasError('name','required')" class="alert-danger">Testimonial Name is
+                  required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Ratings</label>
+                <select name="ratings" formControlName="ratings" class="form-control">
+                  <option value="">Select Rating</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Title</label>
+                <input type="text" name="name" autocomplete="off" formControlName="title" class="form-control"
+                  placeholder="Testimonial Title">
+                <span *ngIf="submitted && hasError('title','required')" class="alert-danger">Testimonial Title is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Location</label>
+                <input type="text" name="name" autocomplete="off" formControlName="location" class="form-control"
+                  placeholder="Location">
+                <span *ngIf="submitted && hasError('location','required')" class="alert-danger">Location is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Featured</label>
+                <select name="featured" formControlName="featured" class="form-control">
+                  <option value="">Select Featured</option>
+                  <option value="true">Active</option>
+                  <option value="false">InActive</option>
+                </select>
+                <span *ngIf="submitted && hasError('featured','required')" class="alert-danger">Featured is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Text</label>
+                <textarea name="text" autocomplete="nope" formControlName="text" class="form-control"
+                  placeholder="Testimonial Information"></textarea>
+                <span *ngIf="submitted && hasError('text','required')" class="alert-danger">Testimonial Information is
+                  required</span>
+              </div>
+              <!-- <div class="form-group">
+                                <label for="exampleInputEmail1">Job</label> 
+                                <ng-select [items]="jobs" bindLabel="name" placeholder="Select Job" appendTo="body"
+                                    [multiple]="true" formControlName="job">
+                                </ng-select>
+                                <span *ngIf="submitted && hasError('job','required')" class="alert-danger">Job is
+                                    required</span>
+                            </div>  -->
+              <div class="form-group">
+                <label for="exampleInputEmail1">Job</label>
+                <select name="job" formControlName="job" class="form-control">
+                  <option value="">Select Job</option>
+                  <option value="Project Manager">Project Manager</option>
+                  <option value="Operations Manager">Operations Manager</option>
+                  <option value="Detailing Manager">Detailing Manager</option>
+                  <option value="Vice President">Vice President</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Testimonial Image</label><br>
+                <input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
+                  [uploadInput]="uploadInput" /><br><br>
+                <label for="exampleInputEmail1" style="display: block;">(Required Size 141 * 141)</label><br>
+                <img *ngIf="ImageName" alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}{{ImageName}}">
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Status</label>
+                <select name="status" formControlName="status" class="form-control">
+                  <option value="true">Active</option>
+                  <option value="false">InActive</option>
+                </select>
+              </div>
+
+            </div>
+            <div class="box-footer d-flex">
+              <button type="submit" class="btn btn-button mr-2">Submit</button>
+              <button type="cancel" (click)="onCancel()" class="btn btn-button">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

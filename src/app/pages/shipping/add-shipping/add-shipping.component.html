@@ -1,0 +1,87 @@
+<div class="content-wrapper" >
+	<div class="page-header">
+		<h3 class="page-title"> Shipping </h3>
+	</div>
+	<div class="row justify-content-center">
+    <div class="col-md-8 col-sm-10 col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title mb-0" *ngIf="id">Edit Shipping</h4>
+          <h4 class="card-title mb-0" *ngIf="!id">Add New Shipping</h4>
+        </div>
+        <div class="card-body">
+          
+          <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+						{{throw_msg}}
+					</div>
+					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+						{{throw_msg}}
+					</div>
+          <form [formGroup]="addShippingForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+            <div class="box-body">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Title</label>
+                <input type="text" name="title" autocomplete="off" formControlName="title" class="form-control"
+                  placeholder="Shipping Name">
+                <span *ngIf="submitted && hasError('title','required')" class="alert-danger">Title is required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Method Name</label>
+                <input type="text" name="method_name" autocomplete="off" formControlName="method_name" class="form-control"
+                  placeholder="Method Name">
+                <span *ngIf="submitted && hasError('method_name','required')" class="alert-danger">Method Name is
+                  required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Minimum Order Amount</label>
+                <input type="number" name="minimum_order_amount" autocomplete="off" formControlName="minimum_order_amount" class="form-control"
+                  placeholder="Minimum Order Amount">
+                <span *ngIf="submitted && hasError('minimum_order_amount','required')" class="alert-danger">Minimum Order Amount is required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Shipping Charges</label>
+                <input type="number" name="shipping_charges" autocomplete="off" formControlName="shipping_charges" class="form-control"
+                  placeholder="Shipping Charges">
+                <span *ngIf="submitted && hasError('shipping_charges','required')" class="alert-danger">Shipping Charges is required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Shipping Type</label>
+                <select name="shipping_type" formControlName="shipping_type" class="form-control">
+                  <option value="">Select Shipping Type</option>
+                  <option value="free">Free</option>
+                  <option value="flat">Flat</option>
+                </select>
+                <span *ngIf="submitted && hasError('shipping_type','required')" class="alert-danger">Please Shipping Type</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Authentications User Id</label>
+                <input type="number" name="user_id" autocomplete="off" formControlName="user_id" class="form-control"
+                  placeholder="User id">
+                <span *ngIf="submitted && hasError('user_id','required')" class="alert-danger">Authentications is required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Password</label>
+                <input type="password" name="password" autocomplete="off" formControlName="password" class="form-control"
+                  placeholder="Password">
+                <span *ngIf="submitted && hasError('password','required')" class="alert-danger">Password is required</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Status</label>
+                <select name="status" formControlName="status" class="form-control">
+                  <option value="">Select Status</option>
+                  <option value="true">Active</option>
+                  <option value="false">Deactive</option>
+                </select>
+                <span *ngIf="submitted && hasError('status','required')" class="alert-danger">Please Select Status</span>
+              </div>
+            </div>
+            <div class="box-footer d-flex">
+              <button type="submit" class="btn btn-button mr-2">Submit</button>
+              <button type="cancel" (click)="onCancel()" class="btn btn-button ">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

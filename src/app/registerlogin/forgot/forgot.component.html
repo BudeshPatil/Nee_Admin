@@ -1,0 +1,58 @@
+<div class="container-fluid page-body-wrapper full-page-wrapper" *ngIf="!link">
+  <div class="row w-100 m-0">
+    <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+      <div class="card col-lg-4 mx-auto">
+        <div class="card-body px-5 py-5">
+          <h3 class="card-title text-left mb-3">Forgot Password</h3>
+          <form [formGroup]="forgotpassForm" (ngSubmit)="onSubmit()" class="login100-form validate-form"> 
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="text" class="form-control p_input" placeholder="Email" type="email" name="email" formControlName="email">
+            </div>
+            <div class="form-group alert alert-danger" *ngIf="loginError2">
+              {{loginErrorMsg}}
+            </div>
+            <div class="form-group alert alert-success" *ngIf="showmsg">
+              {{showmsg}}
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-button btn-block enter-btn">Submit</button>
+            </div>
+            <p class="sign-up">Do have an Account?<a href="#"> Sign in</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid page-body-wrapper full-page-wrapper" *ngIf="link">
+  <div class="row w-100 m-0">
+    <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+      <div class="card col-lg-4 mx-auto">
+        <div class="card-body px-5 py-5">
+          <h3 class="card-title text-left mb-3">Change Password</h3>
+          <form [formGroup]="activateForm" (ngSubmit)="onSubmitActive()" class="login100-form validate-form"> 
+            <div class="form-group">
+              <label>Password *</label>
+              <input type="text" class="form-control p_input" placeholder="Password" type="password" name="password" formControlName="password">
+            </div>
+            <div class="form-group">
+              <label>Confirm Password *</label>
+              <input type="text" class="form-control p_input" placeholder="Confirm Password" type="password" name="confirm_password" formControlName="confirm_password">
+            </div>
+            <div class="form-group alert alert-danger" *ngIf="loginError2">
+              {{loginErrorMsg}}
+            </div>
+            <div class="form-group alert alert-success" *ngIf="showmsg">
+              {{showmsg}}
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-button btn-block enter-btn">Submit</button>
+            </div>
+            <p class="sign-up">Do have an Account?<a href="#"> Sign in</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

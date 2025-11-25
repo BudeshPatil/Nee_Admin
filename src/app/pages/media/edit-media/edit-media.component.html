@@ -1,0 +1,142 @@
+<div class="container-fluid mt--7">
+	<div class="row">
+		<div class="col-xl-12 order-xl-1">
+			<div class="card  shadow">
+				<div class="card-header border-0">
+					<div class="row align-items-center">
+						<div class="col-md-8 col-sm-10 col-12">
+							<h3 class="mb-0">Edit Media</h3>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<!-- form start -->
+					<form [formGroup]="addmediaForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Name</label>
+							<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+								placeholder="Media Name">
+							<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Media Name is
+								required</span>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Description</label>
+							<angular-editor name="description" formControlName="description" [config]="editorConfig"></angular-editor>
+							<span *ngIf="submitted && hasError('description','required')" class="alert-danger">Description is
+								required</span>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Short Description</label>
+							<input name="short_desc" autocomplete="off" formControlName="short_desc" class="form-control"
+								placeholder="Short Description">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Height</label>
+							<input type="number" name="height" autocomplete="off" formControlName="height" class="form-control"
+								placeholder="Height">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Width</label>
+							<input type="number" name="width" autocomplete="off" formControlName="width" class="form-control"
+								placeholder="Width">
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">File Type</label>
+							<select name="file_type" formControlName="file_type" class="form-control">
+								<option value="">Select File Type</option>
+								<option value="image">Image</option>
+								<option value="video">Video</option>
+							</select>
+							<span *ngIf="submitted && hasError('file_type','required')" class="alert-danger">Please Select
+								File Type</span>
+						</div>
+						<div class="form-group" *ngIf="addmediaForm.value.file_type == 'image'">
+							<label for="exampleInputEmail1">Media Image</label>
+							<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
+								[uploadInput]="uploadInput" accept="image/*"/>
+							<img *ngIf="mediaFile" alt="logo" style="height: 100px; width: 100px;margin-top: 5px;"
+								src="{{imagePath}}media/{{mediaFile}}">
+						</div>
+						<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+							<label for="exampleInputEmail1">Media Video</label>
+							<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadVideo($event)"
+								[uploadInput]="uploadInput" accept="video/*"/>
+								<video width="320" height="240" *ngIf="mediaFile" controls>
+									<source src="{{imagePath}}media/{{mediaFile}}" type="video/mp4">
+								</video>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Alt</label>
+							<input type="text" name="alt" autocomplete="off" formControlName="alt" class="form-control"
+								placeholder="Alt">
+							<span *ngIf="submitted && hasError('alt','required')" class="alert-danger">Alt is required</span>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Landing</label>
+							<input type="text" name="landing" autocomplete="off" formControlName="landing" class="form-control"
+								placeholder="Landing">
+							<span *ngIf="submitted && hasError('landing','required')" class="alert-danger">Landing is required</span>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">type</label>
+							<input type="text" name="type" autocomplete="off" formControlName="type" class="form-control"
+								placeholder="Type">
+							<span *ngIf="submitted && hasError('type','required')" class="alert-danger">Type is required</span>
+						</div>
+						
+						<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+							<label for="exampleInputEmail1">Mute</label>
+							<input type="text" name="mute" autocomplete="off" formControlName="mute" class="form-control"
+								placeholder="Mute">
+							<span *ngIf="submitted && hasError('mute','required')" class="alert-danger">Mute is required</span>
+						</div>
+						<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+							<label for="exampleInputEmail1">Autoplay</label>
+							<select name="autoplay" formControlName="autoplay" class="form-control">
+								<option value="">Select Autoplay</option>
+								<option value="true">Active</option>
+								<option value="false">Deactive</option>
+							</select>
+							<span *ngIf="submitted && hasError('autoplay','required')" class="alert-danger">Please Select Autoplay</span>
+						</div>
+						<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+							<label for="exampleInputEmail1">Select Loop</label>
+							<select name="loop" formControlName="loop" class="form-control">
+								<option value="">Select Loop</option>
+								<option value="true">Active</option>
+								<option value="false">Deactive</option>
+							</select>
+							<span *ngIf="submitted && hasError('loop','required')" class="alert-danger">Please Select Loop</span>
+						</div>						
+						<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+							<label for="exampleInputEmail1">Full Screen</label>
+							<input type="text" name="full_screen" autocomplete="off" formControlName="full_screen" class="form-control"
+								placeholder="Full Screen">
+							<span *ngIf="submitted && hasError('full_screen','required')" class="alert-danger">Full Screen is required</span>
+						</div>	
+						<div class="form-group">
+							<label for="exampleInputEmail1">Additional Params</label>
+							<textarea name="additional_params" autocomplete="off" formControlName="additional_params" class="form-control"
+								placeholder="Additional Params"></textarea>
+							<span *ngIf="submitted && hasError('additional_params','required')" class="alert-danger">Additional Params is
+								required</span>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Select Status</label>
+							<select name="status" formControlName="status" class="form-control">
+								<option value="">Select Status</option>
+								<option value="true">Active</option>
+								<option value="false">Deactive</option>
+							</select>
+							<span *ngIf="submitted && hasError('status','required')" class="alert-danger">Please Select Status</span>
+						</div>
+						<div class="box-footer">
+							<button type="submit" class="btn btn-button">Submit</button>
+							<!-- <button type="cancel" (click)="onCancel()" class="btn btn-button">Cancel</button> -->
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

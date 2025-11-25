@@ -1,0 +1,43 @@
+<div class="content-wrapper" >
+	<div class="page-header">
+		<h3 class="page-title"> Subscriber </h3>
+		<!-- <nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Subscriber</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Edit Subscriber</li>
+			</ol>
+		</nav> -->
+	</div>
+	<div class="row justify-content-center">
+    <div class="col-md-8 col-sm-10 col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title" *ngIf="id">Edit Subscriber</h4>
+          <h4 class="card-title" *ngIf="!id">Add New Subscriber</h4>
+          <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+						{{throw_msg}}
+					</div>
+					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+						{{throw_msg}}
+					</div>
+                <!-- form start -->
+                <form [formGroup]="addSubscriberForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email : </label>
+                            <input type="text" name="email" autocomplete="off" formControlName="email"
+                                class="form-control" placeholder="Email">
+                            <span *ngIf="submitted && hasError('email','required')" class="alert-danger">Email is
+                                required</span>
+                        </div>
+                        <div class="box-footer d-flex">
+                            <button type="submit" class="btn btn-button mr-2">Submit</button>
+                            <button type="cancel" (click)="onCancel()" class="btn btn-button">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

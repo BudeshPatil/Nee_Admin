@@ -1,0 +1,102 @@
+{
+	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+	"version": 1,
+	"newProjectRoot": "projects",
+	"projects": {
+		"ghoastrental-dashboard": {
+			"projectType": "application",
+			"schematics": {
+				"@schematics/angular:component": {
+					"style": "scss"
+				}
+			},
+			"root": "",
+			"sourceRoot": "src",
+			"prefix": "app",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:browser",
+					"options": {
+						"outputPath": "dist/ghoastrental-dashboard",
+						"index": "src/index.html",
+						"main": "src/main.ts",
+						"polyfills": ["zone.js"],
+						"tsConfig": "tsconfig.app.json",
+						"inlineStyleLanguage": "scss",
+						"assets": ["src/favicon.ico", "src/assets"],
+						"styles": ["src/styles.scss"],
+						"scripts": []
+					},
+					"configurations": {
+						"production": {
+							"fileReplacements": [
+								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.prod.ts"
+								}
+							],
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "100mb",
+									"maximumError": "100mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "100mb",
+									"maximumError": "100mb"
+								}
+							],
+							"outputHashing": "all"
+						},
+						"development": {
+							"buildOptimizer": false,
+							"optimization": false,
+							"vendorChunk": true,
+							"extractLicenses": false,
+							"sourceMap": true,
+							"namedChunks": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"configurations": {
+						"production": {
+							"browserTarget": "ghoastrental-dashboard:build:production"
+						},
+						"development": {
+							"browserTarget": "ghoastrental-dashboard:build:development",
+							"port": 4314
+						}
+					},
+					"defaultConfiguration": "development"
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n",
+					"options": {
+						"browserTarget": "ghoastrental-dashboard:build"
+					}
+				},
+				"test": {
+					"builder": "@angular-devkit/build-angular:karma",
+					"options": {
+						"polyfills": ["zone.js", "zone.js/testing"],
+						"tsConfig": "tsconfig.spec.json",
+						"inlineStyleLanguage": "scss",
+						"assets": ["src/favicon.ico", "src/assets"],
+						"styles": ["src/styles.scss"],
+						"scripts": []
+					}
+				}
+			}
+		}
+	},
+	"cli": {
+		"analytics": "27ac90ae-fe6f-4fd3-8d40-8b964cc0c5b0",
+		"cache": {
+			"enabled": false
+		}
+	}
+}

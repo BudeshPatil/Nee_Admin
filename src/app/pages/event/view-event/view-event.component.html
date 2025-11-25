@@ -1,0 +1,133 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+	<!-- Table -->
+	<div class="row">
+		<div class="col">
+			<div class="card shadow">
+				<div class="card-header border-0">
+					<h3 class="mb-0">Events List</h3>
+				</div>
+				<div class="card-body">
+					<div class="col-md-12 mb-4">
+						<div class="row">
+							<div class="col-md-6">
+								<input class="form-control" type="text" (keyup)="searchEvent()" name="search" [(ngModel)]="searchText"
+									autocomplete="off" placeholder="&#61442;  Start searching a Event Image by name">
+							</div>
+							<div class="col-md-6">
+								<button type="button" class="btn btn-button pull-right ml-auto" routerLink="/event/add">Add
+									Event</button></div>
+						</div>
+					</div>
+						<!-- <div class="col-md-12"> -->
+						<!-- <div class="row pull-right">
+						<div class="cdis">
+							<label class="btn btn-default">
+								<input type="file" (change)="selectFile($event)" />
+							</label>
+							<div class=""><button type="button" class="btn btn-button"
+								(click)="importEvent()">Upload Master Data</button>
+						</div>
+						</div>
+
+					</div> -->
+						<!-- <div class="pul">
+						<button class="btn btn-button" (click)="exportEvent()" style="margin-right: 10px;">Download
+							Events</button>
+						<button class="btn btn-button" (click)="deleteAllEvents()">Delete All Events</button>
+					</div> -->
+						<!-- </div> -->
+						 
+							
+						 
+					<div class="table-responsive">
+						<table class="table align-items-center table-flush">
+							<thead>
+								<tr>
+									<th>SL No</th>
+									<th>Event Name</th>
+									<!-- <th>Format</th>
+								<th>Event Image/Video</th> -->
+								<th>
+									<div class="d-flex justify-content-center align-items-center">
+									<span class="mr-2">	Status </span> <ng-toggle [(ngModel)]="isactive" [disabled]="config.disabled" [width]="config.width"
+											[height]="config.height" [margin]="config.margin" [labels]="config.labels" [color]="config.color"
+											[switchColor]="config.switchColor" [fontColor]="config.fontColor" [fontSize]="config.fontSize"
+											(click)="changeStatus()" required></ng-toggle> 
+											<a (click)="resetFilter()"	class="btn btn-smallbutton ml-4">Reset</a>
+										</div>
+									</th>
+									<!-- <th>Approved</th> -->
+									<th>Created At</th>
+									<th>Updated At</th>
+									
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<td colspan="6" *ngIf="msg_danger">
+									<div class="alert alert-dismissable" style="text-align: center;">
+										Event List is Empty
+									</div>
+								</td>
+								<!-- <tr *ngFor="let listEvent of EventData | filter:searchText | activefilter:isactive; let i = index"> -->
+
+								<tr *ngFor="let listEvent of EventData; let i = index">
+									<td *ngIf="currentPage == 1">{{i+1}}</td>
+									<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+									<td>{{listEvent.title}}</td>
+									<!-- <td *ngIf="listEvent.media_data">{{listEvent.media_data[0].file_type}}</td> -->
+									<!-- <td *ngIf="listEvent.media_data">
+									<img *ngIf="listEvent.media_data && listEvent.media_data[0].file_type =='image'"
+										src="{{imagePath}}/event/{{listEvent.media_data[0].src}}" alt="logo"
+										style="height: 100px;width: 100px;">
+									<video *ngIf="listEvent.media_data && listEvent.media_data[0].file_type =='video'" width="100"
+										height="100" controls>
+										<source src="{{imagePath}}/event/{{listEvent.media_data[0].src}}" type="video/mp4">
+									</video>
+								</td> -->
+									<td>{{listEvent.status == true ? 'Active':'Deactive'}}</td>
+									<td>{{listEvent.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+									<td>{{listEvent.updated_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+									<td>
+										<a routerLink="/event/edit/{{listEvent._id}}" style="cursor:pointer"><i class="mdi mdi-lead-pencil"
+												aria-hidden="true"></i>
+										</a>
+										<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listEvent)"><i
+												class="mdi mdi-close-box" aria-hidden="true"></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="pcommece-pagination" *ngIf="totalRecord > 0 && !searchText">
+							<!-- <app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+							(changePage)="onListChangePage($event)"></app-pagination> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Event Delete Popup -->
+	<ng-template #content let-modal style="z-index: 0;">
+		<div class="modal-header">
+			<h4 class="modal-title" id="modal-title">Event Image deletion</h4>
+			<button type="button" class="btn btn-button" aria-describedby="modal-title"
+				(click)="modal.dismiss('Cross click')">close</button>
+		</div>
+		<div class="modal-body">
+			<p *ngIf="selectedEvent">
+				<strong>Are you sure you want to delete <span class="text-primary">"{{selectedEvent.name}}"</span> Event
+					Image?</strong>
+			</p>
+			<p>
+				All information associated to this Event Image will be permanently deleted.
+				<span class="text-danger">This operation can not be undone.</span>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
+			<button type="button" class="btn btn-button" (click)="deleteEvent()">Ok</button>
+		</div>
+	</ng-template>

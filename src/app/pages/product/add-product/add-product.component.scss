@@ -1,0 +1,98 @@
+::ng-deep {.accordion-shadow{
+  .accordion-item{
+    .accordion-header .accordion-button{
+      box-shadow: none;
+        border: none;
+        // background: transparent;
+        padding: 15px 10px;
+        width: 100%;
+        text-align: left;
+        border-bottom:1px solid #ccc;
+      }
+      .accordion-body{
+        padding: 10px;
+      }
+  }
+}
+.pagination{
+  justify-content: center;
+  margin: 1rem 0;
+}
+}
+::ng-deep{
+
+  .modal-backdrop{
+    z-index: 0 !important;
+  }
+  .ng-toggle-switch-label.ng-toggle-right{
+    width:80px !important;
+  }
+  }
+
+.toogle_btn{
+  margin-left: 20px;
+}
+
+.pcommece-pagination {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  background-color: #373330;
+}
+
+.btn-primary {
+  color: #ffffff;
+  background-color: #ff5e14;
+  border-color: #ff5e14;
+}
+
+.required{
+  color: #ff5e14;
+}
+
+.fontwgt600{
+  font-weight: 600;
+}
+.cstborder{
+  border:1px solid;
+  padding: 8px;
+}
+.customstep3table{
+  .form-group {
+    margin-bottom: 0;
+  }
+  .table-bordered th, .table-bordered td{
+    padding: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+     
+  }
+  .form-group{
+    select{
+      width: 55px;
+      padding: 5px;
+    }
+  }
+}
+
+
+
+.customconfiguretable{
+  
+  font-size: 14px;
+  white-space: nowrap;
+  text-align: center;
+  th, td{
+    padding: 5px;
+  }
+  .form-group {
+    margin-bottom: 0;
+  }
+   
+  .form-group{
+    select{
+      width: 55px;
+      padding: 5px;
+    }
+  }
+}

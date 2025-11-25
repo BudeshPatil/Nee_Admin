@@ -1,0 +1,77 @@
+<!-- form start -->
+<div class="content-wrapper">
+  <div class="page-header">
+    <h3 class="page-title"> Author </h3>
+    <!-- <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Author</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Author</li>
+      </ol>
+    </nav> -->
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-sm-10 col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Add New Author</h4>
+          <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+            {{throw_msg}}
+          </div>
+          <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+            {{throw_msg}}
+          </div>
+          <form [formGroup]="addAuthorForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+            <div class="box-body">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Name</label>
+                <input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+                  placeholder="Author Name">
+                <span *ngIf="submitted && hasError('name','required')" class="alert-danger">Author Name
+                  is
+                  required</span>
+                <span *ngIf="submitted && hasError('name','maxlength')" class="alert-danger">Please
+                  Enter the 30 length Author Name</span>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Author Image</label><br>
+                <input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
+                  [uploadInput]="uploadInput" /><br><br>
+                <label for="exampleInputEmail1" style="display: block;">(Required Size 141 *141)</label><br>
+                <img *ngIf="authorImage" alt="logo" style="height: 100px; width: 100px;"
+                  src="{{imagePath}}{{authorImage}}">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Author Title</label>
+                <input type="text" name="author_title" autocomplete="off" formControlName="author_title"
+                  class="form-control" placeholder="Author Title">
+                <span *ngIf="submitted && hasError('author_title','required')" class="alert-danger">Author Title is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Description</label>
+                <angular-editor name="description" formControlName="description"
+                  [config]="editorConfig"></angular-editor>
+                <span *ngIf="submitted && hasError('description','required')" class="alert-danger">Description is
+                  required</span>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Status</label>
+                <select name="status" formControlName="status" class="form-control">
+                  <option value="false">Active</option>
+                  <option value="true">InActive</option>
+                </select>
+              </div>
+
+            </div>
+            <div class="box-footer">
+              <button type="submit" class="btn btn-button">Submit</button>
+              <button type="cancel" (click)="onCancel()" class="btn btn-button">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
