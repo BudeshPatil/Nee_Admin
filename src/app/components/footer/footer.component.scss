@@ -1,3 +1,18 @@
-.footer{
-  background-color: transparent;
+.footer-section{
+  position: fixed;
+  bottom: 0;
+  width: 90%;
+  left: 210px;
+  z-index: 3;
+  @media(max-width:767px){
+    left: 0;
+    width: 100%;
+  }
+  .footer{
+    background: #eae3e1 !important;
+    padding: 2.5rem 2rem;
+    @media(max-width:767px){
+      padding: 1.5rem 2rem;
+    }
+  }
 }

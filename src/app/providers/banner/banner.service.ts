@@ -18,7 +18,7 @@ export class BannerService {
       })
     );
   };
-  
+
   addBanner = (moreData:any): Observable<any> => {
     const endpoint = environment.baseUrl+'/api/banner/addbanner';
     return this.http
@@ -42,7 +42,7 @@ export class BannerService {
       );
   };
 
-  // update 
+  // update
   editBannerdata = (moreData:any,Id:any): Observable<any> => {
     let endpoint = environment.baseUrl+'/api/banner/editBannerdata';
     if (Id) {
@@ -119,7 +119,7 @@ importallBanner = (file: File): Observable<any> => {
     headers: HttpHeaders | { [header: string]: string | string[] };
   } {
     let headers;
-    const token = localStorage.getItem('ghoastrental-token');
+    const token = localStorage.getItem('neelgund-admin-token');
     headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });

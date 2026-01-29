@@ -1,0 +1,38 @@
+.neelgund-pagination {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  background-color: #36aef5;
+}
+
+.btn-primary {
+  color: #ffffff;
+  background-color: #423f3f;
+  border-color: #423f3f
+}
+.title{
+  font-size: 30px;
+}
+.box-title{
+  font-size: 60px;
+}
+
+
+.container {
+  padding-top: 50px;
+  padding-bottom: 10px;
+  color: #405065;
+}
+
+/* .search-hero {
+  max-width: 500px;
+  padding-bottom: 50px;
+  margin:auto;
+}
+
+.form-control {
+  box-shadow: 0 10px 40px 0 #B0C1D9;
+}
+.form-control::placeholder  {
+  font-family: FontAwesome;
+} */

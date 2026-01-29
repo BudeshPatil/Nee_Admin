@@ -82,16 +82,7 @@ export class ConfigService {
     );
   };
 
-	// testEmail = (data:any): Observable<any> => {
-  //   const endpoint = environment.baseUrl+'/api/config/testemail';
-  //   return this.http.post(endpoint, data,this.getRequestHeaders()).pipe(
-  //     catchError((err) => {
-  //       return throwError(err);
-  //     })
-  //   );
-  // };
-
-	testEmail = (moreData:any): Observable<any> => {
+  testEmail = (moreData:any): Observable<any> => {
     const endpoint = environment.baseUrl+'/api/config/testemail';
     return this.http
       .post(endpoint, moreData,this.getRequestHeaders())
@@ -102,21 +93,11 @@ export class ConfigService {
       );
   };
 
-  generareSitemapXML = (data:any): Observable<any> => {
-    const endpoint = environment.baseUrl+'/api/config/generateSitemapXML';
-    return this.http.post(endpoint, data,this.getRequestHeaders()).pipe(
-      catchError((err) => {
-        return throwError(err);
-      })
-    );
-  };
-
-
   protected getRequestHeaders(): {
     headers: HttpHeaders | { [header: string]: string | string[] };
   } {
     let headers;
-    const token = localStorage.getItem('ghoastrental-token');
+    const token = localStorage.getItem('neelgund-admin-token');
     headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });

@@ -11,9 +11,10 @@ import {
 @Component({
   selector: 'app-pagination',
   templateUrl: './pagination.component.html',
-  styleUrls: ['./pagination.component.scss']
+  styleUrls: ['./pagination.component.css']
 })
-export class PaginationComponent {
+export class PaginationComponent implements OnInit {
+
   // @Input() items: Array<any>;
   @Input() count: number = 0;
   @Output() changePage = new EventEmitter<any>(true);
@@ -21,7 +22,7 @@ export class PaginationComponent {
   @Input() pageSize = 10;
   @Input() maxPages = 10;
 
-  limit: number = 10;
+  limit: number = 2;
 
   pager: any = {};
 
@@ -44,9 +45,9 @@ export class PaginationComponent {
     //   }
     // }
     if (
-      changes['count'].currentValue &&
-      changes['count'].previousValue &&
-      changes['count'].currentValue !== changes['count'].previousValue
+      changes.count?.currentValue &&
+      changes.count?.previousValue &&
+      changes.count?.currentValue !== changes.count?.previousValue
     ) {
       this.setPage(this.initialPage);
     }
@@ -131,4 +132,6 @@ export class PaginationComponent {
     // call change page function in parent component
     if (!bool) this.changePage.emit(page);
   }
+
+
 }

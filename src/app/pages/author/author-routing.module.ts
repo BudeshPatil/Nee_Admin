@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
+// Add Component
 import { AddAuthorComponent } from './add-author/add-author.component';
-import { AuthGuard } from 'src/app/guard/auth.guard';
 import { ViewAuthorComponent } from './view-author/view-author.component';
 
+// Auth Services
+import {AuthGuard} from '../../guard/auth.guard';
+
 const routes: Routes = [
-  {
-    path:'',
-    component : ViewAuthorComponent,
-    canActivate: [AuthGuard],
-   },
   {
     path:'add',
     component : AddAuthorComponent,
@@ -26,11 +25,6 @@ const routes: Routes = [
     component : ViewAuthorComponent,
     canActivate: [AuthGuard],
    },
-   {
-    path:'**',
-    component : ViewAuthorComponent,
-    canActivate: [AuthGuard],
-   }
 ];
 
 @NgModule({

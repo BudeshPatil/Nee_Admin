@@ -1,0 +1,286 @@
+<div class="header pb-8 pt-5 pt-lg-2 d-flex align-items-center">
+</div>
+<div class="container-fluid mt--7">
+	<div class="row">
+		<div class="col-xl-7 order-xl-1 mx-auto">
+			<div class="card bg-secondary shadow">
+				<div class="card-header bg-white border-0">
+					<div class="row align-items-center">
+						<div class="col-8">
+							<h3 class="mb-0" *ngIf="id">Update/Edit About-Banner</h3>
+							<h3 class="mb-0" *ngIf="!id">Add New About-Banner</h3>
+						</div>
+					</div>
+					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+						{{throw_msg}}
+					</div>
+					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+						{{throw_msg}}
+					</div>
+				</div>
+				<div class="card-body">
+					<!-- form start -->
+					<form class="forms-sample" [formGroup]="addbannerForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Name <span class="required">*</span></label>
+							<input type="text" name="name" id="exampleInputName1" autocomplete="off" formControlName="name"
+								class="form-control" placeholder="Name" disabled>
+							<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Name is
+								required</span>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Short Description
+								<div class="tooltip-wrapper">
+									<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show = true"
+										(mouseleave)="show = false" style="transform: none;  color: #525f7f;">
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+											<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+												stroke-linecap="round" />
+											<circle cx="12" cy="7" r="1" fill="currentColor" />
+										</svg></button>
+									<div class="tooltip-card" *ngIf="show">
+										<h5 class="tooltip-title">Note</h5>
+										<p class="tooltip-text">
+											To maintain the website design, please keep the content within 180–200 characters.
+										</p>
+
+										<span class="tooltip-arrow"></span>
+									</div>
+								</div>
+							</label>
+							<textarea type="text" name="short_desc" id="short_desc" autocomplete="off" formControlName="short_desc"
+								class="form-control" placeholder="Short Description"> </textarea>
+							<span *ngIf="submitted && hasError('short_desc','required')" class="alert-danger">Short Description is
+								required
+							</span>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Description
+								<div class="tooltip-wrapper">
+									<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show1 = true"
+										(mouseleave)="show1 = false" style="transform: none;  color: #525f7f;">
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+											<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+												stroke-linecap="round" />
+											<circle cx="12" cy="7" r="1" fill="currentColor" />
+										</svg></button>
+									<div class="tooltip-card" *ngIf="show1">
+										<h5 class="tooltip-title">Note</h5>
+										<p class="tooltip-text">
+											To maintain the website design, please keep the content within 200–300 characters.
+										</p>
+										<span class="tooltip-arrow"></span>
+									</div>
+								</div>
+							</label>
+							<textarea type="text" name="description" id="description" autocomplete="off" formControlName="description"
+								class="form-control" placeholder="Description"> </textarea>
+							<span *ngIf="submitted && hasError('description','required')" class="alert-danger">
+								Event Description is required
+							</span>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputEmail1">Format </label>
+							<select name="format" formControlName="format" class="form-control">
+								<option value="">Select Format</option>
+								<option value="image">Image</option>
+								<option value="video">Video</option>
+							</select>
+						</div>
+						<hr class="my-3">
+						<div class="form-group">
+							<label class="text-lg-start">Banner Image/Video <span class="required">* </span>
+								<div class="tooltip-wrapper">
+									<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show2 = true"
+										(mouseleave)="show2 = false" style="transform: none;  color: #525f7f;">
+										<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+											<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+												stroke-linecap="round" />
+											<circle cx="12" cy="7" r="1" fill="currentColor" />
+										</svg></button>
+									<div class="tooltip-card" *ngIf="show2">
+										<h5 class="tooltip-title">Note</h5>
+										<p class="tooltip-text">
+											Upload images or videos in the recommended sizes to avoid layout issues. <br>
+											Image: w-1482 * h-584 px <br> Video: 1920 * 1080 px
+										</p>
+										<span class="tooltip-arrow"></span>
+									</div>
+								</div>
+
+							</label>
+							<div class="row text-lg-start">
+								<div class="col-lg-3 col-md-4 col-6" *ngIf="mediaData">
+									<a class="cursor:pointer;text-center">
+										<i class="ni ni-fat-remove" aria-hidden="true"></i></a>
+									<a class="d-block mb-4 h-100">
+										<img src="{{imagePath}}{{mediaData.src}}" class="img-fluid img-thumbnail"
+											*ngIf="mediaData && mediaData.file_type == 'image'" width="200" height="350"
+											(click)="editMedia(media,mediaData,'media')">
+										<video class="img-fluid img-thumbnail" *ngIf="mediaData && mediaData.file_type == 'video'"
+											width="200" height="350" (click)="editMedia(media,mediaData,'media')" controls>
+											<source src="{{imagePath}}{{mediaData.src}}" type="video/mp4">
+										</video>
+									</a>
+								</div>
+								<div class="col-lg-3 col-md-4 col-6">
+									<a (click)="openMedia(media)" class="d-block mb-4 h-100">
+										<img src="{{url}}/img/addimage.svg" class="img-fluid img-thumbnail" width="150" height="150">
+									</a>
+								</div>
+							</div>
+							<!-- <label for="exampleInputEmail1" style="display: block;">(Required size: Image w-1482 × h-584 px | Video
+								1920 × 1080 px)</label><br> -->
+						</div>
+						<div class="form-group">
+							<label for="exampleTextarea1">Status</label>
+							<select name="status" formControlName="status" class="form-control">
+								<option value="">Select Status</option>
+								<option value="true">Active</option>
+								<option value="false">InActive</option>
+							</select>
+						</div>
+						<div class="d-flex">
+							<button type="submit" class="btn btn-primary mr-2">Submit</button>
+							<button type="button" class="btn btn-primary" routerLink="/aboutpage/banner-view">Cancel</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Image| Model Popup -->
+<ng-template #media let-modal style="z-index: 0;">
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Upload Image/Video</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form [formGroup]="addmediaForm" (ngSubmit)="onSubmitMedia('image')">
+			<div class="form-group">
+				<label for="exampleInputEmail1">Name <span class="required">*</span></label>
+				<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+					placeholder="Media Name">
+				<span *ngIf="submittedMedia && hasMediaFormError('name','required')" class="alert-danger">File Name is
+					required</span>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputEmail1">File Type</label>
+				<select name="file_type" formControlName="file_type" class="form-control">
+					<option value="">Select File Type</option>
+					<option value="image">Image</option>
+					<option value="video">Video</option>
+				</select>
+				<span *ngIf="submittedMedia && hasMediaFormError('file_type','required')" class="alert-danger">Please
+					Select
+					File Type</span>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputEmail1">Alt</label>
+				<input type="text" name="alt" autocomplete="off" formControlName="alt" class="form-control"
+					placeholder="Alt Tag">
+				<span *ngIf="submitted && hasMediaFormError('alt','required')" class="alert-danger">Alt is required</span>
+			</div>
+			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'image'">
+				<label for="exampleInputEmail1">Media Image <span class="required">*</span></label><br>
+				<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'image')"
+					[uploadInput]="uploadInput" accept="image/*" />
+				<img *ngIf="mediaFile" alt="logo" style="height: 100px; width: 100px;margin-top: 5px;"
+					src="{{imagePath}}{{mediaFile}}">
+				<span *ngIf="submittedMedia && hasMediaFormError('src','required')" class="alert-danger">Please Select
+					Image</span>
+			</div>
+			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+				<label for="exampleInputEmail1">Media Video <span class="required">*</span></label><br>
+				<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'image')"
+					[uploadInput]="uploadInput" accept="video/*" />
+				<video width="320" height="240" *ngIf="mediaFile" controls>
+					<source src="{{imagePath}}{{mediaFile}}" type="video/mp4">
+				</video>
+				<span *ngIf="submittedMedia && hasMediaFormError('src','required')" class="alert-danger">Please Select
+					Video</span>
+			</div>
+			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'image'">
+				<label for="exampleInputEmail1">Role</label>
+				<select name="role" #selectRole formControlName="role" class="form-control"
+					(change)="selectImageRole($event,selectRole.value)">
+					<option value="">Select Role</option>
+					<option value="base">Base</option>
+					<option value="small">Small</option>
+					<option value="thumbnail">Thumbnail</option>
+				</select>
+				<span *ngIf="submittedMedia && hasMediaFormError('role','required')" class="alert-danger">Please Select
+					Role</span>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputEmail1">Height</label>
+				<input type="number" name="height" autocomplete="off" formControlName="height" class="form-control"
+					placeholder="Height">
+			</div>
+			<div class="form-group">
+				<label for="exampleInputEmail1">Width</label>
+				<input type="number" name="width" autocomplete="off" formControlName="width" class="form-control"
+					placeholder="Width">
+			</div>
+			<div class="form-group">
+				<label for="exampleInputEmail1">Sequence Number</label>
+				<input type="number" name="sequence_number" autocomplete="off" formControlName="sequence_number"
+					class="form-control" placeholder="Sequence Number">
+			</div>
+			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+				<label for="exampleInputEmail1">Mute</label>
+				<input type="text" name="mute" autocomplete="off" formControlName="mute" class="form-control"
+					placeholder="Mute">
+				<span *ngIf="submitted && hasMediaFormError('mute','required')" class="alert-danger">Mute is required</span>
+			</div>
+			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+				<label for="exampleInputEmail1">Autoplay</label>
+				<select name="autoplay" formControlName="autoplay" class="form-control">
+					<option value="">Select Autoplay</option>
+					<option value="true">Active</option>
+					<option value="false">Deactive</option>
+				</select>
+				<span *ngIf="submitted && hasMediaFormError('autoplay','required')" class="alert-danger">Please Select
+					Autoplay</span>
+			</div>
+			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+				<label for="exampleInputEmail1">Select Loop</label>
+				<select name="loop" formControlName="loop" class="form-control">
+					<option value="">Select Loop</option>
+					<option value="true">Active</option>
+					<option value="false">Deactive</option>
+				</select>
+				<span *ngIf="submitted && hasMediaFormError('loop','required')" class="alert-danger">Please Select Loop</span>
+			</div>
+			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+				<label for="exampleInputEmail1">Full Screen</label>
+				<input type="text" name="full_screen" autocomplete="off" formControlName="full_screen" class="form-control"
+					placeholder="Full Screen">
+				<span *ngIf="submitted && hasMediaFormError('full_screen','required')" class="alert-danger">Full Screen is
+					required</span>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputEmail1">Select Status</label>
+				<select name="status" formControlName="status" class="form-control">
+					<option value="">Select Status</option>
+					<option value="true">Active</option>
+					<option value="false">Deactive</option>
+				</select>
+				<span *ngIf="submittedMedia && hasMediaFormError('status','required')" class="alert-danger">Please
+					Select Status</span>
+			</div>
+			<div class="box-footer d-flex">
+				<button class="btn btn-button mr-2">Submit</button>
+				<button type="cancel" (click)="onCancelMedia()" class="btn btn-button">Cancel</button>
+			</div>
+		</form>
+	</div>
+</ng-template>

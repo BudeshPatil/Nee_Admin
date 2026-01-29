@@ -1,38 +1,32 @@
-//Built in Modules
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
-import { AppRoutingModule } from './app-routing.module';
-// Libraries include
+import { AppComponent } from './app.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+
 import { NgbModule,NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { AppRoutingModule } from './app.routing';
+import { ComponentsModule } from './components/components.module';
+// Libraries include
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxUploaderModule } from 'ngx-uploader';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { ToastrModule } from 'ng6-toastr-notifications';
 import { NgSelectModule } from "@ng-select/ng-select";
+import { NgxQrcodeStylingModule } from 'ngx-qrcode-styling';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { ClipboardModule } from 'ngx-clipboard';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AngMusicPlayerModule } from  'ang-music-player';
 import { NgToggleModule } from 'ng-toggle-button';
-
-//Created modules
-import { PipemoduleModule } from './pipes/pipemodule.module';
-import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
-import { ComponentsModule } from './components/components.module';
-import { AppComponent } from './app.component';
-import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
-import { CommonModule } from '@angular/common';
+import { PipemoduleModule } from './pipemodule.module';
 
 @NgModule({
   imports: [
     BrowserAnimationsModule,
-    BrowserModule,
-    CommonModule,
     FormsModule,
     HttpClientModule,
     ComponentsModule,
@@ -44,14 +38,12 @@ import { CommonModule } from '@angular/common';
     NgxUploaderModule,
     AngularEditorModule,
     ToastrModule.forRoot(),
-    // NgxQrcodeStylingModule,
+    NgxQrcodeStylingModule,
     NgSelectModule,
     Ng2SearchPipeModule,
-    NgToggleModule.forRoot(),
+    NgToggleModule,
     PipemoduleModule.forRoot(),
-    NgMultiSelectDropDownModule.forRoot(),
-    ClipboardModule,
-    DragDropModule
+    AngMusicPlayerModule
   ],
   declarations: [
     AppComponent,

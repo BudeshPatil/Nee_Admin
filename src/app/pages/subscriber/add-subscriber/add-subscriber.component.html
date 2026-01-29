@@ -1,25 +1,39 @@
-<div class="content-wrapper" >
-	<div class="page-header">
-		<h3 class="page-title"> Subscriber </h3>
-		<!-- <nav aria-label="breadcrumb">
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="#">Subscriber</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Edit Subscriber</li>
-			</ol>
-		</nav> -->
-	</div>
-	<div class="row justify-content-center">
-    <div class="col-md-8 col-sm-10 col-12 grid-margin stretch-card">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title" *ngIf="id">Edit Subscriber</h4>
-          <h4 class="card-title" *ngIf="!id">Add New Subscriber</h4>
-          <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
-						{{throw_msg}}
-					</div>
-					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
-						{{throw_msg}}
-					</div>
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center">
+    <!-- Mask -->
+    <!-- <span class="mask bg-gradient-info opacity-8"></span> -->
+    <!-- Header container -->
+    <!-- <div class="container-fluid d-flex align-items-center">
+        <div class="row">
+            <div class="col-lg-7 col-md-10">
+                <h1 class="display-2 text-white">Subscriber Information </h1>
+                <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with
+                    your work
+                    and manage your projects or assigned tasks</p>
+                
+            </div>
+        </div>
+    </div> -->
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col-xl-7 mx-auto order-xl-1">
+            <div class="card bg-secondary shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0" *ngIf="id">Edit Subscriber</h3>
+                            <h3 class="mb-0" *ngIf="!id" >Add Subscriber</h3>
+                        </div>
+                    </div>
+                    <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+                        {{throw_msg}}
+                    </div>
+                    <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+                        {{throw_msg}}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- form start -->
                 <!-- form start -->
                 <form [formGroup]="addSubscriberForm" (ngSubmit)="onSubmit()" method="post" novalidate>
                     <div class="box-body">
@@ -30,9 +44,9 @@
                             <span *ngIf="submitted && hasError('email','required')" class="alert-danger">Email is
                                 required</span>
                         </div>
-                        <div class="box-footer d-flex">
-                            <button type="submit" class="btn btn-button mr-2">Submit</button>
-                            <button type="cancel" (click)="onCancel()" class="btn btn-button">Cancel</button>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
                         </div>
                     </div>
                 </form>

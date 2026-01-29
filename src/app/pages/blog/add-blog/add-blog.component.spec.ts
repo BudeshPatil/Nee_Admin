@@ -11,7 +11,9 @@ describe('AddBlogComponent', () => {
       declarations: [ AddBlogComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AddBlogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

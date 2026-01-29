@@ -12,9 +12,9 @@ import { AuthorService } from '../../../providers/author/author.service';
 @Component({
   selector: 'app-add-author',
   templateUrl: './add-author.component.html',
-  styleUrls: ['./add-author.component.scss']
+  styleUrls: ['./add-author.component.css']
 })
-export class AddAuthorComponent {
+export class AddAuthorComponent implements OnInit {
   @ViewChild('uploader', { read: ElementRef }) fileInput: ElementRef;
 
   // File Upload
@@ -67,6 +67,9 @@ export class AddAuthorComponent {
       name: ['',[Validators.required,Validators.maxLength(255)]],
       author_title: ['',Validators.required],
       description: ['',Validators.required],
+      meta_description: ['',Validators.required],
+      meta_title: ['',Validators.required],
+      meta_keywords: ['',Validators.required],
       facebook_link: [''],
       twitter_link: [''],
       youtube_link: [''],
@@ -107,6 +110,9 @@ export class AddAuthorComponent {
             name: data?.name,
             author_title: data?.title,
             description: data?.description,
+            meta_description: data?.meta_description,
+            meta_title: data?.meta_title,
+            meta_keywords: data?.meta_keywords,
             facebook_link: data?.facebook_link,
             twitter_link: data?.twitter_link,
             youtube_link: data?.youtube_link,

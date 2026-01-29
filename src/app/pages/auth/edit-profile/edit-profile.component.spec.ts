@@ -11,7 +11,9 @@ describe('EditProfileComponent', () => {
       declarations: [ EditProfileComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(EditProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -11,13 +11,13 @@ import { environment } from '../../../environments/environment';
 export class LoginService {
 
   constructor(private http: HttpClient) { }
-  
+
   validateLogin = (moreData:any): Observable<any> => {
     const endpoint = environment.baseUrl+'/api/users/login';
     return this.http
       .post(endpoint, moreData, { observe: 'response' as 'body' })
       .pipe(
-        catchError((err) => { 
+        catchError((err) => {
           return throwError(err);
         })
       );
@@ -89,11 +89,65 @@ export class LoginService {
       );
   };
 
+  updateNewPassword = (data:any): Observable<any> => {
+    const endpoint = environment.baseUrl+'/api/users/updateNewPassword';
+    return this.http.post(endpoint, data).pipe(
+      catchError((err) => {
+        return throwError(err);
+      })
+    );
+  };
+
+  activateCustomerData = (data:any): Observable<any> => {
+    const endpoint = environment.baseUrl+'/api/users/activeaccount';
+    return this.http.post(endpoint, data).pipe(
+      catchError((err) => {
+        return throwError(err);
+      })
+    );
+  };
+
+  ForgotPasswordLink = (data:any): Observable<any> => {
+    const endpoint = environment.baseUrl+'/api/users/forgotcustomerpasswordlink';
+    return this.http.post(endpoint, data).pipe(
+      catchError((err) => {
+        return throwError(err);
+      })
+    );
+  };
+
+  updateForgotPassword = (data:any): Observable<any> => {
+    const endpoint = environment.baseUrl+'/api/users/updateforgotpassword';
+    return this.http.post(endpoint, data).pipe(
+      catchError((err) => {
+        return throwError(err);
+      })
+    );
+  };
+
+  SendEmailVerification = (data:any): Observable<any> => {
+    const endpoint = environment.baseUrl+'/api/users/SendEmailVerification';
+    return this.http.post(endpoint, data).pipe(
+      catchError((err) => {
+        return throwError(err);
+      })
+    );
+  };
+
+  update_mailVeryfication = (data:any): Observable<any> => {
+    const endpoint = environment.baseUrl+'/api/users/updateMailVeryfication';
+    return this.http.post(endpoint, data).pipe(
+      catchError((err) => {
+        return throwError(err);
+      })
+    );
+  };
+
   protected getRequestHeaders(): {
     headers: HttpHeaders | { [header: string]: string | string[] };
   } {
     let headers;
-    const token = localStorage.getItem('ghoastrental-token');
+    const token = localStorage.getItem('neelgund-admin-token');
     headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });

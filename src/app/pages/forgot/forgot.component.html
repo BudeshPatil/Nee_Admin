@@ -1,0 +1,119 @@
+<div class="loginblock d-flex flex-column justify-content-center align-items-center">
+<div class="header w-100">
+  <div class="container">
+    <div class="header-body text-center mb-3">
+      <div class="row justify-content-center">
+        <div class="col-lg-12 col-md-12">
+          <h1 class="text-white1">Welcome!</h1>
+          <h1>neelgund Admin Dashboard</h1>
+          <!-- <p class="text-lead text-light">Login here to Add/Edit new records</p> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="separator separator-bottom separator-skew zindex-100">
+    <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+    </svg>
+  </div> -->
+</div>
+<!-- Page content -->
+<div class="container" *ngIf="!id">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+      <div class="card shadow border-0">
+        <div class="card-body px-lg-5 py-lg-5">
+          <div class="text-center text-muted mb-4">
+            <img src="assets/img/brand/phdesign-logo.png" class="d-block mb-2 mx-auto main-logo" alt="main-logo">
+            <small class="d-block">Password Help</small>
+            <small>Enter your email address. You will receive an email with a link to reset your password.</small>
+          </div>
+          <form [formGroup]="ForgotPasswordForm" (ngSubmit)="onForgotPassword()" class="login100-form validate-form">
+            <div class="alert alert-danger" *ngIf="loginError2">
+              {{loginErrorMsg}}
+            </div>
+            <div class="form-group mb-3">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                </div>
+                <input class="form-control" placeholder="Email" type="email" name="email" formControlName="email"
+                  autocomplete="off">
+              </div>
+              <div class="alert-danger" *ngIf="submitted">
+                <p *ngIf="submitted && hasForgotEmailError('email','required')" style="text-align: center;"
+                  class="alert-danger text-center">{{
+                  hasForgotEmailError('email','required')}}</p>
+              </div>
+              <div class="mt-3">
+              <a [routerLink]="['/login']" routerLinkActive="router-link-active"
+            class="text-light mt-3"><small>Login?</small></a>
+          </div>
+            </div>
+            <div class="text-center">
+              <button class="btn btn-primary mt-4">Send Link</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- <div class="row mt-3">
+        <div class="col-6">
+          <a [routerLink]="['/login']" routerLinkActive="router-link-active"
+            class="text-light"><small>Login?</small></a>
+        </div>
+
+      </div> -->
+    </div>
+  </div>
+  <p class="text-light1 mt-3 text-center"><small >Copyright © 2024 neelgund All rights reserved</small></p>
+</div>
+
+<!-- Page content -->
+<div class="container " id="login" *ngIf="id">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+      <div class="card shadow border-0">
+        <div class="card-body px-lg-5 py-lg-5">
+          <div class="text-center text-muted mb-4">
+            <img src="assets/img/brand/phdesign-logo.png" class="d-block mb-2 mx-auto main-logo" alt="main-logo">
+            <small>Update your new password</small>
+          </div>
+          <form [formGroup]="UpdateNewPasswordForm" (ngSubmit)="onSubmitNewPassword()"
+            class="login100-form validate-form">
+            <div class="alert alert-danger" *ngIf="loginError2">
+              {{loginErrorMsg}}
+            </div>
+            <div class="form-group mb-3">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                </div>
+                <input class="form-control" placeholder="Password" type="password" name="password"
+                  formControlName="password" autocomplete="off">
+              </div>
+            </div>
+            <div class=" form-group mb-3 alert-danger">
+              <p *ngIf="submitted && hasError('password','required')" class="alert-danger">Please Enter Password
+              </p>
+              <span *ngIf="submitted && hasError('password','pattern')" class="alert-danger">Please Enter Strong
+                Password</span>
+            </div>
+            <div class="form-group mt-4 text-center mb-0"> <button class="btn btn-primary"> Update Password
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <a [routerLink]="['/login']" routerLinkActive="router-link-active"
+            class="text-light"><small>Login?</small></a>
+        </div>
+        <!-- <div class="col-6 text-right">
+          <a href="javascript:void(0)" class="text-light"><small>Create new account</small></a>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+</div>

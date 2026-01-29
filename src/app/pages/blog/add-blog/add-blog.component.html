@@ -1,161 +1,205 @@
-<div class="content-wrapper">
-	<div class="page-header">
-		<h3 class="page-title"> Blog </h3>
-		<!-- <nav aria-label="breadcrumb">
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="#">Blog</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Edit Blog</li>
-			</ol>
-		</nav> -->
-	</div>
-	<div class="row justify-content-center">
-		<div class="col-md-8 col-sm-10 col-12 grid-margin stretch-card">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title mb-0" *ngIf="id">Edit Blog</h4>
-					<h4 class="card-title mb-0" *ngIf="!id">Add New Blog</h4>
-				</div>
-				<div class="card-body">
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center">
+	<!-- Mask -->
+	<!-- <span class="mask bg-gradient-info opacity-8"></span> -->
+	<!-- Header container -->
+	<!-- <div class="container-fluid d-flex align-items-center">
+		<div class="row">
+			<div class="col-lg-7 col-md-10">
+				<h1 class="display-2 text-white">Single Blog </h1>
+				<p class="text-white mt-0 mb-5">This is your Blog page. You can select author, tags and add/edit Blog content
+					you've and manage your Blog</p>
+			</div>
+		</div>
+	</div> -->
+</div>
+<div class="container-fluid mt--7">
+	<div class="row">
+		<div class="col-xl-7 order-xl-1 mx-auto">
+			<div class="card bg-secondary shadow">
+				<div class="card-header bg-white border-0">
+					<div class="row align-items-center">
+						<div class="col-8">
+							<h3 class="mb-0" *ngIf="id">Edit Blog</h3>
+							<h3 class="mb-0" *ngIf="!id">Add Blog</h3>
+						</div>
+					</div>
 					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
 						{{throw_msg}}
 					</div>
 					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
 						{{throw_msg}}
 					</div>
-					<form class="forms-sample" [formGroup]="addBlogForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-						<div class="form-group">
-							<label for="exampleInputEmail1">Name</label>
-							<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
-								placeholder="Blog Name">
-							<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Blog Name is
-								required</span>
-						</div>
-						<div class="form-group">
-							<label for="exampleInputEmail1">Publication Date</label>
-							<input type="date" name="publication_date" autocomplete="off" formControlName="publication_date"
-								class="form-control" placeholder="Publication Date">
-							<span *ngIf="submitted && hasError('publication_date','required')" class="alert-danger">Publication
-								Date</span>
-						</div>
-						<!-- <div class="form-group">
-							<label for="exampleInputEmail1">Select Blog Category</label>
-							<select name="blog_category" formControlName="blog_category" class="form-control"
-								(change)="onChangeCategory($event)">
-								<option value="">Select Blog Category</option>
-								<option value="1">Wind Turbines</option>
-								<option value="2">Solar Panels</option>
-								<option value="3">Battery Matrial</option>
-								<option value="4">Hydro Plants</option>
-								<option value="5">Charge Control</option>
-								<option value="6">Fossil Resourc</option>
-							</select>
-						</div> -->
+				</div>
+				<div class="card-body">
+					<!-- form start -->
+					<form [formGroup]="addBlogForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+						<div class="box-body">
 
-						<!-- <div class="form-group">
-							<label for="exampleInputEmail1">Select Tag</label>
-							<select name="Tag" formControlName="tag" multiple class="form-control">
-								<option value="">Select Tag</option>
-								<option value="{{listTag._id}}" *ngFor="let listTag of tagData; let j = index">{{listTag.name}}</option>
-							</select>
-							<span *ngIf="submitted && hasError('tag','required')" class="alert-danger">Tag is
-								required</span>
-						</div> -->
-
-						<div class="form-group">
-							<label for="exampleInputEmail1">Select Author</label>
-							<select name="author" formControlName="author" class="form-control">
-								<option value="">Select Author</option>
-								<option value="{{listAuthor._id}}" *ngFor="let listAuthor of authorData; let j = index">
-									{{listAuthor.name}}</option>
-							</select>
-							<span *ngIf="submitted && hasError('author','required')" class="alert-danger">Author is
-								required</span>
-						</div>
-
-						<div class="pixtar-ordiv">
-							<div class="alert alert-danger" style="margin-left: 0;" *ngIf="videomsg">
-								Please Select Video And Image Both for Video Infographics Category
-							</div>
 							<div class="form-group">
-								<label for="exampleInputEmail1">Video Link</label>
-								<input type="text" name="video_link" autocomplete="off" formControlName="video_link"
-									class="form-control" placeholder="Video Link">
-							</div>
-
-							<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Blog Image</label>
-								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
-									[uploadInput]="uploadInput" />
-								<label for="exampleInputEmail1" style="display: block;">(Required Size for Image w-768px *
-									h-512px)</label><br>
-								<img *ngIf="blogImage" alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}{{blogImage}}">
-							</div> -->
-							<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Format </label>
-								<select name="format" formControlName="format" class="form-control">
-									<option value="">Select Format</option>
-									<option value="image">Image</option>
-									<option value="video">Video</option>
+								<label for="exampleInputEmail1">Status</label>
+								<select name="status" formControlName="status" class="form-control">
+									<option value="true">Active</option>
+									<option value="false">Deactive</option>
 								</select>
-							</div> -->
-							<hr class="my-3">
+							</div>
+
 							<div class="form-group">
-								<h4 class="text-lg-start">Blog Image/Video <span class="required">*</span></h4>
-								<div class="row text-lg-start">
-									<div class="col-lg-3 col-md-4 col-6" *ngIf="mediaData">
-										<a class="cursor:pointer;text-center">
-											<i class="mdi mdi-close-box" aria-hidden="true"></i></a>
-										<a class="d-block mb-4 h-100">
-											<img src="{{imagePath}}blog/{{mediaData.src}}" class="img-fluid img-thumbnail"
-												*ngIf="mediaData && mediaData.file_type == 'image'" width="200" height="350"
-												(click)="editMedia(media,mediaData,'media')">
-											<video class="img-fluid img-thumbnail" *ngIf="mediaData && mediaData.file_type == 'video'"
-												width="200" height="350" (click)="editMedia(media,mediaData,'media')" controls>
-												<source src="{{imagePath}}blog/{{mediaData.src}}" type="video/mp4">
-											</video>
-										</a>
-									</div>
-									<div class="col-lg-3 col-md-4 col-6">
-										<a (click)="openMedia(media)" class="d-block mb-4 h-100">
-											<img src="{{url}}/img/addimage.svg" class="img-fluid img-thumbnail" width="150" height="150">
-										</a>
+								<label for="exampleInputEmail1">Date</label>
+								<input type="date" name="date" autocomplete="off" formControlName="date" class="form-control"
+									placeholder="Date" [max]="currentDate">
+								<span *ngIf="submitted && hasError('date','required')" class="alert-danger">Date is
+									required</span>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Select Blog Category</label>
+								<select name="blog_category" formControlName="blog_category" class="form-control">
+									<option value="">Select Blog Category</option>
+									<option value="{{cat._id}}" *ngFor="let cat of categoryData; let j = index">{{cat.name}}</option>
+								</select>
+								<span *ngIf="submitted && hasError('blog_category','required')" class="alert-danger">Please
+									Select Category</span>
+							</div>
+
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Name</label>
+								<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+									placeholder="Blog Name">
+								<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Blog Name is
+									required</span>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Description</label>
+								<textarea name="content_html" formControlName="content_html" class="form-control"
+									placeholder="Description"></textarea>
+								<span *ngIf="submitted && hasError('content_html','required')" class="alert-danger">Description is
+									required</span>
+							</div>
+
+
+
+							<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Select Tag</label>
+								<select name="Tag" formControlName="tag" multiple class="form-control">
+									<option value="">Select Tag</option>
+									<option value="{{listTag._id}}" *ngFor="let listTag of tagData; let j = index">{{listTag.name}}
+									</option>
+								</select>
+								<span *ngIf="submitted && hasError('tag','required')" class="alert-danger">Tag is
+									required</span>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Select Author</label>
+								<select name="author" formControlName="author" class="form-control">
+									<option value="">Select Author</option>
+									<option value="{{listAuthor._id}}" *ngFor="let listAuthor of authorData; let j = index">
+										{{listAuthor.name}}</option>
+								</select>
+								<span *ngIf="submitted && hasError('author','required')" class="alert-danger">Author is
+									required</span>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Featured</label>
+								<select name="featured" formControlName="featured" class="form-control">
+									<option value="">Select Featured</option>
+									<option value="true">Active</option>
+									<option value="false">InActive</option>
+								</select>
+								<span *ngIf="submitted && hasError('featured','required')" class="alert-danger">Featured is
+									required</span>
+							</div> -->
+
+							<div class="pixtar-ordiv">
+								<!-- <div class="alert alert-danger" style="margin-left: 0;" *ngIf="videomsg">
+									Please Select Video And Image Both for Video Infographics Category
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Video Link</label>
+									<input type="text" name="video_link" autocomplete="off" formControlName="video_link"
+										class="form-control" placeholder="Video Link">
+								</div> -->
+
+								<div class="form-group">
+									<div class="form-group">
+										<label for="exampleInputEmail1">Article link</label>
+										<input type="text" name="source_link" autocomplete="off" formControlName="source_link"
+											class="form-control" placeholder="Article link">
 									</div>
 								</div>
-								<label for="exampleInputEmail1" style="display: block;">(Required Size for Image w-1482px *
-									h-584px)</label><br>
-								<!-- <span *ngIf="submitted && hasError('product_gallery','required')" class="alert-danger">Gallery Images is required</span> -->
+
+								<div class="gslor"> OR</div>
+								<br>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Upload Image</label><br>
+									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
+										[uploadInput]="uploadInput" accept="image/*" />
+									<label for="exampleInputEmail1" style="display: block;">(Required Size 514 * 554)</label>
+									<img *ngIf="blogImage" alt="logo" style="height: 100px; width: 100px;"
+										src="{{imagePath}}{{blogImage}}">
+								</div>
+
+								<div class="gslor"> OR</div>
+								<br>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Youtube Video URL Key</label>
+									<p>Ex: https://www.youtube.com/watch?v=wiur_AGatGU</p>
+									<input type="text" name="video_link" formControlName="video_link" class="form-control"
+										placeholder="wiur_AGatGU">
+									<span *ngIf="submitted && hasError('video_link','required')" class="alert-danger">Video URL is
+										required</span>
+								</div>
+
 							</div>
-						</div>
 
-						<!-- <div class="form-group">
-							<label for="exampleInputEmail1">Featured</label>
-							<select name="featured" formControlName="featured" class="form-control">
-								<option value="">Select Featured</option>
-								<option value="true">Active</option>
-								<option value="false">InActive</option>
-							</select>
-							<span *ngIf="submitted && hasError('featured','required')" class="alert-danger">Featured is
-								required</span>
-						</div> -->
 
-						<div class="form-group">
-							<label for="exampleInputEmail1">Content Html</label>
-							<angular-editor name="content_html" formControlName="content_html"
-								[config]="editorConfig"></angular-editor>
-							<span *ngIf="submitted && hasError('content_html','required')" class="alert-danger">Content Html is
-								required</span>
-						</div>
 
-						<div class="form-group">
-							<label for="exampleInputEmail1">Status</label>
-							<select name="status" formControlName="status" class="form-control">
-								<option value="true">Active</option>
-								<option value="false">Deactive</option>
-							</select>
+
+
+							<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Content Html</label>
+								<angular-editor name="content_html" formControlName="content_html"
+									[config]="editorConfig"></angular-editor>
+								<span *ngIf="submitted && hasError('content_html','required')" class="alert-danger">Content Html is
+									required</span>
+							</div> -->
+
+
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Meta Title</label>
+								<input type="text" name="meta_title" autocomplete="off" formControlName="meta_title"
+									class="form-control" placeholder="Meta Title">
+								<span *ngIf="submitted && hasError('meta_title','required')" class="alert-danger">Meta Title is
+									required</span>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Meta Keywords</label>
+								<input type="text" name="meta_keywords" autocomplete="off" formControlName="meta_keywords"
+									class="form-control" placeholder="Meta Keywords">
+								<span *ngIf="submitted && hasError('meta_keywords','required')" class="alert-danger">Meta Keywords is
+									required</span>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Meta Description</label>
+								<textarea name="meta_description" autocomplete="off" formControlName="meta_description"
+									class="form-control" placeholder="Meta Description"></textarea>
+								<span *ngIf="submitted && hasError('meta_description','required')" class="alert-danger">Meta Description
+									is
+									required</span>
+							</div>
+
+
+
 						</div>
-						<div class="d-flex">
-							<button type="submit" class="btn btn-button mr-2">Submit</button>
-							<button type="button" class="btn btn-button" routerLink="/blog/view">Cancel</button>
+						<div class="box-footer">
+							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
 						</div>
 					</form>
 				</div>
@@ -163,137 +207,3 @@
 		</div>
 	</div>
 </div>
-
-
-<!-- Image| Model Popup -->
-<ng-template #media let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Upload Image/Video</h4>
-		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<div class="modal-body">
-		<form [formGroup]="addmediaForm" (ngSubmit)="onSubmitMedia('image')">
-			<div class="form-group">
-				<label for="exampleInputEmail1">Name <span class="required">*</span></label>
-				<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
-					placeholder="Media Name">
-				<span *ngIf="submittedMedia && hasMediaFormError('name','required')" class="alert-danger">File Name is
-					required</span>
-			</div>
-			<div class="form-group">
-				<label for="exampleInputEmail1">File Type</label>
-				<select name="file_type" formControlName="file_type" class="form-control">
-					<option value="">Select File Type</option>
-					<option value="image">Image</option>
-					<option value="video">Video</option>
-				</select>
-				<span *ngIf="submittedMedia && hasMediaFormError('file_type','required')" class="alert-danger">Please
-					Select
-					File Type</span>
-			</div>
-			<div class="form-group">
-				<label for="exampleInputEmail1">Alt</label>
-				<input type="text" name="alt" autocomplete="off" formControlName="alt" class="form-control"
-					placeholder="Alt Tag">
-				<span *ngIf="submitted && hasMediaFormError('alt','required')" class="alert-danger">Alt is required</span>
-			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'image'">
-				<label for="exampleInputEmail1">Media Image <span class="required">*</span></label><br>
-				<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'image')"
-					[uploadInput]="uploadInput" accept="image/*" />
-				<img *ngIf="mediaFile" alt="logo" style="height: 100px; width: 100px;margin-top: 5px;"
-					src="{{imagePath}}blog/{{mediaFile}}">
-				<span *ngIf="submittedMedia && hasMediaFormError('src','required')" class="alert-danger">Please Select
-					Image</span>
-			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
-				<label for="exampleInputEmail1">Media Video <span class="required">*</span></label><br>
-				<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'image')"
-					[uploadInput]="uploadInput" accept="video/*" />
-				<video width="320" height="240" *ngIf="mediaFile" controls>
-					<source src="{{imagePath}}blog/{{mediaFile}}" type="video/mp4">
-				</video>
-				<span *ngIf="submittedMedia && hasMediaFormError('src','required')" class="alert-danger">Please Select
-					Video</span>
-			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'image'">
-				<label for="exampleInputEmail1">Role</label>
-				<select name="role" #selectRole formControlName="role" class="form-control"
-					(change)="selectImageRole($event,selectRole.value)">
-					<option value="">Select Role</option>
-					<option value="base">Base</option>
-					<option value="small">Small</option>
-					<option value="thumbnail">Thumbnail</option>
-				</select>
-				<span *ngIf="submittedMedia && hasMediaFormError('role','required')" class="alert-danger">Please Select
-					Role</span>
-			</div>
-			<div class="form-group">
-				<label for="exampleInputEmail1">Height</label>
-				<input type="number" name="height" autocomplete="off" formControlName="height" class="form-control"
-					placeholder="Height">
-			</div>
-			<div class="form-group">
-				<label for="exampleInputEmail1">Width</label>
-				<input type="number" name="width" autocomplete="off" formControlName="width" class="form-control"
-					placeholder="Width">
-			</div>
-			<div class="form-group">
-				<label for="exampleInputEmail1">Sequence Number</label>
-				<input type="number" name="sequence_number" autocomplete="off" formControlName="sequence_number"
-					class="form-control" placeholder="Sequence Number">
-			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
-				<label for="exampleInputEmail1">Mute</label>
-				<input type="text" name="mute" autocomplete="off" formControlName="mute" class="form-control"
-					placeholder="Mute">
-				<span *ngIf="submitted && hasMediaFormError('mute','required')" class="alert-danger">Mute is required</span>
-			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
-				<label for="exampleInputEmail1">Autoplay</label>
-				<select name="autoplay" formControlName="autoplay" class="form-control">
-					<option value="">Select Autoplay</option>
-					<option value="true">Active</option>
-					<option value="false">Deactive</option>
-				</select>
-				<span *ngIf="submitted && hasMediaFormError('autoplay','required')" class="alert-danger">Please Select
-					Autoplay</span>
-			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
-				<label for="exampleInputEmail1">Select Loop</label>
-				<select name="loop" formControlName="loop" class="form-control">
-					<option value="">Select Loop</option>
-					<option value="true">Active</option>
-					<option value="false">Deactive</option>
-				</select>
-				<span *ngIf="submitted && hasMediaFormError('loop','required')" class="alert-danger">Please Select Loop</span>
-			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
-				<label for="exampleInputEmail1">Full Screen</label>
-				<input type="text" name="full_screen" autocomplete="off" formControlName="full_screen" class="form-control"
-					placeholder="Full Screen">
-				<span *ngIf="submitted && hasMediaFormError('full_screen','required')" class="alert-danger">Full Screen is
-					required</span>
-			</div>
-			<div class="form-group">
-				<label for="exampleInputEmail1">Select Status</label>
-				<select name="status" formControlName="status" class="form-control">
-					<option value="">Select Status</option>
-					<option value="true">Active</option>
-					<option value="false">Deactive</option>
-				</select>
-				<span *ngIf="submittedMedia && hasMediaFormError('status','required')" class="alert-danger">Please
-					Select Status</span>
-			</div>
-			<div class="box-footer d-flex">
-				<button class="btn btn-button mr-2">Submit</button>
-				<button type="cancel" (click)="onCancelMedia()" class="btn btn-button">Cancel</button>
-			</div>
-		</form>
-	</div>
-	<!-- <div class="modal-footer">
-		<button type="button" class="btn btn-smallbutton" (click)="modal.close('Close click')">Close</button>
-	</div> -->
-</ng-template>

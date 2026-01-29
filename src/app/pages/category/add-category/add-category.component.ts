@@ -8,16 +8,16 @@ import { CategoryService } from 'src/app/providers/category/category.service';
 import { MediaService } from '../../../providers/media/media.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { CollectionService } from '../../../providers/collection/collection.service';
+
 import { ResponseService } from '../../../providers/response/response.service';
-import { SubcategoryService } from '../../../providers/subcategory/subcategory.service';
+
 
 @Component({
 	selector: 'app-add-category',
 	templateUrl: './add-category.component.html',
 	styleUrls: ['./add-category.component.scss']
 })
-export class AddCategoryComponent {
+export class AddCategoryComponent implements OnInit {
 	@ViewChild('uploader', { read: ElementRef }) fileInput: ElementRef;
 	// File Upload
 	options: UploaderOptions;
@@ -51,14 +51,19 @@ export class AddCategoryComponent {
 		translate: 'yes',
 		enableToolbar: true,
 		showToolbar: true,
+
 		placeholder: 'Enter text here...',
 		defaultParagraphSeparator: '',
 		defaultFontName: '',
 		defaultFontSize: '',
 		fonts: [
-			{ class: 'blog-descriptiondetail', name: 'Rajdhani sans-serif' },
+			{ class: 'career_box', name: 'Rajdhani sans-serif' },
 		],
 	}
+	show = false;
+	show1 = false;
+	show2 = false;
+	show3 = false;
 	mediaData: any;
 	images: any = [];
 	closeResult: any = '';
@@ -88,25 +93,26 @@ export class AddCategoryComponent {
 		private formBuilder: FormBuilder,
 		private categoryService: CategoryService,
 		private toastr: ToastrManager,
-		public collectionService: CollectionService,
+
 		private modalService: NgbModal,
 		private mediaService: MediaService,
 		public responseService: ResponseService,
-		private subcategoryService: SubcategoryService,
+
 	) {
 		this.uploadInput = new EventEmitter<UploadInput>();
 		this.addcategoryForm = this.formBuilder.group({
 			name: ['', Validators.required],
-			status: ['', Validators.required],
-			description: ['', Validators.required],
+			status: [''],
+			// description: ['', Validators.required],
+			short_desc: ['', Validators.required],
 			url_key: ['', Validators.required],
-			sub_categories: [''],
-			collection_id: ['', Validators.required],
-			collection_title: [''],
-			collection_description: [''],
+			// sub_categories: [''],
+			// collection_id: ['', Validators.required],
+			// collection_title: [''],
+			// collection_description: [''],
 			sequence_number: [1]
 		});
-		this.token = localStorage.getItem('ghoastrental-token');
+		this.token = localStorage.getItem('neelgund-admin-token');
 		this.imagePath = environment.baseUrl + '/public/';
 		this.url = environment.Url + '/assets';
 		this.dropdownSettings = {
@@ -118,8 +124,6 @@ export class AddCategoryComponent {
 			itemsShowLimit: 6,
 			allowSearchFilter: true
 		};
-		this.get_SubCategoryData();
-		this.get_collectionData();
 		this.addmediaForm = this.formBuilder.group({
 			name: ['', Validators.required],
 			status: [true, Validators.required],
@@ -203,11 +207,12 @@ export class AddCategoryComponent {
 					this.addcategoryForm.patchValue({
 						name: data?.name,
 						status: data?.status,
-						description: data?.description,
+						short_desc: data?.short_desc,
+						// description: data?.description,
 						url_key: data?.url_key,
-						collection_title: data?.collection_title,
-						collection_description: data?.collection_description,
-						sub_categories: tempsubcategoryData,
+						// collection_title: data?.collection_title,
+						// collection_description: data?.collection_description,
+						// sub_categories: tempsubcategoryData,
 						sequence_number: data?.sequence_number,
 						collection_id: data?.collection_id
 					});
@@ -227,20 +232,20 @@ export class AddCategoryComponent {
 			obj['image'] = this.mediaData._id;
 		}
 		obj['gallery_image'] = this.gallery_images;
-		let subcategory_Data: any = [];
-		if (this.addcategoryForm.value.sub_categories && this.addcategoryForm.value.sub_categories.length > 0) {
-			this.addcategoryForm.value.sub_categories.forEach((subcategory) => {
-				let obj = {
-					sub_category_id: subcategory._id,
-					sub_category_name: subcategory.name
-				};
-				subcategory_Data.push(obj);
-			})
-		}
+		// let subcategory_Data: any = [];
+		// if (this.addcategoryForm.value.sub_categories && this.addcategoryForm.value.sub_categories.length > 0) {
+		// 	this.addcategoryForm.value.sub_categories.forEach((subcategory) => {
+		// 		let obj = {
+		// 			sub_category_id: subcategory._id,
+		// 			sub_category_name: subcategory.name
+		// 		};
+		// 		subcategory_Data.push(obj);
+		// 	})
+		// }
 		if (this.addcategoryForm.invalid) {
 			return;
 		}
-		obj['sub_categories'] = subcategory_Data;
+		// obj['sub_categories'] = subcategory_Data;
 		if (!this.isEdit) {
 			this.categoryService.addCategory(obj).subscribe(
 				(response) => {
@@ -254,9 +259,6 @@ export class AddCategoryComponent {
 						}
 						if (this.isMediaFileDeleted) {
 							this.deleteMediaFile();
-						}
-						if (this.isMediaDeleted) {
-							this.deleteMediaMultiFiles();
 						}
 						setTimeout(() => {
 							this.router.navigate(['/category/view']);
@@ -284,7 +286,6 @@ export class AddCategoryComponent {
 						if (this.isMediaFileDeleted) {
 							this.deleteMediaFile();
 						}
-						this.deleteMediaMultiFiles();
 						this.toastr.successToastr(response.message);
 						setTimeout(() => {
 							this.router.navigate(['/category/view']);
@@ -305,60 +306,12 @@ export class AddCategoryComponent {
 	}
 
 	onCancel() {
-		this.router.navigate(['/banner/view']);
+		this.router.navigate(['/category/view']);
 	}
 
-	get_collectionData() {
-		const obj = {
-			token: this.token,
-		};
-		this.collectionService.getallCollectionDetails(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					if (response.result != null && response.result != '') {
-						this.collectionData = response.result;
-						if (this.collectionData && this.collectionData.length > 0) {
-							let tempData = [];
-							this.collectionData.forEach((item, index) => {
-								tempData.push({ _id: item._id, name: item.name });
-							});
-							this.collectionData = tempData;
-						}
-					}
-					else {
-						this.msg_danger = true;
-					}
 
-				}
-			},
-		);
-	}
 
-	get_SubCategoryData() {
-		const obj = {
-			token: this.token,
-		};
-		this.subcategoryService.getallSubCategory(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					if (response.result != null && response.result != '') {
-						this.subCategoryData = response.result;
-						if (this.subCategoryData && this.subCategoryData.length > 0) {
-							let tempData = [];
-							this.subCategoryData.forEach((item, index) => {
-								tempData.push({ _id: item._id, name: item.name });
-							});
-							this.subCategoryData = tempData;
-						}
-					}
-					else {
-						this.msg_danger = true;
-					}
 
-				}
-			},
-		);
-	}
 
 	openMedia(content: any) {
 		this.addmediaForm = this.formBuilder.group({
@@ -383,7 +336,7 @@ export class AddCategoryComponent {
 		this.isMediaEdit = false;
 		this.mediaID = '';
 		this.galleryFile = '';
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: "myCustomModalClass", size: 'xl',  backdrop: 'static' })
+		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: "myCustomModalClass", size: 'xl', backdrop: 'static' })
 			.result.then((result) => {
 				this.closeResult = `Closed with: ${result}`;
 			}, (reason) => {
@@ -418,7 +371,7 @@ export class AddCategoryComponent {
 			loop: mediaData.loop,
 			full_screen: mediaData.full_screen,
 		});
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: "myCustomModalClass", size: 'xl',  backdrop: 'static' })
+		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: "myCustomModalClass", size: 'xl', backdrop: 'static' })
 			.result.then((result) => {
 				this.closeResult = `Closed with: ${result}`;
 			}, (reason) => {
@@ -447,7 +400,7 @@ export class AddCategoryComponent {
 				this.submittedMedia = false;
 				this.addmediaForm.patchValue({
 					src: this.galleryFile
-				});				
+				});
 			} else {
 				this.isUploaded = true;
 				this.fileFormat = output.file.type;
@@ -688,12 +641,21 @@ export class AddCategoryComponent {
 		}
 	}
 
-	deleteMedia() {
-		this.images.splice(1, 1);
-		this.isMediaDeleted = true;
-		this.deletedMediaData = this.mediaData;
-		this.mediaData = null;
+	deleteMedia(type: string, index: number | null, media: any) {
+		if (type === 'media') {
+			this.isMediaDeleted = true;
+			this.deletedMediaData = this.mediaData;
+			this.mediaData = null;
+		} else if (type === 'gallery') {
+			if (index !== null && this.galleryData.length > index) {
+				this.deletedMediaData = media;
+				this.galleryData.splice(index, 1);
+				this.gallery_images.splice(index, 1);
+				this.isMediaDeleted = true;
+			}
+		}
 	}
+
 
 	deleteMediaFile() {
 		if (this.isUploaded && this.deletedMediaFile && this.deletedMediaFile.length > 0) {
@@ -710,30 +672,6 @@ export class AddCategoryComponent {
 			);
 		}
 	}
-
-	deleteMediaMultiFiles() {
-		if (this.deletedMediaFiles) {
-			let obj = {};
-			obj['files'] = this.deletedMediaFiles;
-			obj['ids'] = this.deletedMediaData.map(md => { return md._id });
-			this.collectionService.deleteMediaData(obj).subscribe(
-				(response) => {
-					if (response.code == 200) {
-						this.isUploaded = false;
-						if (this.galleryFile) {
-							this.galleryFile = '';
-						} else {
-							this.mediaFile = '';
-						}
-					}
-					else {
-						// this.bannerVideo = this.bannerVideo;
-					}
-				},
-			);
-		}
-	}
-
 
 	deleteMediaData() {
 		if (this.deletedMediaData) {

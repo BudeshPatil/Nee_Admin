@@ -11,7 +11,9 @@ describe('ViewBannerComponent', () => {
       declarations: [ ViewBannerComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ViewBannerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

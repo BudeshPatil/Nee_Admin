@@ -1,0 +1,109 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+    style="min-height: 400px;  background-size: cover; background-position: center top;">
+    <!-- Mask -->
+    <span class="mask bg-gradient-info opacity-8"></span>
+    <!-- Header container -->
+    <div class="container-fluid d-flex align-items-center">
+        <div class="row">
+            <div class="col-lg-7 col-md-10">
+                <h1 class="display-2 text-white">Single Tag </h1>
+                <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with
+                    your work
+                    and manage your projects or assigned tasks</p>
+                <!-- <a href="#!" class="btn btn-info">Edit Pages</a> -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col-xl-12 order-xl-1">
+            <div class="card bg-secondary shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Edit Tag</h3>
+                        </div>
+                    </div>
+                    <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+                        {{throw_msg}}
+                    </div>
+                    <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+                        {{throw_msg}}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- form start -->  
+                    <form [formGroup]="addTagForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+                        <div class="box-body">
+                            <div class="form-group"> 
+                                <label for="exampleInputEmail1">Name</label>
+                                <input type="text" name="name" autocomplete="off" formControlName="name"
+                                    class="form-control" placeholder="Tag Name">
+                                <span *ngIf="submitted && hasError('name','required')" class="alert-danger">Tag Name is
+                                    required</span>
+                            </div>
+                        
+                            <div class="form-group">
+                                    <label for="exampleInputEmail1">Tag Image</label>
+                                    <input   
+                                        type="file" 
+                                        #uploader 
+                                        ngFileSelect 
+                                        (uploadOutput)="onUploadOutput($event)" 
+                                        [uploadInput]="uploadInput" 
+                                    />
+                                    <label for="exampleInputEmail1" style="display: block;">(Required Size 141 * 141)</label>
+                                    <img  *ngIf="tagImage" alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}{{tagImage}}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Description</label> 
+                                <angular-editor name="description" formControlName="description" [config]="editorConfig"></angular-editor>
+                                <span *ngIf="submitted && hasError('description','required')" class="alert-danger">Description is
+                                    required</span>
+                            </div>
+                         
+                            <div class="form-group"> 
+                                <label for="exampleInputEmail1">Meta Title</label>
+                                <input type="text" name="meta_title" autocomplete="off" formControlName="meta_title"
+                                    class="form-control" placeholder="Meta Title">
+                                <span *ngIf="submitted && hasError('meta_title','required')" class="alert-danger">Meta Title is
+                                    required</span>
+                            </div>
+
+                            <div class="form-group"> 
+                                <label for="exampleInputEmail1">Meta Keywords</label>
+                                <input type="text" name="meta_keywords" autocomplete="off" formControlName="meta_keywords"
+                                    class="form-control" placeholder="Meta Keywords">
+                                <span *ngIf="submitted && hasError('meta_keywords','required')" class="alert-danger">Meta Keywords is
+                                    required</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Meta Description</label> 
+                                   <textarea name="meta_description" autocomplete="off" formControlName="meta_description" 
+                                        class="form-control" placeholder="Meta Description"></textarea>
+                                <span *ngIf="submitted && hasError('meta_description','required')" class="alert-danger">Meta Description is
+                                    required</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Status</label>
+                                <select name="status" formControlName="status" class="form-control">
+                                    <option value="false">Active</option>
+                                    <option value="true">InActive</option>
+                                </select>
+                            </div>
+
+                      </div>
+                       <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

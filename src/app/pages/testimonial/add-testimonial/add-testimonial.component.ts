@@ -12,7 +12,7 @@ import { TestimonialService } from '../../../providers/testimonial/testimonial.s
   templateUrl: './add-testimonial.component.html',
   styleUrls: ['./add-testimonial.component.scss']
 })
-export class AddTestimonialComponent {
+export class AddTestimonialComponent implements OnInit {
   @ViewChild('uploader', { read: ElementRef }) fileInput: ElementRef;
 
   // File Upload
@@ -24,7 +24,7 @@ export class AddTestimonialComponent {
   // Data Assign
 
   addTestimonialForm:FormGroup;
-  throw_msg:any; 
+  throw_msg:any;
   submitted: boolean = false;
   msg_success: boolean = false;
   msg_danger: boolean = false;
@@ -32,6 +32,8 @@ export class AddTestimonialComponent {
   // Edit Action Here
   applyAction: any;
   id:any;
+  show = false; // for tooltip
+  show1 = false; // for tooltip
   isEdit = this.route.snapshot.data.title === 'edit' ? true : false;
   jobs = [
     { id: 1, name: "User" },
@@ -40,37 +42,37 @@ export class AddTestimonialComponent {
     { id: 4, name: "Developer" },
     { id: 5, name: "Others" },
   ];
-  
+
   selected = [{ id: 1, name: "User" }];
 
-  constructor(      
+  constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private testimonialService:TestimonialService,
     private toastr: ToastrManager
-  ){ 
+  ){
     this.uploadInput = new EventEmitter<UploadInput>();
     this.addTestimonialForm = this.formBuilder.group({
       name: ['',Validators.required],
       status: [true,Validators.required],
-      title: ['',Validators.required],
-      location: ['',Validators.required],
+      title: [''],
+      location: [''],
       text: ['',Validators.required],
-      featured: ['',Validators.required],
-      job: ['',Validators.required],
+      featured: [false],
+      job: [''],
       ratings: ['',Validators.required]
      });
-     this.imagePath = environment.baseUrl+'/public/';
+     this.imagePath = environment.baseUrl+'/public/testimonial/';
   }
-  
-  public hasError = (controlName: string, errorName: string) => { 
+
+  public hasError = (controlName: string, errorName: string) => {
     return this.addTestimonialForm.controls[controlName].hasError(errorName);
   };
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
-    if (this.isEdit) 
+    if (this.isEdit)
     {
       this.patchingdata(this.id);
       this.applyAction = 'Update';
@@ -80,8 +82,8 @@ export class AddTestimonialComponent {
       this.applyAction = 'Add';
     }
   }
-  
-  patchingdata(id:any) { 
+
+  patchingdata(id:any) {
     let obj = {id:id};
     this.testimonialService.getTestimonialWithId(obj).subscribe(
       (response) => {
@@ -96,10 +98,10 @@ export class AddTestimonialComponent {
             featured:data?.featured,
             status:data?.status,
             job:data?.job,
-            ratings:data?.ratings 
+            ratings:data?.ratings
           });
        }else{
-          
+
         }
       },
     );
@@ -109,31 +111,31 @@ export class AddTestimonialComponent {
     this.submitted = true;
     let obj = this.addTestimonialForm.value;
     let id  = this.id;
-    
-    obj['image'] = this.ImageName; 
+
+    obj['image'] = this.ImageName;
     if (this.addTestimonialForm.invalid){
       return;
     }
-    
+
     if (!this.isEdit)
     {
       this.testimonialService.addTestimonial(obj).subscribe(
         (response) => {
-          if(response.code == 200) 
-          { 
-            // this.throw_msg   = response.message 
+          if(response.code == 200)
+          {
+            // this.throw_msg   = response.message
             // this.msg_success = true;
             this.toastr.successToastr(response.message);
-            setTimeout(()=>{                           
+            setTimeout(()=>{
               this.router.navigate(['/testimonial/view']);
             },2000);
           }
-          else if(response.code == 400) 
-          {   
+          else if(response.code == 400)
+          {
               // this.throw_msg  = response.message
               // this.msg_danger = true;
               this.toastr.errorToastr(response.message);
-          } 
+          }
         },
       );
 
@@ -142,41 +144,42 @@ export class AddTestimonialComponent {
     {
       this.testimonialService.editTestimonialdata(obj,id).subscribe(
         (response) => {
-          if(response.code == 200) 
+          if(response.code == 200)
           {
-            // this.throw_msg = response.message 
+            // this.throw_msg = response.message
             // this.msg_success = true;
             this.toastr.successToastr(response.message);
-            setTimeout(()=>{                           
+            setTimeout(()=>{
                 this.router.navigate(['/testimonial/view']);
-            },2000);  
+            },2000);
           } else {
             this.toastr.errorToastr(response.message);
           }
         },
       );
     }
-  
+
   }
 
-  onUploadOutput(output: UploadOutput): void { 
+  onUploadOutput(output: UploadOutput): void {
     if (output.type === 'allAddedToQueue')
     {
-      const event: UploadInput = { 
-        type: 'uploadAll', 
-        url: environment.baseUrl+'/api/home/addimage',
+      const event: UploadInput = {
+        type: 'uploadAll',
+        url: environment.baseUrl+'/api/testimonial/addimage',
         method: 'POST',
-        data: {}, 
+        data: {},
       };
       this.uploadInput.emit(event);
-    } 
+    }
     else if(output.type === 'done' && typeof output.file !== 'undefined')
-    {  
+    {
       this.ImageName = output.file.response.result;
     }
   }
 
   onCancel(){
     this.router.navigate(['/testimonial/view']);
-  } 
+  }
+
 }

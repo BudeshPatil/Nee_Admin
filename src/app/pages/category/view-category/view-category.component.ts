@@ -13,7 +13,6 @@ import { ResponseService } from '../../../providers/response/response.service';
 	styleUrls: ['./view-category.component.scss']
 })
 export class ViewCategoryComponent implements OnInit {
-
 	msg_danger: boolean = false;
 	CategoryData: any;
 	imagePath: any;
@@ -39,13 +38,12 @@ export class ViewCategoryComponent implements OnInit {
 		public toastr: ToastrManager,
 		public responseService: ResponseService
 	) {
-		this.imagePath = environment.baseUrl + '/public/';
-		this.token = localStorage.getItem('ghoastrental-token');
+		this.imagePath = environment.baseUrl + '/public/category/';
+		this.token = localStorage.getItem('neelgund-admin-token');
 	}
 
 	ngOnInit(): void {
 		this.get_CategoryData();
-		// this.get_VendorData();
 	}
 
 	get_CategoryData() {
@@ -81,7 +79,7 @@ export class ViewCategoryComponent implements OnInit {
           {
 						this.modalService.dismissAll();
             this.get_CategoryData();
-						this.deleteMediaData();						
+						this.deleteMediaData();
             this.router.navigate(['/category/view']);
           } else {
 						this.modalService.dismissAll();
@@ -157,11 +155,11 @@ export class ViewCategoryComponent implements OnInit {
 			);
 		}
 	}
-	
+
 
 	CreateErrorResponse(responseData){
 		if(responseData){
-			let obj = {	
+			let obj = {
 				model:'Category',
 				request:responseData,
 				errorCode:400,

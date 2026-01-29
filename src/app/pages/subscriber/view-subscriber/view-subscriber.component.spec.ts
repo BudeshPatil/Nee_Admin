@@ -11,7 +11,9 @@ describe('ViewSubscriberComponent', () => {
       declarations: [ ViewSubscriberComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ViewSubscriberComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

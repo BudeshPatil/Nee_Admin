@@ -5,20 +5,21 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
+
 // Services
 import { BannerService } from '../../../providers/banner/banner.service';
 import { MediaService } from '../../../providers/media/media.service';
-import { DataService } from '../../../providers/data/data.service';
+import { ResponseService } from 'src/app/providers/response/response.service';
+
 
 @Component({
-  selector: 'app-add-banner',
-  templateUrl: './add-banner.component.html',
-  styleUrls: ['./add-banner.component.scss']
+	selector: 'app-add-banner',
+	templateUrl: './add-banner.component.html',
+	styleUrls: ['./add-banner.component.scss']
 })
 export class AddBannerComponent {
 
-  @ViewChild('uploader', { read: ElementRef }) fileInput: ElementRef;
+	@ViewChild('uploader', { read: ElementRef }) fileInput: ElementRef;
 	// File Upload
 	options: UploaderOptions;
 	uploadInput: EventEmitter<UploadInput>;
@@ -56,26 +57,10 @@ export class AddBannerComponent {
 	isMediaEdit = false;
 	mediaID: any;
 	bannerData: any;
-	ImageName:any;
-	editorConfig: AngularEditorConfig = {
-			editable: true,
-			spellcheck: true,
-			height: 'auto',
-			minHeight: '200px',
-			maxHeight: 'auto',
-			width: 'auto',
-			minWidth: '0',
-			translate: 'yes',
-			enableToolbar: true,
-			showToolbar: true,
-			placeholder: 'Enter text here...',
-			defaultParagraphSeparator: '',
-			defaultFontName: '',
-			defaultFontSize: '',
-			fonts: [
-				{ class: 'blog-descriptiondetail', name: 'Rajdhani sans-serif' },
-			],
-		}
+	ImageName: any;
+	show = false;
+	show1 = false;
+	show2 = false;
 	constructor(
 		private router: Router,
 		private route: ActivatedRoute,
@@ -84,7 +69,7 @@ export class AddBannerComponent {
 		private modalService: NgbModal,
 		private mediaService: MediaService,
 		private toastr: ToastrManager,
-		public dataService: DataService
+		public responseService: ResponseService
 	) {
 		this.uploadInput = new EventEmitter<UploadInput>();
 		this.options = { concurrency: 0, allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif'] };
@@ -94,10 +79,9 @@ export class AddBannerComponent {
 			description: [''],
 			short_desc: [''],
 			format: ['image'],
-			page: ['', Validators.required],
 		});
 		this.token = localStorage.getItem('token');
-		this.imagePath = environment.baseUrl + '/public/';
+		this.imagePath = environment.baseUrl + '/public/banner/';
 		this.url = environment.Url + '/assets';
 		this.addmediaForm = this.formBuilder.group({
 			name: ['', Validators.required],
@@ -149,8 +133,7 @@ export class AddBannerComponent {
 						status: data?.status,
 						description: data?.description,
 						short_desc: data?.short_desc,
-						format: data?.format,
-						page: data?.page
+						format: data?.format
 					});
 				} else {
 
@@ -175,7 +158,8 @@ export class AddBannerComponent {
 			this.bannerService.addBanner(obj).subscribe(
 				(response) => {
 					if (response.code == 200) {
-						this.throw_msg = response.message
+						// this.throw_msg = response.message
+						this.toastr.successToastr('Banner Added successfully!', 'Success');
 						this.msg_success = true;
 						this.isUploaded = true;
 						if (this.isMediaDeleted) {
@@ -185,7 +169,7 @@ export class AddBannerComponent {
 							this.deleteMediaFile();
 						}
 						setTimeout(() => {
-							this.router.navigate(['/banner/view']);
+							this.router.navigate(['/banner-images/view']);
 						}, 2000);
 					}
 					else {
@@ -200,7 +184,8 @@ export class AddBannerComponent {
 			this.bannerService.editBannerdata(obj, id).subscribe(
 				(response) => {
 					if (response.code == 200) {
-						this.throw_msg = response.message
+						// this.throw_msg = response.message
+						this.toastr.successToastr('Banner Updated successfully!', 'Success');
 						this.msg_success = true;
 						this.isUploaded = true;
 						if (this.isMediaDeleted) {
@@ -210,9 +195,10 @@ export class AddBannerComponent {
 							this.deleteMediaFile();
 						}
 						setTimeout(() => {
-							this.router.navigate(['/banner/view']);
+							this.router.navigate(['/banner-images/view']);
 						}, 2000);
 					} else {
+						this.toastr.warningToastr('Something to review.', 'Warning');
 						this.CreateErrorResponse(response);
 					}
 				},
@@ -221,7 +207,7 @@ export class AddBannerComponent {
 	}
 
 	onCancel() {
-		this.router.navigate(['/banner/view']);
+		this.router.navigate(['/banner-images/view']);
 	}
 
 	openMedia(content: any) {
@@ -246,7 +232,7 @@ export class AddBannerComponent {
 		this.mediaFile = '';
 		this.isMediaEdit = false;
 		this.mediaID = '';
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: "myCustomModalClass",size: 'xl',  backdrop: 'static' })
+		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: "myCustomModalClass", size: 'xl', backdrop: 'static' })
 			.result.then((result) => {
 				this.closeResult = `Closed with: ${result}`;
 			}, (reason) => {
@@ -276,7 +262,7 @@ export class AddBannerComponent {
 			loop: mediaData.loop,
 			full_screen: mediaData.full_screen,
 		});
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: "myCustomModalClass",size: 'xl',  backdrop: 'static' })
+		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', windowClass: "myCustomModalClass", size: 'xl', backdrop: 'static' })
 			.result.then((result) => {
 				this.closeResult = `Closed with: ${result}`;
 			}, (reason) => {
@@ -510,7 +496,7 @@ export class AddBannerComponent {
 			} else {
 				obj['log_type'] = 'Add';
 			}
-			this.dataService.addErrorResponse(obj).subscribe(
+			this.responseService.addErrorResponse(obj).subscribe(
 				(response) => {
 					if (response.code == 200) {
 						console.log('logs updated');
@@ -521,21 +507,4 @@ export class AddBannerComponent {
 			);
 		}
 	}
-
-	onUploadMobileScreenImage(output: UploadOutput): void { 
-    if (output.type === 'allAddedToQueue')
-    {
-      const event: UploadInput = { 
-        type: 'uploadAll', 
-        url: environment.baseUrl+'/api/home/addimage',
-        method: 'POST',
-        data: {}, 
-      };
-      this.uploadInput.emit(event);
-    } 
-    else if(output.type === 'done' && typeof output.file !== 'undefined')
-    {  
-      this.ImageName = output.file.response.result;
-    }
-  }
 }

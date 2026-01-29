@@ -9,10 +9,9 @@ import { from } from 'rxjs';
 @Component({
   selector: 'app-view-author',
   templateUrl: './view-author.component.html',
-  styleUrls: ['./view-author.component.scss']
+  styleUrls: ['./view-author.component.css']
 })
-export class ViewAuthorComponent {
-
+export class ViewAuthorComponent implements OnInit {
   msg_danger: boolean = false;
   authorData: any;
   imagePath : any;

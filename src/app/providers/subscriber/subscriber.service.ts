@@ -30,9 +30,9 @@ export class SubscriberService {
         return throwError(err);
       })
     );
-  }; 
+  };
 
-  
+
   getSubscriberWithId = (moreData:any): Observable<any> => {
     const endpoint = environment.baseUrl+'/api/subscriber/getsubscriberWithId';
     return this.http
@@ -69,7 +69,7 @@ export class SubscriberService {
     headers: HttpHeaders | { [header: string]: string | string[] };
   } {
     let headers;
-    const token = localStorage.getItem('ghoastrental-token');
+    const token = localStorage.getItem('neelgund-admin-token');
     headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });

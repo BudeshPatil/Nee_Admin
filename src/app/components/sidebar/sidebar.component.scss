@@ -1,28 +1,13 @@
-.mb-3,
-.my-3 {
-	margin-bottom: 1rem !important;
+.custom-logo {
+	max-height: 100% !important;
+	max-width: 120px !important;
+	width: 70% !important;
+	// @media(max-width:767px){
+	// 	max-width: 70% !important;
+	// }
 }
-
-.navbar-vertical.navbar-expand-md .navbar-collapse > * {
-	min-width: 100%;
-}
-.sidebar .nav{
-  padding-left: 10px;
-  padding-right: 10px;
-}
-.line{
-  background-color: grey;
-  width: 100%;
-  height: 2px;
-}
-.navbar-heading.text-muted{
-  border-top: 1px solid grey;
-  padding-top: 15px;
-  margin-top: 10px;
-}
-.sidebar .nav .nav-item{
-  padding-right: 0;
-}
-.lastoption{
-  margin-bottom: 50px;
+.navbar-vertical .navbar-brand{
+	@media(max-width:767px){
+		text-align: center;
+	}
 }

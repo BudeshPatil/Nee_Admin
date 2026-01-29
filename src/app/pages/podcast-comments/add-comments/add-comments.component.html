@@ -1,0 +1,98 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+    style="min-height: 400px;  background-size: cover; background-position: center top;">
+    <!-- Mask -->
+    <span class="mask bg-gradient-info opacity-8"></span>
+    <!-- Header container -->
+    <div class="container-fluid d-flex align-items-center">
+        <div class="row">
+            <div class="col-lg-12 col-md-10">
+                <h1 class="display-2 text-white">Single Podcast Comments </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col-xl-12 order-xl-1">
+            <div class="card bg-secondary shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Edit Podcast Comments</h3>
+                        </div>
+                    </div>
+                    <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+                        {{throw_msg}}
+                    </div>
+                    <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+                        {{throw_msg}}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- form start -->  
+                    <form [formGroup]="addCommentsForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+                        <div class="box-body">
+                            <div class="form-group"> 
+                                <label for="exampleInputEmail1">Firstname</label>
+                                <input type="text" name="firstname" autocomplete="off" formControlName="firstname"
+                                    class="form-control" placeholder="Firstname">
+                                <span *ngIf="submitted && hasError('firstname','required')" class="alert-danger">Comments Name is
+                                    required</span>
+                            </div>
+                            <div class="form-group"> 
+                                <label for="exampleInputEmail1">Lastname</label>
+                                <input type="text" name="lastname" autocomplete="off" formControlName="lastname"
+                                    class="form-control" placeholder="Lastname">
+                                <span *ngIf="submitted && hasError('lastname','required')" class="alert-danger">Comments Name is
+                                    required</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email</label>
+                                <input type="email" name="email" autocomplete="off" formControlName="email"
+                                    class="form-control" placeholder="Email">
+                                <span *ngIf="submitted && hasError('email','required')" class="alert-danger">Email is
+                                    required</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Mobile</label>
+                                <input type="number" name="phone" autocomplete="off" formControlName="phone"
+                                    class="form-control" placeholder="Mobile">
+                                <span *ngIf="submitted && hasError('phone','required')" class="alert-danger">Mobile is
+                                    required</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Mobile</label>
+                                <input type="number" name="phone" autocomplete="off" formControlName="phone"
+                                    class="form-control" placeholder="Mobile">
+                                <span *ngIf="submitted && hasError('phone','required')" class="alert-danger">Mobile is
+                                    required</span>
+                            </div>
+                            <div class="form-group">
+                                <ngb-rating [max]=5  formControlName="ratings" name="ratings"></ngb-rating>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Is Approved</label>
+                                <select name="isApproved" formControlName="isApproved" class="form-control">
+                                    <option value="true">Active</option>
+                                    <option value="false">InActive</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Status</label>
+                                <select name="status" formControlName="status" class="form-control">
+                                    <option value="true">Active</option>
+                                    <option value="false">InActive</option>
+                                </select>
+                            </div>
+
+                      </div>
+                       <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

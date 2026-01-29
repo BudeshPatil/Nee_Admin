@@ -1,0 +1,72 @@
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+	<div class="container-fluid">
+			<div class="header-body">
+					<!-- Card stats -->
+
+			</div>
+	</div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+	<!-- Table -->
+	<div class="row">
+			<div class="col">
+					<div class="card shadow">
+							<div class="card-header border-0">
+									<h3 class="mb-0">Achievement Category List</h3>
+							</div>
+							<div class="col-md-12">
+									<div class="row">
+											<div class="col-md-6">
+													<h4 class="title"></h4>
+											</div>
+											<div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
+															routerLink="/achievement-category/add">Add Achievement Category</button></div>
+									</div>
+									<div class="col-md-6">
+											<h4 class="title"></h4>
+									</div>
+							</div>
+							<div class="table-responsive">
+									<table class="table align-items-center table-flush">
+											<thead>
+													<tr>
+															<th>Category Name</th>
+															<th>Category Image</th>
+															<th>Category Description</th>
+															<th>Status</th>
+															<th>Action</th>
+													</tr>
+											</thead>
+											<tbody>
+													<td colspan="5" *ngIf="msg_danger">
+															<div class="alert alert-dismissable" style="text-align: center;">
+																	Category List is Empty
+															</div>
+													</td>
+													<tr *ngFor="let listCategory of categoryData; let i = index">
+															<td>{{listCategory.name}}</td>
+															<td><img src="{{imagePath}}{{listCategory.image}}" alt="logo"
+																			style="height: 100px;width: 100px;"></td>
+															<td>{{listCategory.description}}</td>
+															<td *ngIf="listCategory.isDeleted == false">Active</td>
+															<td *ngIf="listCategory.isDeleted == true">InActive</td>
+															<td>
+																	<a routerLink="/achievement-category/edit/{{listCategory._id}}"
+																			style="cursor:pointer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+																	</a>
+																	<a style="cursor:pointer;padding-left: 15px;"
+																			(click)="deletecategory(listCategory._id)"><i class="fa fa-trash-o"
+																					aria-hidden="true"></i></a>
+															</td>
+													</tr>
+											</tbody>
+									</table>
+									<div class="neelgund-pagination" *ngIf="totalRecord > 0">
+											<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+													(changePage)="onListChangePage($event)"></app-pagination>
+									</div>
+							</div>
+					</div>
+			</div>
+	</div>

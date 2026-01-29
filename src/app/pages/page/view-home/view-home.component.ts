@@ -16,9 +16,10 @@ import { from } from 'rxjs';
 @Component({
   selector: 'app-view-home',
   templateUrl: './view-home.component.html',
-  styleUrls: ['./view-home.component.scss']
+  styleUrls: ['./view-home.component.css']
 })
-export class ViewHomeComponent {
+export class ViewHomeComponent implements OnInit {
+
   msg_danger: boolean = false;
   pageData: any;
 
@@ -50,4 +51,5 @@ export class ViewHomeComponent {
         },
       );
   }
+
 }

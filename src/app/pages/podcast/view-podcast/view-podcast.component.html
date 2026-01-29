@@ -1,0 +1,113 @@
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+	<div class="container-fluid">
+		<div class="header-body">
+			<!-- Card stats -->
+
+		</div>
+	</div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+	<!-- Table -->
+	<div class="row">
+		<div class="col">
+			<div class="card shadow">
+				<div class="card-header border-0">
+					<h3 class="mb-0">Podcasts List</h3>
+				</div>
+				<div class="col-md-12 mb-4">
+					<div class="row">
+						<div class="col-md-6">
+							<button class="btn btn-primary" routerLink="/podcast-category/view">Add Podcast Category</button>
+							<button class="btn btn-primary" routerLink="/podcast-comments/view">Add Podcast Comments</button>
+							<input class="form-control mt-4" type="text" (keyup)="searchPodcast()" name="search" [(ngModel)]="searchText"
+								autocomplete="off" placeholder="&#61442;  Start searching a Podcast  name">
+						</div>
+						<div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
+								routerLink="/podcast/add">Add Podcast</button></div>
+					</div>
+				</div>
+				<div class="col-md-12">
+				</div>
+				<div class="table-responsive">
+					<table class="table align-items-center table-flush">
+						<thead>
+							<tr>
+								<th>SL No</th>
+								<th>Podcast Name</th>
+								<th>Format</th>
+								<th>Podcast Image/Video</th>
+								<th>Status <ng-toggle [(ngModel)]="isactive" [disabled]="config.disabled" [width]="config.width"
+										[height]="config.height" [margin]="config.margin" [labels]="config.labels" [color]="config.color"
+										[switchColor]="config.switchColor" [fontColor]="config.fontColor" [fontSize]="config.fontSize"
+										(click)="changeStatus()" required></ng-toggle> <a (click)="resetFilter()"
+										class="btn btn-sm btn-info mr-4">Reset</a></th>
+								<th>Approved</th>
+								<th>Created At</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<td colspan="6" *ngIf="msg_danger">
+								<div class="alert alert-dismissable" style="text-align: center;">
+									Podcast List is Empty
+								</div>
+							</td>
+							<tr *ngFor="let listPodcast of PodcastData | filter:searchText | activefilter:isactive; let i = index">
+								<td *ngIf="currentPage == 1">{{i+1}}</td>
+								<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+								<td>{{listPodcast.name}}</td>
+								<td >{{listPodcast.type}}</td>
+								<td *ngIf="listPodcast.media_data">
+									<img *ngIf="listPodcast.media_data && listPodcast.media_data[0].file_type =='image'"
+										src="{{imagePath}}/podcast/{{listPodcast.media_data[0].src}}" alt="logo"
+										style="height: 100px;width: 100px;">
+									<video *ngIf="listPodcast.media_data && listPodcast.media_data[0].file_type =='video'" width="100"
+										height="100" controls>
+										<source src="{{imagePath}}/podcast/{{listPodcast.media_data[0].src}}" type="video/mp4">
+									</video>
+								</td>
+								<td>{{listPodcast.status == true ? 'Active':'Deactive'}}</td>
+								<td>{{listPodcast.isApproved == true ? 'Yes':'No'}}</td>
+								<td>{{listPodcast.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+								<td>
+									<a routerLink="/podcast/edit/{{listPodcast._id}}" style="cursor:pointer"><i
+											class="fa fa-pencil-square-o" aria-hidden="true"></i>
+									</a>
+									<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listPodcast)"><i
+											class="fa fa-trash-o" aria-hidden="true"></i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
+						<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+							(changePage)="onListChangePage($event)"></app-pagination>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Podcast Delete Popup -->
+	<ng-template #content let-modal style="z-index: 0;">
+		<div class="modal-header">
+			<h4 class="modal-title" id="modal-title">Podcast Image deletion</h4>
+			<button type="button" class="btn btn-danger" aria-describedby="modal-title"
+				(click)="modal.dismiss('Cross click')">close</button>
+		</div>
+		<div class="modal-body">
+			<p *ngIf="selectedPodcast">
+				<strong>Are you sure you want to delete <span class="text-primary">"{{selectedPodcast.name}}"</span> Podcast
+					Image?</strong>
+			</p>
+			<!-- <p>
+				All information associated to this Podcast Image will be permanently deleted.
+				<span class="text-danger">This operation can not be undone.</span>
+			</p> -->
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-danger" (click)="modal.dismiss('cancel click')">Cancel</button>
+			<button type="button" class="btn btn-primary" (click)="deletePodcast()">Ok</button>
+		</div>
+	</ng-template>

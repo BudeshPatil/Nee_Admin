@@ -11,7 +11,9 @@ describe('ViewUserComponent', () => {
       declarations: [ ViewUserComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ViewUserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

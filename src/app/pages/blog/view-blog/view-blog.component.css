@@ -1,0 +1,28 @@
+.neelgund-pagination {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  background-color: #36aef5;
+}
+
+.btn-primary {
+  color: #ffffff;
+  background-color: #423f3f;
+  border-color: #423f3f
+}
+
+  .title{
+    font-size: 30px;
+  }
+  .box-title{
+    font-size: 60px;
+  }
+
+  .cdis{
+    display: flex;
+    align-items: center;
+    margin-bottom:15px;
+  }
+  .cdis button{
+    margin-left: 10px;
+  }

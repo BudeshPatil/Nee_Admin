@@ -1,0 +1,537 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+	style="min-height: 400px;  background-size: cover; background-position: center top;">
+	<!-- Mask -->
+	<span class="mask bg-gradient-info opacity-8"></span>
+	<!-- Header container -->
+	<div class="container-fluid d-flex align-items-center">
+		<div class="row">
+			<div class="col-lg-7 col-md-10">
+				<!-- <h1 class="display-2 text-white">Project Information </h1> -->
+				<!-- <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with
+					your work
+					and manage your projects or assigned tasks</p> -->
+				<!-- <a href="#!" class="btn btn-info">Edit Pages</a> -->
+			</div>
+		</div>
+	</div>
+</div>
+<div class="section">
+	<div class="container-fluid mt--7">
+		<div class="row">
+			<div class="col-xl-12 order-xl-1">
+				<div class="card bg-secondary shadow">
+					<div class="card-header bg-white border-0">
+						<div class="row align-items-center">
+							<div class="col-8">
+								<h3 class="mb-0" *ngIf="id">Update/Edit Project</h3>
+								<h3 class="mb-0" *ngIf="!id">Add New Project</h3>
+							</div>
+						</div>
+						<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+							{{throw_msg}}
+						</div>
+						<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+							{{throw_msg}}
+						</div>
+					</div>
+					<div class="card-body">
+						<!-- form start -->
+						<form [formGroup]="addProjectForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+							<div class="box-body">
+								<div class="form-group row mb-3">
+									<!-- <div class="col-md-3">
+										<div class="row">
+											<div class="col-6">
+											<label for="exampleInputEmail1">Featured : </label>
+										</div>
+										<div class="col-6">
+											<ng-toggle name="featured" formControlName="featured" class="toogle_btn"
+												[disabled]="config.disabled" [width]="config.width" [height]="config.height"
+												[margin]="config.margin" [labels]="config.yes_no_labels" [color]="config.color"
+												[switchColor]="config.switchColor" [fontColor]="config.fontColor" [fontSize]="config.fontSize"
+												required>
+											</ng-toggle>
+										</div>
+										</div>
+									</div> -->
+									<div class="col-md-4">
+										<div class="row">
+											<div class="col-6">
+												<label for="exampleInputEmail1">Display on Home Page : </label>
+											</div>
+											<div class="col-6">
+												<ng-toggle name="display_on_home" formControlName="display_on_home" class="toogle_btn"
+													[disabled]="config.disabled" [width]="config.width" [height]="config.height"
+													[margin]="config.margin" [labels]="config.yes_no_labels" [color]="config.color"
+													[switchColor]="config.switchColor" [fontColor]="config.fontColor" [fontSize]="config.fontSize"
+													required>
+												</ng-toggle>
+											</div>
+										</div>
+									</div>
+									<!-- <div class="col-md-3">
+										<div class="row">
+											<div class="col-6">
+											<label for="exampleInputEmail1">Display on Service Page : </label>
+										</div>
+										<div class="col-6">
+											<ng-toggle name="display_on_service" formControlName="display_on_service" class="toogle_btn"
+												[disabled]="config.disabled" [width]="config.width" [height]="config.height"
+												[margin]="config.margin" [labels]="config.yes_no_labels" [color]="config.color"
+												[switchColor]="config.switchColor" [fontColor]="config.fontColor" [fontSize]="config.fontSize"
+												required></ng-toggle>
+										</div>
+										</div>
+									</div> -->
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Project Name <span> * </span></label>
+									<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+										placeholder="Project Name">
+									<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Project Name
+										is
+										required</span>
+									<span *ngIf="submitted && hasError('name','maxlength')" class="alert-danger">Please
+										Enter the 30 length Project Name</span>
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Select Type of Project <span> * </span> </label>
+									<select name="category" formControlName="category" class="form-control">
+										<option value="">Select Type of Project</option>
+										<option value="{{cat._id}}" *ngFor="let cat of categoryData; let j = index">{{cat.name}}</option>
+									</select>
+									<span *ngIf="submitted && hasError('category','required')" class="alert-danger">Select Type of Project
+										is required</span>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Scope <span> * </span> </label>
+									<input type="text" name="scope" autocomplete="off" formControlName="scope" class="form-control"
+										placeholder="Scope">
+									<span *ngIf="submitted && hasError('scope','required')" class="alert-danger">Scope is
+										required</span>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Client <span> * </span></label>
+									<input type="text" name="owner" autocomplete="off" formControlName="owner" class="form-control"
+										placeholder="Client">
+									<span *ngIf="submitted && hasError('owner','required')" class="alert-danger">Client is
+										required</span>
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Year <span> * </span> </label>
+									<input type="text" name="year" autocomplete="off" formControlName="year" class="form-control"
+										placeholder="Year">
+									<span *ngIf="submitted && hasError('year','required')" class="alert-danger">Year is
+										required</span>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Location <span> * </span> </label>
+									<input type="text" name="location" autocomplete="off" formControlName="location" class="form-control"
+										placeholder="Location">
+									<span *ngIf="submitted && hasError('location','required')" class="alert-danger">Location is
+										required</span>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Project Overview <span> * </span> </label>
+									<angular-editor name="desc" formControlName="desc" [config]="editorConfig">
+									</angular-editor>
+									<span *ngIf="submitted && hasError('desc','required')" class="alert-danger">Project Overview is
+										required</span>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Description 1</label>
+									<angular-editor name="desc_1" formControlName="desc_1" [config]="editorConfig">
+									</angular-editor>
+									<span *ngIf="submitted && hasError('desc_1','required')" class="alert-danger">Description 1 is
+										required</span>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">The Brief</label>
+									<angular-editor name="the_brief" formControlName="the_brief" [config]="editorConfig">
+									</angular-editor>
+									<span *ngIf="submitted && hasError('the_brief','required')" class="alert-danger">
+										The Brief is required
+									</span>
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Scope Of Work</label>
+									<angular-editor name="scope_of_work" formControlName="scope_of_work" [config]="editorConfig">
+									</angular-editor>
+									<span *ngIf="submitted && hasError('scope_of_work','required')" class="alert-danger">
+										Scope Of Work is required
+									</span>
+								</div>
+								<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Key Features</label>
+								<angular-editor name="key_features" formControlName="key_features" [config]="editorConfig">
+								</angular-editor>
+								<span *ngIf="submitted && hasError('key_features','required')" class="alert-danger">
+									Key Features is required
+								</span>
+							</div> -->
+
+								<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Description 2</label>
+								<angular-editor name="desc_2" formControlName="desc_2" [config]="editorConfig">
+								</angular-editor>
+								<span *ngIf="submitted && hasError('desc_2','required')" class="alert-danger">Description 2 is
+									required</span>
+							</div> -->
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Description 3</label>
+									<angular-editor name="desc_3" formControlName="desc_3" [config]="editorConfig">
+									</angular-editor>
+									<span *ngIf="submitted && hasError('desc_3','required')" class="alert-danger">Description 3 is
+										required</span>
+								</div>
+
+								<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Link</label>
+								<input type="text" name="link" autocomplete="off" formControlName="link" class="form-control"
+									placeholder="Project Link">
+								<span *ngIf="submitted && hasError('link','required')" class="alert-danger">Link is
+									required</span>
+							</div> -->
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Project Thumbnail Image <div class="tooltip-wrapper">
+											<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show1 = true"
+												(mouseleave)="show1 = false" style="transform: none;  color: #525f7f;">
+												<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+													<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+														stroke-linecap="round" />
+													<circle cx="12" cy="7" r="1" fill="currentColor" />
+												</svg></button>
+											<div class="tooltip-card" *ngIf="show1">
+												<h5 class="tooltip-title">Note</h5>
+												<p class="tooltip-text">
+													Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 510 * 720
+													px)
+												</p>
+												<span class="tooltip-arrow"></span>
+											</div>
+										</div>
+									</label>
+									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputProjectThumb($event)"
+										[uploadInput]="uploadInput" />
+									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 510 *720)</label> -->
+									<div class="row" *ngIf="projectImageThumb">
+										<div class="col-md-2">
+											<img alt="logo" style="height: 100px; width: 100px;"
+												src="{{imagePath}}project/{{projectImageThumb}}">
+											<a href="javascript:;" (click)="removeImageThumb(projectImageThumb)" class="small-box-footer"><i
+													class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+										</div>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Project Banner Image <div class="tooltip-wrapper">
+											<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show = true"
+												(mouseleave)="show = false" style="transform: none;  color: #525f7f;">
+												<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+													<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+														stroke-linecap="round" />
+													<circle cx="12" cy="7" r="1" fill="currentColor" />
+												</svg></button>
+											<div class="tooltip-card" *ngIf="show">
+												<h5 class="tooltip-title">Note</h5>
+												<p class="tooltip-text">
+													Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 1920 * 1080
+													px)
+												</p>
+												<span class="tooltip-arrow"></span>
+											</div>
+										</div> </label>
+									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
+										[uploadInput]="uploadInput" />
+									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 1920 *1080)</label> -->
+									<div class="row" *ngIf="projectImage">
+										<div class="col-md-2">
+											<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{projectImage}}">
+											<a href="javascript:;" (click)="removeImage(projectImage)" class="small-box-footer"><i
+													class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+										</div>
+									</div>
+								</div>
+								<hr>
+								<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Project Thumbnail Image <div class="tooltip-wrapper">
+										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show1 = true"
+											(mouseleave)="show1 = false" style="transform: none;  color: #525f7f;">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+													stroke-linecap="round" />
+												<circle cx="12" cy="7" r="1" fill="currentColor" />
+											</svg></button>
+										<div class="tooltip-card" *ngIf="show1">
+											<h5 class="tooltip-title">Note</h5>
+											<p class="tooltip-text">
+												Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 510 * 720 px)
+											</p>
+											<span class="tooltip-arrow"></span>
+										</div>
+									</div>
+								</label>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputProjectThumb($event)"
+									[uploadInput]="uploadInput" /> -->
+								<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 510 *720)</label> -->
+								<!-- <div class="row" *ngIf="projectImageThumb">
+									<div class="col-md-2">
+										<img alt="logo" style="height: 100px; width: 100px;"
+											src="{{imagePath}}project/{{projectImageThumb}}">
+										<a href="javascript:;" (click)="removeImageThumb(projectImageThumb)" class="small-box-footer"><i
+												class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+									</div>
+								</div>
+							</div> -->
+								<!-- <hr> -->
+								<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Project Multil Image</label>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputProjectImage($event)"
+									[uploadInput]="uploadInput" />
+								<label for="exampleInputEmail2" style="display: block;">(Required Size 780 * 700)px</label>
+
+								<div class="row">
+									<div class="col-md-2" *ngFor="let proimage of projectMultiImages; let i = index;">
+										<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{proimage}}">
+										<a href="javascript:;" (click)="removeImageHover(i)" class="small-box-footer"><i class="fa fa-trash"
+												style="color: red;" aria-hidden="true"></i></a>
+									</div>
+								</div>
+							</div>
+							<hr> -->
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Image 1 <div class="tooltip-wrapper">
+											<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show2 = true"
+												(mouseleave)="show2 = false" style="transform: none;  color: #525f7f;">
+												<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+													<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+														stroke-linecap="round" />
+													<circle cx="12" cy="7" r="1" fill="currentColor" />
+												</svg></button>
+											<div class="tooltip-card" *ngIf="show2">
+												<h5 class="tooltip-title">Note</h5>
+												<p class="tooltip-text">
+													Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 1635 *
+													700px)
+												</p>
+												<span class="tooltip-arrow"></span>
+											</div>
+										</div></label>
+									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD1($event)"
+										[uploadInput]="uploadInput" />
+									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 1635 * 700)px</label> -->
+									<div class="row" *ngIf="designImage1">
+										<div class="col-md-2">
+											<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage1}}">
+											<a href="javascript:;" (click)="removeD1Image(designImage1)" class="small-box-footer">
+												<i class="fa fa-trash" style="color: red;" aria-hidden="true"></i>
+											</a>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Image 2 <div class="tooltip-wrapper">
+											<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show3 = true"
+												(mouseleave)="show3 = false" style="transform: none;  color: #525f7f;">
+												<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+													<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+														stroke-linecap="round" />
+													<circle cx="12" cy="7" r="1" fill="currentColor" />
+												</svg></button>
+											<div class="tooltip-card" *ngIf="show3">
+												<h5 class="tooltip-title">Note</h5>
+												<p class="tooltip-text">
+													Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 1635 *
+													700px)
+												</p>
+												<span class="tooltip-arrow"></span>
+											</div>
+										</div>
+									</label>
+									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD2($event)"
+										[uploadInput]="uploadInput" />
+									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 1635 * 700)px</label> -->
+									<div class="row" *ngIf="designImage2">
+										<div class="col-md-2">
+											<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage2}}">
+											<a href="javascript:;" (click)="removeD2Image(designImage2)" class="small-box-footer">
+												<i class="fa fa-trash" style="color: red;" aria-hidden="true"></i>
+											</a>
+										</div>
+									</div>
+								</div>
+
+								<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Image 3</label>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD3($event)"
+									[uploadInput]="uploadInput" />
+								<label for="exampleInputEmail1" style="display: block;">(Required Size 450 * 520)px</label>
+								<div class="row" *ngIf="designImage3">
+									<div class="col-md-2">
+										<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage3}}">
+										<a href="javascript:;" (click)="removeD3Image(designImage3)" class="small-box-footer"><i
+												class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Image 4</label>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD4($event)"
+									[uploadInput]="uploadInput" />
+								<label for="exampleInputEmail1" style="display: block;">(Required Size 1080 *
+									700)px</label>
+								<div class="row" *ngIf="designImage4">
+									<div class="col-md-2">
+										<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage4}}">
+										<a href="javascript:;" (click)="removeD4Image(designImage4)" class="small-box-footer"><i
+												class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+									</div>
+								</div>
+							</div> -->
+								<hr>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Project Design Image <div class="tooltip-wrapper">
+											<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show4 = true"
+												(mouseleave)="show4 = false" style="transform: none;  color: #525f7f;">
+												<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+													<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+														stroke-linecap="round" />
+													<circle cx="12" cy="7" r="1" fill="currentColor" />
+												</svg></button>
+											<div class="tooltip-card" *ngIf="show4">
+												<h5 class="tooltip-title">Note</h5>
+												<p class="tooltip-text">
+													Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 780 * 700
+													px)
+												</p>
+												<span class="tooltip-arrow"></span>
+											</div>
+										</div>
+									</label>
+									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputProjectDesignImage($event)"
+										[uploadInput]="uploadInput" />
+									<!-- <label for="exampleInputEmail2" style="display: block;">(Required Size 780 * 700)px</label> -->
+									<div class="row">
+										<div class="col-md-2" *ngFor="let designImage of projectDesignImages; let i = index;">
+											<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage}}">
+											<a href="javascript:;" (click)="removeDesignImage(i)" class="small-box-footer"><i
+													class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+										</div>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Bottom Image <div class="tooltip-wrapper">
+											<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show5 = true"
+												(mouseleave)="show5 = false" style="transform: none;  color: #525f7f;">
+												<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+													<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+														stroke-linecap="round" />
+													<circle cx="12" cy="7" r="1" fill="currentColor" />
+												</svg></button>
+											<div class="tooltip-card" *ngIf="show5">
+												<h5 class="tooltip-title">Note</h5>
+												<p class="tooltip-text">
+													Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 1635 * 700
+													px)
+												</p>
+												<span class="tooltip-arrow"></span>
+											</div>
+										</div>
+									</label>
+									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD5($event)"
+										[uploadInput]="uploadInput" />
+									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 1635 *
+									700)px</label> -->
+									<div class="row" *ngIf="designImage5">
+										<div class="col-md-2">
+											<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage5}}">
+											<a href="javascript:;" (click)="removeD5Image(designImage5)" class="small-box-footer"><i
+													class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+										</div>
+									</div>
+								</div>
+								<hr>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Related of Projects</label>
+									<ng-select class="form-control" [items]="projectListData" bindLabel="name"
+										placeholder="Select Projects" [multiple]="true" formControlName="related_prjects">
+									</ng-select>
+									<span *ngIf="submitted && hasError('related_prjects','required')" class="alert-danger">Related
+										Projects
+										is
+										required</span>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Sequence Number</label>
+									<input type="number" name="sequence_number" autocomplete="off" formControlName="sequence_number"
+										class="form-control" placeholder="Sequence Number">
+									<span *ngIf="submitted && hasError('sequence_number','required')" class="alert-danger">Sequence Number
+										is required</span>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">URL Key <span> * </span>
+										<div class="tooltip-wrapper">
+											<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show6 = true"
+												(mouseleave)="show6 = false" style="transform: none;  color: #525f7f;">
+												<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+													<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+														stroke-linecap="round" />
+													<circle cx="12" cy="7" r="1" fill="currentColor" />
+												</svg></button>
+											<div class="tooltip-card" *ngIf="show6">
+												<h5 class="tooltip-title">Note</h5>
+												<p class="tooltip-text">
+													Enter a unique word or the project’s first word to generate the case study URL.
+												</p>
+												<span class="tooltip-arrow"></span>
+											</div>
+										</div>
+									</label>
+									<input type="text" name="url_key" autocomplete="off" formControlName="url_key" class="form-control"
+										placeholder="URL Key">
+									<span *ngIf="submitted && hasError('url_key','required')" class="alert-danger">URL key is
+										required</span>
+								</div>
+
+								<div class="form-group">
+									<label for="exampleInputEmail1">Status</label>
+									<select name="status" formControlName="status" class="form-control">
+										<option value="true">Active</option>
+										<option value="false">InActive</option>
+									</select>
+								</div>
+
+							</div>
+							<div class="box-footer">
+								<button type="submit" class="btn btn-primary">Submit</button>
+								<button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

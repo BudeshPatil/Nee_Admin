@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ConfigRoutingModule } from './config-routing.module';
-import { ViewConfigComponent } from './view-config/view-config.component';
-import { DatamoduleModule } from 'src/app/datamodule.module';
+import { HttpClientModule,HttpResponse } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxUploaderModule } from 'ngx-uploader';
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { PageModule } from '../page/page.module';
+import { BlogModule } from '../blog/blog.module';// search module
+
+import { ConfigRoutingModule } from './config-routing.module';
+import { ViewConfigComponent } from './view-config/view-config.component';
+import { NgxQrcodeStylingModule } from 'ngx-qrcode-styling';
 
 @NgModule({
   declarations: [
@@ -16,12 +18,14 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
   imports: [
     CommonModule,
     ConfigRoutingModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     NgxUploaderModule,
     AngularEditorModule,
-    Ng2SearchPipeModule,
-    DatamoduleModule
+    PageModule,
+    BlogModule,
+    NgxQrcodeStylingModule
   ]
 })
 export class ConfigModule { }

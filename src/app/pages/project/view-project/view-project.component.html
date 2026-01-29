@@ -1,0 +1,135 @@
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+	<div class="container-fluid">
+		<div class="header-body">
+			<!-- Card stats -->
+		</div>
+	</div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" *ngIf="isLoading">
+	<div class="spinner-container">
+		<div class="spinner"></div>
+		<p>Loading...</p>
+	</div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+	<!-- Table -->
+	<div class="row">
+		<div class="col">
+			<div class="card shadow">
+				<div class="card-header border-0">
+					<h3 class="mb-0">Portfolio List</h3>
+				</div>
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="search-wrapper">
+								<input class="form-control mt-4" type="text" (keyup)="searchProject()" name="search"
+									[(ngModel)]="searchText" autocomplete="off" placeholder="&#61442;  Start searching a Project name">
+								<button *ngIf="searchText" class="clear-search-btn" (click)="clearSearch()" title="Clear search">
+									<i class="fa fa-times" aria-hidden="true"></i>
+								</button>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-primary pull-right custom-btn" routerLink="/project/add">
+								Add Project
+							</button>
+							<button type="button" class="btn btn-primary pull-right custom-btn mr-5" routerLink="/category/add">
+								Add Category
+							</button>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<h4 class="title"></h4>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table class="table align-items-center table-flush">
+						<thead>
+							<tr>
+								<th style="cursor: pointer;" (click)="sortBy('slno')" [class.sort-active]="isSortActive('slno')">
+									SL No <span class="sort-icon">{{ getSortIcon('slno') }}</span>
+								</th>
+								<th style="cursor: pointer;" (click)="sortBy('name')" [class.sort-active]="isSortActive('name')">
+									Project Name <span class="sort-icon">{{ getSortIcon('name') }}</span>
+								</th>
+								<th>Image</th>
+								<th style="cursor: pointer;" (click)="sortBy('category')"
+									[class.sort-active]="isSortActive('category')">
+									Category <span class="sort-icon">{{ getSortIcon('category') }}</span>
+								</th>
+								<th style="cursor: pointer;" (click)="sortBy('sequence')"
+									[class.sort-active]="isSortActive('sequence')">
+									Sequence No <span class="sort-icon">{{ getSortIcon('sequence') }}</span>
+								</th>
+								<th style="cursor: pointer;" (click)="sortBy('doh')" [class.sort-active]="isSortActive('doh')"
+									title="Display On Homepage">
+									DOH <span class="sort-icon">{{ getSortIcon('doh') }}</span>
+								</th>
+								<th style="cursor: pointer;" (click)="sortBy('status')" [class.sort-active]="isSortActive('status')">
+									Status <span class="sort-icon">{{ getSortIcon('status') }}</span>
+									<!-- <ng-toggle [(ngModel)]="isactive" [disabled]="config.disabled" [width]="config.width"
+										[height]="config.height" [margin]="config.margin" [labels]="config.labels" [color]="config.color"
+										[switchColor]="config.switchColor" [fontColor]="config.fontColor" [fontSize]="config.fontSize"
+										(click)="changeStatus()" required>
+									</ng-toggle>
+									<a (click)="resetFilter()" class="btn btn-sm btn-info mr-4">Reset</a> -->
+								</th>
+								<th style="cursor: pointer;" (click)="sortBy('created')" [class.sort-active]="isSortActive('created')">
+									Created At <span class="sort-icon">{{ getSortIcon('created') }}</span>
+								</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngIf="msg_danger">
+								<td colspan="9" class="text-center">
+									<div class="alert alert-info">
+										Portfolio List is Empty
+									</div>
+								</td>
+							</tr>
+							<tr *ngFor="let listProject of projectData | filter:searchText | activefilter:isactive; let i = index">
+								<td *ngIf="currentPage == 1">{{i+1}}</td>
+								<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+								<td>{{listProject.name}}</td>
+								<td>
+									<img [src]="imagePath + 'project/' + listProject.image" [alt]="listProject.name"
+										style="height: 100px; width: 100px; object-fit: cover;"
+										onerror="this.src='assets/img/placeholder.webp'">
+								</td>
+								<td>{{listProject.category_name}}</td>
+								<td>{{listProject.sequence_number}}</td>
+								<td>{{listProject.display_on_home == true ? 'Yes' : 'No'}}</td>
+								<td>
+									<span [class]="listProject.status == true ? 'badge badge-success' : 'badge badge-danger'">
+										{{listProject.status == true ? 'Active' : 'InActive'}}
+									</span>
+								</td>
+								<td>{{listProject.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+								<td>
+									<a routerLink="/project/edit/{{listProject._id}}" style="cursor:pointer" title="Edit Project">
+										<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+									</a>
+									<a style="cursor:pointer; padding-left: 15px;" (click)="deleteProject(listProject._id)"
+										title="Delete Project">
+										<i class="fa fa-trash-o" aria-hidden="true"></i>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
+						<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord" [perPage]="currentLimit"
+							(changePage)="onListChangePage($event)">
+						</app-pagination>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanDeactivate<u
   }
 
   checkSession(route:any) {
-    this.token = localStorage.getItem('ghoastrental-token');
+    this.token = localStorage.getItem('neelgund-admin-token');
     if (this.token != undefined) {
       return true;
     } else {

@@ -11,7 +11,9 @@ describe('ViewConfigComponent', () => {
       declarations: [ ViewConfigComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ViewConfigComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

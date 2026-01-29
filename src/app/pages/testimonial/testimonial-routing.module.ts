@@ -1,16 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { AddTestimonialComponent } from './add-testimonial/add-testimonial.component';
-import { AuthGuard } from 'src/app/guard/auth.guard';
 import { ViewTestimonialComponent } from './view-testimonial/view-testimonial.component';
+import {AuthGuard} from '../../guard/auth.guard';
 
 const routes: Routes = [
-  
-  {
-    path:'',
-    component:ViewTestimonialComponent,
-    canActivate: [AuthGuard],
-  },
   {
     path:'add',
     component : AddTestimonialComponent,

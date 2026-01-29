@@ -1,0 +1,171 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+	style="min-height: 400px;  background-size: cover; background-position: center top;">
+	<!-- Mask -->
+	<span class="mask bg-gradient-info opacity-8"></span>
+	<!-- Header container -->
+	<div class="container-fluid d-flex align-items-center">
+		<div class="row">
+			<div class="col-lg-7 col-md-10">
+				<!-- <h1 class="display-2 text-white">Service </h1>
+				<p class="text-white mt-0 mb-5">This is your Service page. You can see the progress you've made with your work
+					and manage your Service</p> -->
+				<!-- <a href="#!" class="btn btn-info">Edit Pages</a> -->
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container-fluid mt--7">
+	<div class="row">
+		<div class="col-xl-12 order-xl-1">
+			<div class="card bg-secondary shadow">
+				<div class="card-header bg-white border-0">
+					<div class="row align-items-center">
+						<div class="col-8">
+							<h3 class="mb-0" *ngIf="id">Update/Edit Service</h3>
+							<h3 class="mb-0" *ngIf="!id">Add New Service</h3>
+						</div>
+					</div>
+					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+						{{throw_msg}}
+					</div>
+					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+						{{throw_msg}}
+					</div>
+				</div>
+				<div class="card-body">
+					<!-- form start -->
+					<form [formGroup]="addServiceForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+						<div class="box-body">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Service Name <span> * </span></label>
+								<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+									placeholder="Service Name">
+								<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Service Name is
+									required</span>
+								<span *ngIf="submitted && hasError('name','maxlength')" class="alert-danger">Please
+									Enter the 30 length Service Name</span>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Short Description <span class="required"> * </span>
+									<div class="tooltip-wrapper">
+										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show = true"
+											(mouseleave)="show = false" style="transform: none;  color: #525f7f;">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+													stroke-linecap="round" />
+												<circle cx="12" cy="7" r="1" fill="currentColor" />
+											</svg></button>
+										<div class="tooltip-card" *ngIf="show">
+											<h5 class="tooltip-title">Note</h5>
+											<p class="tooltip-text">
+												To maintain the website design, please keep the content within 180–200 characters.
+											</p>
+											<span class="tooltip-arrow"></span>
+										</div>
+									</div>
+								</label>
+								<textarea name="short_desc" autocomplete="off" formControlName="short_desc" class="form-control"
+									placeholder="Short Description"></textarea>
+								<span *ngIf="submitted && hasError('short_desc','required')" class="alert-danger">Short Description is
+									required</span>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Description <span> * </span>
+									<div class="tooltip-wrapper">
+										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show1 = true"
+											(mouseleave)="show1 = false" style="transform: none;  color: #525f7f;">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+													stroke-linecap="round" />
+												<circle cx="12" cy="7" r="1" fill="currentColor" />
+											</svg></button>
+										<div class="tooltip-card" *ngIf="show1">
+											<h5 class="tooltip-title">Note</h5>
+											<p class="tooltip-text">
+												To maintain the website design, please keep the content within 180–200 characters.
+											</p>
+											<span class="tooltip-arrow"></span>
+										</div>
+									</div>
+								</label>
+								<angular-editor name="desc" formControlName="desc" [config]="editorConfig">
+								</angular-editor>
+								<span *ngIf="submitted && hasError('desc','required')" class="alert-danger">Description is
+									required</span>
+							</div>
+							<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Service Price</label>
+								<input type="number" name="price" autocomplete="off" formControlName="price" class="form-control"
+									placeholder="Service Price">
+								<span *ngIf="submitted && hasError('price','required')" class="alert-danger">Price is
+									required</span>
+							</div> -->
+							<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Link</label>
+								<input type="text" name="link" autocomplete="off" formControlName="link" class="form-control"
+									placeholder="Service Link">
+								<span *ngIf="submitted && hasError('link','required')" class="alert-danger">Link is
+									required</span>
+							</div> -->
+							<div class="form-group">
+								<label for="exampleInputEmail1">Service Banner <div class="tooltip-wrapper">
+										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show2 = true"
+											(mouseleave)="show2 = false" style="transform: none;  color: #525f7f;">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+													stroke-linecap="round" />
+												<circle cx="12" cy="7" r="1" fill="currentColor" />
+											</svg></button>
+										<div class="tooltip-card" *ngIf="show2">
+											<h5 class="tooltip-title">Note</h5>
+											<p class="tooltip-text">
+												Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 141 * 141 px)
+											</p>
+											<span class="tooltip-arrow"></span>
+										</div>
+									</div>
+								</label><br>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'service')"
+									[uploadInput]="uploadInput" /><br>
+								<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 141 *
+									141)</label> -->
+								<img *ngIf="serviceImage" alt="logo" style="height: 100px; width: 100px;"
+									src="{{imagePath}}{{serviceImage}}">
+							</div>
+							<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Home Page Service Image</label><br>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'home')"
+									[uploadInput]="uploadInput" /><br>
+								<label for="exampleInputEmail1" style="display: block;">(Required Size 141 *
+									141)</label>
+								<img *ngIf="homeserviceImage" alt="logo" style="height: 100px; width: 100px;"
+									src="{{imagePath}}{{homeserviceImage}}">
+							</div> -->
+							<!-- <div class="form-group">
+								<label for="exampleInputEmail1">Sequence Number</label>
+								<input type="number" name="sequence_number" autocomplete="off" formControlName="sequence_number"
+									class="form-control" placeholder="Sequence Number">
+								<span *ngIf="submitted && hasError('sequence_number','required')" class="alert-danger">Sequence Number
+									is required</span>
+							</div> -->
+							<div class="form-group">
+								<label for="exampleInputEmail1">Status</label>
+								<select name="status" formControlName="status" class="form-control">
+									<option value="true">Active</option>
+									<option value="false">InActive</option>
+								</select>
+							</div>
+						</div>
+						<div class="box-footer">
+							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

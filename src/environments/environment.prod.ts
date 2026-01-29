@@ -1,7 +1,13 @@
 export const environment = {
-  production: true,
-  // Url: 'https://build.pixtar.ae/ghoastrental_admin',
-  // baseUrl:'https://build.pixtar.ae:5014',
-  Url: 'https://www.ghostrentals.com/admin_dashboard',
-  baseUrl: 'https://www.ghostrentals.com:5014',
+	production: true,
+
+	// live
+	// baseUrl: 'https://www.neelgund.com:5015',
+	// Url: 'https://www.neelgund.com/admin',
+
+
+	// Staging
+	baseUrl: 'https://neelgund.pixtar.ae:5015',
+	Url: 'https://neelgund.pixtar.ae/admin',
+
 };

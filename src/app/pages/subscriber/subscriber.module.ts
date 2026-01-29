@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule,HttpResponse } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxUploaderModule } from 'ngx-uploader';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+
+import { NgxPaginationModule } from 'ngx-pagination';
+import { BlogModule } from '../blog/blog.module';
 
 import { SubscriberRoutingModule } from './subscriber-routing.module';
 import { AddSubscriberComponent } from './add-subscriber/add-subscriber.component';
 import { ViewSubscriberComponent } from './view-subscriber/view-subscriber.component';
-import { DatamoduleModule } from 'src/app/datamodule.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxUploaderModule } from 'ngx-uploader';
-import { AngularEditorModule } from '@kolkov/angular-editor';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
@@ -18,12 +21,15 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
   imports: [
     CommonModule,
     SubscriberRoutingModule,
+    CommonModule,
+    HttpClientModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule, 
     NgxUploaderModule,
     AngularEditorModule,
-    Ng2SearchPipeModule,
-    DatamoduleModule
+    NgxPaginationModule,
+    BlogModule,
+    Ng2SearchPipeModule
   ]
 })
 export class SubscriberModule { }

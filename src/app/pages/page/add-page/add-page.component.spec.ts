@@ -11,7 +11,9 @@ describe('AddPageComponent', () => {
       declarations: [ AddPageComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AddPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

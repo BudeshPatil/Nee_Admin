@@ -12,13 +12,12 @@ declare interface TableData {
   headerRow: string[];
   dataRows: string[][];
 }
-
 @Component({
   selector: 'app-view-user',
   templateUrl: './view-user.component.html',
-  styleUrls: ['./view-user.component.scss']
+  styleUrls: ['./view-user.component.css']
 })
-export class ViewUserComponent {
+export class ViewUserComponent implements OnInit {
 
   msg_danger: boolean = false;
   userData: any;
@@ -31,7 +30,7 @@ export class ViewUserComponent {
   public tableData1: TableData;
   public tableData2: TableData;
   searchText = '';
-  selectedUser :any;
+
   constructor(
     private router: Router,
     private userService:LoginService,
@@ -128,8 +127,4 @@ export class ViewUserComponent {
     this.get_userData();
   }
 
-  deleteUser(){
-    
-  }
-  
 }

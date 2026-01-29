@@ -11,7 +11,9 @@ describe('ViewBlogComponent', () => {
       declarations: [ ViewBlogComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ViewBlogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

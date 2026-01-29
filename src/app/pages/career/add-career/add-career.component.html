@@ -1,0 +1,92 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+    style="min-height: 400px;  background-size: cover; background-position: center top;">
+    <!-- Mask -->
+    <span class="mask bg-gradient-info opacity-8"></span>
+    <!-- Header container -->
+    <div class="container-fluid d-flex align-items-center">
+        <div class="row">
+            <div class="col-lg-7 col-md-10">
+                <h1 class="display-2 text-white">Single Career </h1>
+                <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with
+                    your work
+                    and manage your projects or assigned tasks</p>
+                <!-- <a href="#!" class="btn btn-info">Edit Pages</a> -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col-xl-12 order-xl-1">
+            <div class="card bg-secondary shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Edit Career</h3>
+                        </div>
+                    </div>
+                    <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+                        {{throw_msg}}
+                    </div>
+                    <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+                        {{throw_msg}}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- form start -->
+                    <form [formGroup]="addCareerForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" name="firstname" autocomplete="off" formControlName="firstname"
+                                    class="form-control" placeholder="Career Name">
+                                <span *ngIf="submitted && hasError('firstname','required')" class="alert-danger">First Name is
+                                    required</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Last Name</label>
+                                <input type="text" name="lastname" autocomplete="off" formControlName="lastname"
+                                    class="form-control" placeholder="Last Name">
+                                <span *ngIf="submitted && hasError('lastname','required')" class="alert-danger">Last Name is
+                                    required</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email</label>
+                                <input type="email" name="email" autocomplete="off" formControlName="email"
+                                    class="form-control" placeholder="Career Email">
+                                <span *ngIf="submitted && hasError('email','required')" class="alert-danger">Career Email is
+                                    required</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Mobile</label>
+                                <input type="number" name="mobile" autocomplete="off" formControlName="mobile"
+                                    class="form-control" placeholder="Career Mobile">
+                                <span *ngIf="submitted && hasError('mobile','required')" class="alert-danger">Career Mobile is
+                                    required</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Subject</label>
+                                <angular-editor name="description" formControlName="subject"
+                                    [config]="editorConfig">
+                                </angular-editor>
+                                <span *ngIf="submitted && hasError('subject','required')"
+                                    class="alert-danger">Subject is
+                                    required</span>
+                            </div>
+                            <div class="form-group" >
+								<label for="exampleInputEmail1">Upload Document</label><br>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadFile($event)"
+									[uploadInput]="uploadInput" /><br>
+								<a *ngIf="document" href="{{imagePath}}career/{{document}}" target="_blank" >{{document}}</a>
+							</div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

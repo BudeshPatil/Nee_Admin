@@ -1,0 +1,93 @@
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+	<div class="container-fluid">
+		<div class="header-body">
+			<!-- Card stats -->
+
+		</div>
+	</div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+	<!-- Table -->
+	<div class="row">
+		<div class="col">
+			<div class="card shadow">
+				<div class="card-header border-0">
+					<h3 class="mb-0">Service Page</h3>
+				</div>
+				<div class="col-md-12">
+					<!-- <div class="row">
+						<div class="col-md-6">
+							<input class="form-control mt-4" type="text" (keyup)="searchService()" name="search" [(ngModel)]="searchText"
+                                          autocomplete="off" placeholder="&#61442;  Start searching a Service  name">
+						</div>
+						<div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
+								routerLink="/service/add">Add
+								Service</button></div>
+					</div> -->
+					<div class="col-md-6">
+						<h4 class="title"></h4>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table class="table align-items-center table-flush">
+									<thead>
+										<tr>
+											<th>SL No</th>
+											<th>Service Name</th>
+											<!-- <th>Short Description</th> -->
+											<th>Image</th>
+											<!-- <th>Home Image</th> -->
+											<!-- <th>Price</th> -->
+											<!-- <th>Sequence Number</th> -->
+											<th>Status </th>
+											<th>Created At</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<td colspan="6" *ngIf="msg_danger">
+											<div class="alert alert-dismissable" style="text-align: center;">
+												List is Empty
+											</div>
+										</td>
+										<tr *ngFor="let listService of serviceData | filter:searchText | activefilter:isactive; let i = index">
+											<td *ngIf="currentPage == 1">{{i+1}}</td>
+											<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+											<td>{{listService.name}}</td>
+											<!-- <td [innerHTML]="listService.short_desc"></td> -->
+
+											<td><img src="{{imagePath}}{{listService.image}}" alt="logo" style="height: 100px;width: 100px;">
+											</td>
+											<!-- <td><img src="{{imagePath}}{{listService.home_image}}" alt="logo" style="height: 100px;width: 100px;">
+											</td> -->
+											<!-- <td><p>{{listService.price}}</p></td> -->
+											<!-- <td><p>{{listService.sequence_number}}</p></td> -->
+											<!-- <td *ngIf="listService.isDeleted == true">InActive</td>
+											<td *ngIf="listService.isDeleted == false">Active</td> -->
+											<td *ngIf="listService.status == true">Active</td>
+											<td *ngIf="listService.status == false">InActive</td>
+											<td>{{listService.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+											<td>
+												<a routerLink="/service/edit/{{listService._id}}" style="cursor:pointer"><i
+														class="fa fa-pencil-square-o" aria-hidden="true"></i>
+												</a>
+												<!-- <a style="cursor:pointer;padding-left: 15px;" (click)="deleteService(listService._id)"><i
+														class="fa fa-trash-o" aria-hidden="true"></i></a> -->
+											</td>
+										</tr>
+									</tbody>
+								</table>
+                <div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
+                    <app-pagination
+                        #pagination
+                        [initialPage]="currentPage"
+                        [count]="totalRecord"
+                        (changePage)="onListChangePage($event)"
+                    ></app-pagination>
+                  </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

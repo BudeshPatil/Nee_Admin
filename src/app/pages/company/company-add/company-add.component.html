@@ -1,0 +1,149 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center">
+	<span class="mask bg-gradient-info opacity-8"></span>
+	<div class="container-fluid d-flex align-items-center">
+		<div class="row">
+			<div class="col-lg-7 col-md-10">
+				<!-- <h1 class="display-2 text-white">Hello {{user.username}}</h1> -->
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container-fluid mt--7">
+	<div class="row">
+		<div class="col-xl-7 order-xl-1 mx-auto">
+			<div class="card bg-secondary shadow">
+				<div class="card-header bg-white border-0">
+					<div class="row align-items-center">
+						<div class="col-8">
+							<h3 class="mb-0">Company Details</h3>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<form [formGroup]="addForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+						<div class="form-group">
+							<label>Title</label>
+							<input class="form-control" formControlName="title" />
+							<div *ngIf="submitted && hasError('title', 'required')" class="text-danger">
+								Title is required
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label>Sub Title</label>
+							<input class="form-control" formControlName="sub_title" />
+							<div *ngIf="submitted && hasError('sub_title', 'required')" class="text-danger">
+								Sub title is required
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label>Description</label>
+							<angular-editor formControlName="desc_long" [config]="editorConfig"></angular-editor>
+							<div *ngIf="submitted && hasError('desc_long', 'required')" class="text-danger">
+								Long description is required
+							</div>
+						</div>
+
+						<!-- <div class="form-group">
+							<label>Short Description</label>
+							<input class="form-control" formControlName="desc_short" />
+							<div *ngIf="submitted && hasError('desc_short', 'required')" class="text-danger">
+								Short description is required
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label>Email</label>
+							<input class="form-control" formControlName="email" />
+							<div *ngIf="submitted && hasError('email', 'required')" class="text-danger">Email is required</div>
+							<div *ngIf="submitted && hasError('email', 'email')" class="text-danger">Invalid email format</div>
+						</div>
+
+						<div class="form-group">
+							<label>Phone</label>
+							<input class="form-control" formControlName="phone" />
+							<div *ngIf="submitted && hasError('phone', 'required')" class="text-danger">Phone is required</div>
+						</div>
+
+						<div class="form-group">
+							<label>Address</label>
+							<input class="form-control" formControlName="address" />
+							<div *ngIf="submitted && hasError('address', 'required')" class="text-danger">Address is required</div>
+						</div>
+
+						<div class="form-group">
+							<label>Meta Title</label>
+							<input class="form-control" formControlName="meta_title" />
+						</div>
+
+						<div class="form-group">
+							<label>Meta Keyword</label>
+							<input class="form-control" formControlName="meta_keyword" />
+						</div>
+
+						<div class="form-group">
+							<label>Meta Description</label>
+							<input class="form-control" formControlName="meta_description" />
+						</div> -->
+
+						<div class="form-group">
+							<label>Page Section</label>
+							<input class="form-control" formControlName="page_section" />
+							<div *ngIf="submitted && hasError('page_section', 'required')" class="text-danger">
+								Page section is required
+							</div>
+						</div>
+
+
+						<div class="form-group">
+							<label>URL Key</label>
+							<input class="form-control" formControlName="url_key" />
+							<div *ngIf="submitted && hasError('url_key', 'required')" class="text-danger">
+								URL Key is required
+							</div>
+							<div *ngIf="submitted && hasError('url_key', 'pattern')" class="text-danger">
+								Only lowercase letters, numbers and dashes allowed
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label>Status</label>
+							<select class="form-control" formControlName="status">
+								<option [ngValue]="true">Active</option>
+								<option [ngValue]="false">Inactive</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Image Small</label>
+							<input type="file" (change)="onFileChange($event, 'logo')" />
+							<!-- Preview for Logo -->
+							<div *ngIf="logoImage" class="mb-2">
+								<img [src]="previewLogo" width="150" class="img-thumbnail me-2" />
+								<button class="btn btn-sm btn-danger" (click)="removeImage('logo')" type="button">Remove Logo</button>
+							</div>
+							<div *ngIf="fileNames.logo">
+								<small class="text-muted">Selected: {{ fileNames.logo }}</small>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label>Image Big</label>
+							<input type="file" (change)="onFileChange($event, 'image')" />
+							<div *ngIf="companyImage" class="mb-2">
+								<img [src]="previewImage" width="150" class="img-thumbnail me-2" />
+								<button class="btn btn-sm btn-danger" (click)="removeImage('image')" type="button">Remove Image</button>
+							</div>
+							<div *ngIf="fileNames.image">
+								<small class="text-muted">Selected: {{ fileNames.image }}</small>
+							</div>
+						</div>
+
+						<button class="btn btn-primary" type="submit">Save</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

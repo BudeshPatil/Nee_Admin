@@ -1,0 +1,111 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+	style="min-height: 400px;  background-size: cover; background-position: center top;">
+	<!-- Mask -->
+	<span class="mask bg-gradient-info opacity-8"></span>
+	<!-- Header container -->
+	<div class="container-fluid d-flex align-items-center">
+		<div class="row">
+			<div class="col-lg-7 col-md-10">
+				<h1 class="display-2 text-white">Client Information </h1>
+				<p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with
+					your work
+					and manage your client or assigned tasks</p>
+				<!-- <a href="#!" class="btn btn-info">Edit Pages</a> -->
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container-fluid mt--7">
+	<div class="row">
+		<div class="col-xl-12 order-xl-1">
+			<div class="card bg-secondary shadow">
+				<div class="card-header bg-white border-0">
+					<div class="row align-items-center">
+						<div class="col-8">
+							<h3 class="mb-0">Edit Client</h3>
+						</div>
+					</div>
+					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
+						{{throw_msg}}
+					</div>
+					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
+						{{throw_msg}}
+					</div>
+				</div>
+				<div class="card-body">
+					<!-- form start -->
+					<form [formGroup]="clientForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+						<div class="box-body">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Client Name</label>
+								<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
+									placeholder="Client Name">
+								<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Client Name
+									is
+									required</span>
+								<span *ngIf="submitted && hasError('name','maxlength')" class="alert-danger">Please
+									Enter the 30 length Client Name</span>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Short Desc</label>
+								<input type="text" name="desc_short" autocomplete="off" formControlName="desc_short"
+									class="form-control" placeholder="Short Desc">
+								<span *ngIf="submitted && hasError('desc_short','required')" class="alert-danger">short Description is
+									required</span>
+							</div>
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Description</label>
+								<angular-editor name="desc_long" formControlName="desc_long" [config]="editorConfig">
+								</angular-editor>
+								<span *ngIf="submitted && hasError('desc_long','required')" class="alert-danger">Description is
+									required</span>
+							</div>
+
+
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Link</label>
+								<input type="text" name="link" autocomplete="off" formControlName="link" class="form-control"
+									placeholder="Client Link">
+								<span *ngIf="submitted && hasError('link','required')" class="alert-danger">Link is
+									required</span>
+							</div>
+
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">Client Image</label>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
+									[uploadInput]="uploadInput" />
+								<label for="exampleInputEmail1" style="display: block;">(Required Size 141 *
+									141)</label>
+
+								<div class="row">
+									<div class="col-md-2" *ngFor="let image of clientMultiImages; let i = index">
+										<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}{{image}}">
+										<a href="javascript:;" (click)="removeImage(i)" class="small-box-footer"><i class="fa fa-trash"
+												style="color: red;" aria-hidden="true"></i></a>
+									</div>
+								</div>
+
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Status</label>
+								<select name="status" formControlName="status" class="form-control">
+									<option value="true">Active</option>
+									<option value="false">InActive</option>
+								</select>
+							</div>
+
+						</div>
+						<div class="box-footer">
+							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

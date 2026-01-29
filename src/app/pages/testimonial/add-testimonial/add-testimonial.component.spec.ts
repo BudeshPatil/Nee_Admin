@@ -11,7 +11,9 @@ describe('AddTestimonialComponent', () => {
       declarations: [ AddTestimonialComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AddTestimonialComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

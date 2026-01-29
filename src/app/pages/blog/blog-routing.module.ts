@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ViewBlogComponent } from './view-blog/view-blog.component';
-import { AuthGuard } from 'src/app/guard/auth.guard';
+
+// Add Component
 import { AddBlogComponent } from './add-blog/add-blog.component';
+import { ViewBlogComponent } from './view-blog/view-blog.component';
+
+// Auth Services
+import {AuthGuard} from '../../guard/auth.guard';
 
 const routes: Routes = [
-  
-  {
-    path:'',
-    component : ViewBlogComponent,
-    canActivate: [AuthGuard],
-  },
   {
     path:'add',
     component : AddBlogComponent,
@@ -27,11 +25,6 @@ const routes: Routes = [
     component : ViewBlogComponent,
     canActivate: [AuthGuard],
   },
-  {
-    path:'**',
-    component : ViewBlogComponent,
-    canActivate: [AuthGuard],
-  }
 ];
 
 @NgModule({

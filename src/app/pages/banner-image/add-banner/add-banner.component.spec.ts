@@ -11,7 +11,9 @@ describe('AddBannerComponent', () => {
       declarations: [ AddBannerComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AddBannerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,177 +1,192 @@
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body">
+            <!-- Card stats -->
+
+        </div>
+    </div>
+</div>
 <!-- Page content -->
 <div class="container-fluid mt--7">
-	<!-- Table -->
-	<div class="row">
-		<div class="col">
-			<div class="card shadow">
-				<div class="card-header border-0">
-					<h3 class="mb-0">Subscriber List</h3>
-				</div>
-				<div class="card-body">
-					<div class="col-md-12">
-						<div class="row">
-							<div class="col-md-6">
-								<h4 class="title">
-									<input class="form-control mb-4 mt-4" type="text" (keyup)="searchSubscriber()" name="search"
-										[(ngModel)]="searchText" autocomplete="off"
-										placeholder="&#61442;  Start searching for a Subscriber by name or email">
-								</h4>
-							</div>
-							<div class="col-md-3">
-								<button type="button" class="btn btn-button mb-4 mt-4" routerLink="/subscriber/add">Add
-									Subscriber</button>
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <h3 class="mb-0">Subscriber List</h3>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="title">
+                                <input class="form-control" type="text" (keyup)="searchSubscriber()" name="search" [(ngModel)]="searchText"
+                                          autocomplete="off" placeholder="&#61442;  Start searching for a Subscriber  name or email">
+                            </h4>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-primary pull-right custom-btn" routerLink="/subscriber/add">Add
+                                Subscriber</button>
 
-							</div>
-							<div class="col-md-3">
-								<!-- <button type="button" class="btn btn-button pull-right" (click)="SendAll($event)">Send
+                        </div>
+                        <div class="col-md-3">
+                            <!-- <button type="button" class="btn btn-primary pull-right" (click)="SendAll($event)">Send
                                 All</button> -->
-								<button type="button" class="btn btn-button ml-auto mb-4 mt-4" (click)="sendAllopen(content1)">Send
-									All</button>
-								<!-- <a style="cursor:pointer;padding-left: 15px;"
+                            <button type="button" class="btn btn-primary pull-right custom-btn" (click)="sendAllopen(content1)" >Send
+                                All</button>
+                                <!-- <a style="cursor:pointer;padding-left: 15px;"
                                     (click)="sendAllopen(content1)"><i class="fa fa-envelope-o"
                                             aria-hidden="true"></i></a> -->
-							</div>
-						</div>
-						<div class="col-md-6">
-							<h4 class="title"></h4>
-						</div>
-					</div>
-					<div class="table-responsive">
-						<table class="table align-items-center table-flush">
-							<thead>
-								<tr>
-									<th>Sl No</th>
-									<th>Email</th>
-									<th>Date</th>
-									<th>Action</th>
-									<th>Send Email</th>
-								</tr>
-							</thead>
-							<tbody>
-								<td colspan="5" *ngIf="msg_danger">
-									<div class="alert alert-dismissable" style="text-align: center;">
-										Subscriber List is Empty
-									</div>
-								</td>
-								<tr *ngFor="let cData of subscriberData | filter:searchText; let i = index">
-									<td *ngIf="currentPage == 1">{{i+1}}</td>
-									<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-									<td>{{cData.email}}</td>
-									<td>{{cData.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-									<td>
-										<a routerLink="/subscriber/edit/{{cData._id}}" style="cursor:pointer"><i class="mdi mdi-lead-pencil"
-												aria-hidden="true"></i>
-										</a>
-										<a style="cursor:pointer;padding-left: 15px;" (click)="deleteSubscriber(cData._id)"><i
-												class="mdi mdi-close-box" aria-hidden="true"></i></a>
-									</td>
-									<td>
-										<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,cData)"><i
-												class="mdi mdi-email" aria-hidden="true"></i></a>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="pcommece-pagination" *ngIf="totalRecord > 0 && !searchText">
-							<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
-								(changePage)="onListChangePage($event)"></app-pagination>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="title"></h4>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead>
+                            <tr>
+                                <th>Sl No</th>
+                                <th>Email</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                                <th>Send Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td colspan="5" *ngIf="msg_danger">
+                                <div class="alert alert-dismissable" style="text-align: center;">
+                                    Subscriber List is Empty
+                                </div>
+                            </td>
+                            <tr *ngFor="let cData of subscriberData | filter:searchText; let i = index">
+                                <td *ngIf="currentPage == 1">{{i+1}}</td>
+                                <td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+                                <td>{{cData.email}}</td>
+                                <td>{{cData.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
+                                <td>
+                                    <a routerLink="/subscriber/edit/{{cData._id}}" style="cursor:pointer"><i
+                                            class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </a>
+                                    <a style="cursor:pointer;padding-left: 15px;"
+                                        (click)="deleteSubscriber(cData._id)"><i class="fa fa-trash-o"
+                                            aria-hidden="true"></i></a>
+                                </td>
+                                <td>
+                                    <a style="cursor:pointer;padding-left: 15px;"
+                                    (click)="open(content,cData)"><i class="fa fa-envelope-o"
+                                            aria-hidden="true"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
+                        <app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+                            (changePage)="onListChangePage($event)"></app-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-	<ng-template #content let-modal style="z-index: 0;">
+    <ng-template #content let-modal style="z-index: 0;">
 		<div class="modal-header">
 			<h4 class="modal-title" id="modal-title">Send Email to Subscriber</h4>
-			<button type="button" class="btn btn-button" aria-describedby="modal-title"
-				(click)="modal.dismiss('Cross click')">close</button>
+			<button
+				type="button"
+				class="btn btn-danger"
+				aria-describedby="modal-title"
+				(click)="modal.dismiss('Cross click')"
+			>close</button>
 		</div>
 		<div class="modal-body">
 			<!-- <p *ngIf="selectedBanner">
 				<strong>Are you sure you want to delete <span class="text-primary">"{{selectedBanner.email}}"</span> Banner Image?</strong>
 			</p> -->
-			<form [formGroup]="addSubscriberEmailForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-				<div class="box-body">
-					<div class="form-group">
-						<label for="exampleInputEmail1">Email : </label>
-						<input type="text" name="email" autocomplete="off" formControlName="email" class="form-control"
-							placeholder="Email" ngModel="{{selectedBanner.email}}">
-						<span *ngIf="submitted && hasError('email','required')" class="alert-danger">Email is
-							required</span>
-					</div>
-					<div class="form-group">
-						<label for="exampleInputsubject">Subject : </label>
-						<input type="text" name="subject" autocomplete="off" formControlName="subject" class="form-control"
-							placeholder="subject">
-						<span *ngIf="submitted && hasError('subject','required')" class="alert-danger">Subject is
-							required</span>
-					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Content</label>
-						<angular-editor name="content" formControlName="content" [config]="editorConfig">
-						</angular-editor>
-						<span *ngIf="submitted && hasError('content','required')" class="alert-danger">Content is
-							required</span>
-					</div>
-					<div class="modal-footer box-footer">
-						<button type="submit" class="btn btn-button">Submit</button>
-						<!-- <button type="cancel" (click)="onCancel()" class="btn btn-button">Cancel</button> -->
-					</div>
-				</div>
-			</form>
+            <form [formGroup]="addSubscriberEmailForm" (ngSubmit)="onSubmit()" method="post" novalidate>
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email : </label>
+                        <input type="text" name="email" autocomplete="off" formControlName="email"
+                            class="form-control" placeholder="Email" ngModel="{{selectedBanner.email}}" disabled>
+                        <span *ngIf="submitted && hasError('email','required')" class="alert-danger">Email is
+                            required</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputsubject">Subject : </label>
+                        <input type="text" name="subject" autocomplete="off" formControlName="subject"
+                            class="form-control" placeholder="subject">
+                        <span *ngIf="submitted && hasError('subject','required')" class="alert-danger">Subject is
+                            required</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Content</label>
+                        <!-- <angular-editor name="content" formControlName="content" [config]="editorConfig"> </angular-editor> -->
+												<textarea name="content" formControlName="content" class="form-control"></textarea>
+                        <span *ngIf="submitted && hasError('content','required')" class="alert-danger">Content is
+                            required</span>
+                    </div>
+                    <div class="modal-footer box-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <!-- <button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button> -->
+                    </div>
+                </div>
+            </form>
 		</div>
 		<!-- <div class="modal-footer">
-			<button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
-			<button type="button" class="btn btn-button" (click)="deleteBanner()">Ok</button>
+			<button type="button" class="btn btn-danger" (click)="modal.dismiss('cancel click')">Cancel</button>
+			<button type="button" class="btn btn-primary" (click)="deleteBanner()">Ok</button>
 		</div> -->
 	</ng-template>
 
 
-	<ng-template #content1 let-modal style="z-index: 0;">
+    <ng-template #content1 let-modal style="z-index: 0;">
 		<div class="modal-header">
 			<h4 class="modal-title" id="modal-title">Send Email to Subscriber</h4>
-			<button type="button" class="btn btn-button" aria-describedby="modal-title"
-				(click)="modal.dismiss('Cross click')">close</button>
+			<button
+				type="button"
+				class="btn btn-danger"
+				aria-describedby="modal-title"
+				(click)="modal.dismiss('Cross click')"
+			>close</button>
 		</div>
 		<div class="modal-body">
 			<!-- <p *ngIf="selectedBanner">
 				<strong>Are you sure you want to delete <span class="text-primary">"{{selectedBanner.email}}"</span> Banner Image?</strong>
 			</p> -->
-			<form [formGroup]="addSubscriberEmailForm" (ngSubmit)="SendAll()" method="post" novalidate>
-				<div class="box-body">
-					<!-- <div class="form-group">
+            <form [formGroup]="addSubscriberEmailForm" (ngSubmit)="SendAll()" method="post" novalidate>
+                <div class="box-body">
+                    <!-- <div class="form-group">
                         <label for="exampleInputEmail1">Email : </label>
                         <input type="text" name="email" autocomplete="off" formControlName="email"
                             class="form-control" placeholder="Email" ngModel="{{selectedBanner.email}}" disabled>
                         <span *ngIf="submitted && hasError('email','required')" class="alert-danger">Email is
                             required</span>
                     </div> -->
-					<div class="form-group">
-						<label for="exampleInputsubject">Subject : </label>
-						<input type="text" name="subject" autocomplete="off" formControlName="subject" class="form-control"
-							placeholder="subject">
-						<span *ngIf="submitted && hasError('subject','required')" class="alert-danger">Subject is
-							required</span>
-					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Content</label>
-						<angular-editor name="content" formControlName="content" [config]="editorConfig">
-						</angular-editor>
-						<span *ngIf="submitted && hasError('content','required')" class="alert-danger">Content is
-							required</span>
-					</div>
-					<div class="modal-footer box-footer">
-						<button type="submit" class="btn btn-button">Submit All</button>
-						<!-- <button type="cancel" (click)="onCancel()" class="btn btn-button">Cancel</button> -->
-					</div>
-				</div>
-			</form>
+                    <div class="form-group">
+                        <label for="exampleInputsubject">Subject : </label>
+                        <input type="text" name="subject" autocomplete="off" formControlName="subject"
+                            class="form-control" placeholder="subject">
+                        <span *ngIf="submitted && hasError('subject','required')" class="alert-danger">Subject is
+                            required</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Content</label>
+                        <!-- <angular-editor name="content" formControlName="content" [config]="editorConfig"> </angular-editor> -->
+												<textarea name="content" formControlName="content" class="form-control"></textarea>
+                        <span *ngIf="submitted && hasError('content','required')" class="alert-danger">Content is
+                            required</span>
+                    </div>
+                    <div class="modal-footer box-footer">
+                        <button type="submit" class="btn btn-primary">Submit All</button>
+                        <!-- <button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button> -->
+                    </div>
+                </div>
+            </form>
 		</div>
 		<!-- <div class="modal-footer">
-			<button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
-			<button type="button" class="btn btn-button" (click)="deleteBanner()">Ok</button>
+			<button type="button" class="btn btn-danger" (click)="modal.dismiss('cancel click')">Cancel</button>
+			<button type="button" class="btn btn-primary" (click)="deleteBanner()">Ok</button>
 		</div> -->
 	</ng-template>

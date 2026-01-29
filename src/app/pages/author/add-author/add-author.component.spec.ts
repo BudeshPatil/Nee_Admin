@@ -11,7 +11,9 @@ describe('AddAuthorComponent', () => {
       declarations: [ AddAuthorComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AddAuthorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

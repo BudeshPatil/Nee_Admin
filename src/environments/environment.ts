@@ -3,14 +3,22 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  baseUrl: 'http://localhost:5014',
-  Url: 'http://localhost:4314',
-  // Url: 'https://build.pixtar.ae/ghoastrental_admin',
-  // baseUrl:'https://build.pixtar.ae:5009',
+	production: false,
 
-  // Url: 'https://www.ghostrentals.com/admin_dashboard',
-  // baseUrl:'https://www.ghostrentals.com:5014',
+	// Live
+	// baseUrl: 'https://www.neelgund.com:5015',
+	// Url: 'https://www.neelgund.com/admin',
+
+	// Staging
+	// baseUrl: 'https://neelgund.pixtar.ae:5015',
+	// Url: 'https://neelgund.pixtar.ae/admin',
+
+	// Local
+	baseUrl: 'http://localhost:5015',
+	Url: 'http://localhost:4315',
+
+
+
 };
 
 /*

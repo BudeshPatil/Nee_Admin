@@ -72,7 +72,7 @@ export class ResponseService {
     headers: HttpHeaders | { [header: string]: string | string[] };
   } {
     let headers;
-    const token = localStorage.getItem('ghoastrental-token');
+    const token = localStorage.getItem('neelgund-admin-token');
     headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });

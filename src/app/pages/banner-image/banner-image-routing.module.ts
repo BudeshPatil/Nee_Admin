@@ -1,15 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ViewBannerComponent } from './view-banner/view-banner.component';
-import { AddBannerComponent } from './add-banner/add-banner.component';
-import { AuthGuard } from 'src/app/guard/auth.guard';
+import {AuthGuard} from '../../guard/auth.guard';
+import {AddBannerComponent} from '../banner-image/add-banner/add-banner.component';
+import {ViewBannerComponent} from '../banner-image/view-banner/view-banner.component'
 
 const routes: Routes = [
-  {
-    path:'',
-    component : ViewBannerComponent,
-    canActivate: [AuthGuard],
-  },
   {
     path:'add',
     component : AddBannerComponent,
@@ -26,11 +21,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {title: 'edit'},
   },
-  {
-    path:'**',
-    component : ViewBannerComponent,
-    canActivate: [AuthGuard],
-  }
   
 ];
 

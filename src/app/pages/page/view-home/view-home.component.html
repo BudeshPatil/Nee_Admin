@@ -1,34 +1,46 @@
-<!-- Page content -->
-<div class="container-fluid mt--7">
-  <!-- Table -->
-  <div class="row">
-    <div class="col">
-      <div class="card shadow">
-        <div class="card-header border-0">
-          <h3 class="mb-0">SEO Pages</h3>
-        </div>
-        <div class="table-responsive">
-          <table class="table align-items-center table-flush">
-            <tr>
-              <th>Page Name</th>
-              <th>Action</th>
-            </tr>
-            <td colspan="5" *ngIf="msg_danger">
-              <div class="alert alert-dismissable" style="text-align: center;">
-                Home Page Data List is Empty
-              </div>
-            </td>
-            <tr *ngFor="let listPage of pageData; let i = index">
-              <td>{{listPage.page_name}}</td>
-              <td>
-                <a routerLink="/page/home-edit/{{listPage._id}}" style="cursor:pointer"><i class="mdi mdi-lead-pencil"
-                    aria-hidden="true"></i>
-                </a>
-              </td>
-            </tr>
-          </table>
-        </div>
+<aside class="right-side">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+       <h1>
+           Home Page 
+       </h1>
+       <ol class="breadcrumb">
+           <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+           <li class="active">Page</li>
+       </ol>
+   </section>
+   <!-- Main content --> 
+   <section class="content">
+             
+      <div class="row">
+          <div class="col-xs-12">
+              <div class="box">
+                  <div class="box-header">
+                      <h3 class="box-title">Home Page Data List</h3>
+                  </div><!-- /.box-header -->
+                  <div class="box-body table-responsive">
+                      <table class="table table-hover table-bordered">
+                          <tr>
+                              <th>Page Name</th>
+                              <th>Action</th>
+                          </tr>
+                          <td colspan="5" *ngIf="msg_danger">
+                            <div class="alert alert-dismissable" style="text-align: center;">
+                                Home Page Data List is Empty
+                            </div>
+                          </td>
+                          <tr *ngFor="let listPage of pageData; let i = index">
+                            <td>{{listPage.page_name}}</td>
+                            <td> 
+                                <a routerLink="/page/home-edit/{{listPage._id}}" style="cursor:pointer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                </a>
+                             </td>
+                         </tr>
+                      </table>
+                  </div><!-- /.box-body -->
+              </div><!-- /.box -->
+          </div>
       </div>
-    </div>
-  </div>
-</div>
+
+  </section><!-- /.content --> 
+  </aside><!-- /.right-side -->      

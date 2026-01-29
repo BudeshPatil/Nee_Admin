@@ -11,7 +11,9 @@ describe('PaginationComponent', () => {
       declarations: [ PaginationComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(PaginationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

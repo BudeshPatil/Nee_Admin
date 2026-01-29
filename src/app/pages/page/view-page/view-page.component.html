@@ -1,65 +1,96 @@
-<!-- Page content -->
-<div class="container-fluid mt--7">
-  <!-- Table -->
-  <div class="row">
-    <div class="col">
-      <div class="card shadow">
-        <div class="card-header border-0">
-          <h3 class="mb-0">SEO Pages</h3>
-        </div>
-        <div class="card-body">
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body">
+        <!-- Card stats -->
+
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">SEO Pages</h3>
+          </div>
           <div class="col-md-12 mb-4">
             <div class="row">
               <div class="col-md-6">
-                <input class="form-control mt-4" type="text" (keyup)="searchPage()" name="search"
-                  [(ngModel)]="searchText" autocomplete="off" placeholder="&#61442;  Start searching a Pages by name">
+                <input class="form-control mt-4" type="text" (keyup)="searchPage()" name="search" [(ngModel)]="searchText"
+                                            autocomplete="off" placeholder="&#61442;  Start searching a Pages  name">
               </div>
-              <div class="col-md-6"><button type="button" class="btn btn-button pull-right ml-auto mt-4"
+              <div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
                   routerLink="/page/addpage">Add Page</button></div>
             </div>
           </div>
           <div class="table-responsive">
             <table class="table align-items-center table-flush">
-              <thead>
-                <tr>
-                  <th>SL No</th>
-                  <th>Page Name</th>
-                  <th>Meta Title</th>
-                  <th>Meta Description</th>
-                  <th>Meta Keywords</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <td colspan="5" *ngIf="msg_danger">
-                  <div class="alert alert-dismissable" style="text-align: center;">
-                    Page List is Empty
+                    <thead>
+                        <tr>
+                            <th>SL No</th>
+                            <th>Page Name</th>
+                            <th>Meta Title</th>
+                            <th>Meta Description</th>
+                            <th>Meta Keywords</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <td colspan="5" *ngIf="msg_danger">
+                            <div class="alert alert-dismissable" style="text-align: center;">
+                                Page List is Empty
+                            </div>
+                        </td>
+                        <tr *ngFor="let listPage of pageData | filter:searchText; let i = index">
+                            <td *ngIf="currentPage == 1">{{i+1}}</td>
+                            <td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
+                            <td>{{listPage.page_name}}</td>
+                            <td>{{listPage.meta_title}}</td>
+                            <td>{{listPage.meta_description}}</td>
+                            <td>{{listPage.meta_keywords}}</td>
+                            <td>
+                                <a routerLink="/page/edit/{{listPage._id}}" style="cursor:pointer"><i
+                                        class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                </a>
+                                <a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listPage)"><i
+                                  class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
+                    <app-pagination
+                        #pagination
+                        [initialPage]="currentPage"
+                        [count]="totalRecord"
+                        (changePage)="onListChangePage($event)"
+                    ></app-pagination>
                   </div>
-                </td>
-                <tr *ngFor="let listPage of pageData | filter:searchText; let i = index">
-                  <td *ngIf="currentPage == 1">{{i+1}}</td>
-                  <td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-                  <td>{{listPage.page_name}}</td>
-                  <td>{{listPage.meta_title}}</td>
-                  <td>{{listPage.meta_description}}</td>
-                  <td>{{listPage.meta_keywords}}</td>
-                  <td>
-                    <a routerLink="/page/edit/{{listPage._id}}" style="cursor:pointer"><i class="mdi mdi-lead-pencil"
-                        aria-hidden="true"></i>
-                    </a>
-                    <a style="cursor:pointer;padding-left: 15px;" (click)="deletePage(listPage._id)"><i
-                        class="mdi mdi-close-box" aria-hidden="true"></i></a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="pcommece-pagination" *ngIf="totalRecord > 0 && !searchText">
-              <app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
-                (changePage)="onListChangePage($event)"></app-pagination>
-            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+<!-- Banner Delete Popup -->
+<ng-template #content let-modal style="z-index: 0;">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Page deletion</h4>
+    <button type="button" class="btn btn-danger" aria-describedby="modal-title"
+      (click)="modal.dismiss('Cross click')">close</button>
+  </div>
+  <div class="modal-body">
+    <p *ngIf="selectedPage">
+      <strong>Are you sure you want to delete <span class="text-primary">"{{selectedPage.page_name}}"</span> Page?</strong>
+    </p>
+    <!-- <p>
+      All information associated to this Banner Image will be permanently deleted.
+      <span class="text-danger">This operation can not be undone.</span>
+    </p> -->
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss('cancel click')">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="deletePage()">Ok</button>
+  </div>
+</ng-template>

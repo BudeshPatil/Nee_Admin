@@ -11,7 +11,9 @@ describe('ViewPageComponent', () => {
       declarations: [ ViewPageComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ViewPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

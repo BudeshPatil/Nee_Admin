@@ -11,7 +11,9 @@ describe('ViewAuthorComponent', () => {
       declarations: [ ViewAuthorComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ViewAuthorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

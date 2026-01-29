@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BlogService } from 'src/app/providers/blog/blog.service';
-import { environment } from 'src/environments/environment';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { environment } from '../../../../environments/environment'
+
+// Services
+import { BlogService } from '../../../providers/blog/blog.service';
+import { from } from 'rxjs';
 
 @Component({
 	selector: 'app-view-blog',
 	templateUrl: './view-blog.component.html',
-	styleUrls: ['./view-blog.component.scss']
+	styleUrls: ['./view-blog.component.css']
 })
-
-export class ViewBlogComponent {
-
+export class ViewBlogComponent implements OnInit {
 	msg_danger: boolean = false;
 	blogData: any;
 	imagePath: any;
@@ -19,7 +19,7 @@ export class ViewBlogComponent {
 	// pagination
 	currentPage: number = 1;
 	initialized: boolean = false;
-	currentLimit: number = 5;
+	currentLimit: number = 10;
 	totalRecord: number = 0;
 	searchText = '';
 	config = {
@@ -51,15 +51,11 @@ export class ViewBlogComponent {
 		},
 	};
 	isactive: any;
-	selectedBlog: any;
-	closeResult = '';
-	modalReference = null;
 	constructor(
 		private router: Router,
-		private blogService: BlogService,
-		private modalService: NgbModal,
+		private blogService: BlogService
 	) {
-		this.imagePath = environment.baseUrl + '/public/';
+		this.imagePath = environment.baseUrl + '/public/blog/';
 
 	}
 
@@ -92,15 +88,19 @@ export class ViewBlogComponent {
 		);
 	}
 
-	deleteblog() {
-		if (this.selectedBlog) {
-			var mylist = { id: this.selectedBlog._id };
+	onListChangePage(event: any) {
+		this.currentPage = event;
+		this.get_blogData();
+	}
+
+	deleteblog(listid: any) {
+		if (confirm("Are you sure to delete this Blog")) {
+			var mylist = { id: listid };
 			this.blogService.deleteblog(mylist).subscribe(
 				(response) => {
 					if (response.code == 200) {
 						this.get_blogData();
 						this.router.navigate(['/blog/view']);
-						this.modalService.dismissAll();
 					}
 				},
 			);
@@ -143,28 +143,4 @@ export class ViewBlogComponent {
 		this.config.labels.unchecked = 'Change';
 		this.isactive = 'none';
 	}
-
-	open(content, data) {
-		this.selectedBlog = data;
-		this.modalReference = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-			(result) => {
-				this.closeResult = `Closed with: ${result}`;
-			},
-			(reason) => {
-				this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-			},
-		);
-	}
-
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
-		} else {
-			return `with: ${reason}`;
-		}
-	}
-
-
 }

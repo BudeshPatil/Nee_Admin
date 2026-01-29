@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../environments/environment'
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+
 // Services
 import { TestimonialService } from '../../../providers/testimonial/testimonial.service';
 import { from } from 'rxjs';
@@ -16,9 +16,9 @@ import { from } from 'rxjs';
 @Component({
   selector: 'app-view-testimonial',
   templateUrl: './view-testimonial.component.html',
-  styleUrls: ['./view-testimonial.component.scss']
+  styleUrls: ['./view-testimonial.component.css']
 })
-export class ViewTestimonialComponent {
+export class ViewTestimonialComponent implements OnInit {
   msg_danger: boolean = false;
   testimonialData: any;
   imagePath : any;
@@ -57,17 +57,13 @@ export class ViewTestimonialComponent {
     },
   };
   isactive :any ;
-  selectedData:any;
-	modalReference = null;
-  closeResult = '';
+
   constructor(
     private router: Router,
-    private testimonialservice:TestimonialService,
-    private modalService: NgbModal,
-		private activeModal: NgbActiveModal
+    private testimonialservice:TestimonialService
   )
-  { 
-    this.imagePath = environment.baseUrl+'/public/';
+  {
+    this.imagePath = environment.baseUrl+'/public/testimonial/';
     this.config.switchColor.checked = '#dcdcdc';
     this.config.color.checked = '#dcdcdc';
     this.config.labels.checked = 'Change';
@@ -86,13 +82,13 @@ export class ViewTestimonialComponent {
     };
     this.testimonialservice.getTestimonialDetails(obj).subscribe(
         (response)=> {
-          if (response.code == 200) 
+          if (response.code == 200)
           {
             if(response.result != null && response.result != '')
             {
               this.testimonialData = response.result;
-              this.totalRecord     = response?.count; 
-              window.scroll(0,0); 
+              this.totalRecord     = response?.count;
+              window.scroll(0,0);
             }
             else
             {
@@ -106,54 +102,28 @@ export class ViewTestimonialComponent {
   onListChangePage(event:any) {
     this.currentPage = event;
     this.get_testimonialData();
-  } 
+  }
 
-  deleteTestimonial()
+  deleteTestimonial(listid:any)
   {
-    if(this.selectedData)
+    if(confirm("Are you sure to delete this testimonial"))
     {
-      var mylist = {id:this.selectedData ._id};
+      var mylist = {id:listid};
       this.testimonialservice.deleteTestimonial(mylist).subscribe(
         (response)=> {
-          if (response.code == 200) 
-          {   
+          if (response.code == 200)
+          {
             this.get_testimonialData();
             this.router.navigate(['/testimonial/view']);
-            this.modalService.dismissAll();
           }
         },
       );
     }
   }
-  open(content,data) {
-    this.selectedData = data;
-		if (this.selectedData) {
-		var mylist = { id: this.selectedData._id };
-		this.modalReference = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-			(result) => {
-				this.closeResult = `Closed with: ${result}`;
-			},
-			(reason) => {
-				this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-			},
-		);
-		}
-	}
-
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
-		} else {
-			return `with: ${reason}`;
-		}
-	}
-
   searchProduct(){
     if(this.searchText){
       this.currentLimit = 1000;
-      this.currentPage = 1; 
+      this.currentPage = 1;
     } else {
       this.currentLimit = 10;
     }
@@ -186,4 +156,5 @@ export class ViewTestimonialComponent {
     this.config.labels.unchecked = 'Change';
     this.isactive = 'none';
 	}
+
 }
