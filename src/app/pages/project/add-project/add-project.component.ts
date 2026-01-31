@@ -140,6 +140,11 @@ export class AddProjectComponent implements OnInit {
 			sequence_number: [''],
 			url_key: ['', Validators.required],
 			related_prjects: [],
+			area: [''],
+			noofplots: [''],
+			amenties: [''],
+			dimentions: [''],
+			price: ['']
 		})
 		this.imagePath = environment.baseUrl + '/public/';
 
@@ -201,7 +206,11 @@ export class AddProjectComponent implements OnInit {
 						owner: data?.owner,
 						location: data?.location,
 						url_key: data?.url_key,
-						related_prjects: data?.related_prjects
+						related_prjects: data?.related_prjects,
+						area: data?.area,
+						noofplots: data?.noofplots,
+						price: data?.price,
+						dimentions: data?.dimentions
 					})
 				} else {
 

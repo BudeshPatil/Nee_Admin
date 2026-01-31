@@ -39,21 +39,6 @@
 						<form [formGroup]="addProjectForm" (ngSubmit)="onSubmit()" method="post" novalidate>
 							<div class="box-body">
 								<div class="form-group row mb-3">
-									<!-- <div class="col-md-3">
-										<div class="row">
-											<div class="col-6">
-											<label for="exampleInputEmail1">Featured : </label>
-										</div>
-										<div class="col-6">
-											<ng-toggle name="featured" formControlName="featured" class="toogle_btn"
-												[disabled]="config.disabled" [width]="config.width" [height]="config.height"
-												[margin]="config.margin" [labels]="config.yes_no_labels" [color]="config.color"
-												[switchColor]="config.switchColor" [fontColor]="config.fontColor" [fontSize]="config.fontSize"
-												required>
-											</ng-toggle>
-										</div>
-										</div>
-									</div> -->
 									<div class="col-md-4">
 										<div class="row">
 											<div class="col-6">
@@ -69,28 +54,13 @@
 											</div>
 										</div>
 									</div>
-									<!-- <div class="col-md-3">
-										<div class="row">
-											<div class="col-6">
-											<label for="exampleInputEmail1">Display on Service Page : </label>
-										</div>
-										<div class="col-6">
-											<ng-toggle name="display_on_service" formControlName="display_on_service" class="toogle_btn"
-												[disabled]="config.disabled" [width]="config.width" [height]="config.height"
-												[margin]="config.margin" [labels]="config.yes_no_labels" [color]="config.color"
-												[switchColor]="config.switchColor" [fontColor]="config.fontColor" [fontSize]="config.fontSize"
-												required></ng-toggle>
-										</div>
-										</div>
-									</div> -->
 								</div>
 								<div class="form-group">
 									<label for="exampleInputEmail1">Project Name <span> * </span></label>
 									<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
 										placeholder="Project Name">
 									<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Project Name
-										is
-										required</span>
+										is required</span>
 									<span *ngIf="submitted && hasError('name','maxlength')" class="alert-danger">Please
 										Enter the 30 length Project Name</span>
 								</div>
@@ -103,22 +73,6 @@
 									<span *ngIf="submitted && hasError('category','required')" class="alert-danger">Select Type of Project
 										is required</span>
 								</div>
-
-								<div class="form-group">
-									<label for="exampleInputEmail1">Scope <span> * </span> </label>
-									<input type="text" name="scope" autocomplete="off" formControlName="scope" class="form-control"
-										placeholder="Scope">
-									<span *ngIf="submitted && hasError('scope','required')" class="alert-danger">Scope is
-										required</span>
-								</div>
-
-								<div class="form-group">
-									<label for="exampleInputEmail1">Client <span> * </span></label>
-									<input type="text" name="owner" autocomplete="off" formControlName="owner" class="form-control"
-										placeholder="Client">
-									<span *ngIf="submitted && hasError('owner','required')" class="alert-danger">Client is
-										required</span>
-								</div>
 								<div class="form-group">
 									<label for="exampleInputEmail1">Year <span> * </span> </label>
 									<input type="text" name="year" autocomplete="off" formControlName="year" class="form-control"
@@ -126,7 +80,6 @@
 									<span *ngIf="submitted && hasError('year','required')" class="alert-danger">Year is
 										required</span>
 								</div>
-
 								<div class="form-group">
 									<label for="exampleInputEmail1">Location <span> * </span> </label>
 									<input type="text" name="location" autocomplete="off" formControlName="location" class="form-control"
@@ -134,23 +87,48 @@
 									<span *ngIf="submitted && hasError('location','required')" class="alert-danger">Location is
 										required</span>
 								</div>
-
 								<div class="form-group">
-									<label for="exampleInputEmail1">Project Overview <span> * </span> </label>
+									<label for="exampleInputEmail1">Area <span> * </span> </label>
+									<input type="text" name="area" autocomplete="off" formControlName="area" class="form-control"
+										placeholder="Area">
+									<span *ngIf="submitted && hasError('area','required')" class="alert-danger">Area is
+										required</span>
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">No of Plots <span> * </span> </label>
+									<input type="text" name="noofplots" autocomplete="off" formControlName="noofplots" class="form-control"
+										placeholder="No of Plots">
+									<span *ngIf="submitted && hasError('noofplots','required')" class="alert-danger">No of Plots is
+										required</span>
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Amenties <span> * </span> </label>
+									<input type="text" name="amenties" autocomplete="off" formControlName="amenties" class="form-control"
+										placeholder="Amenties">
+									<span *ngIf="submitted && hasError('amenties','required')" class="alert-danger">Amenties is
+										required</span>
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Dimentions <span> * </span> </label>
+									<input type="text" name="dimentions" autocomplete="off" formControlName="dimentions" class="form-control"
+										placeholder="Dimentions">
+									<span *ngIf="submitted && hasError('dimentions','required')" class="alert-danger">Dimentions is
+										required</span>
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Project Overview/Descriptions <span> * </span> </label>
 									<angular-editor name="desc" formControlName="desc" [config]="editorConfig">
 									</angular-editor>
 									<span *ngIf="submitted && hasError('desc','required')" class="alert-danger">Project Overview is
 										required</span>
 								</div>
-
-								<div class="form-group">
+								<!-- <div class="form-group">
 									<label for="exampleInputEmail1">Description 1</label>
 									<angular-editor name="desc_1" formControlName="desc_1" [config]="editorConfig">
 									</angular-editor>
 									<span *ngIf="submitted && hasError('desc_1','required')" class="alert-danger">Description 1 is
 										required</span>
 								</div>
-
 								<div class="form-group">
 									<label for="exampleInputEmail1">The Brief</label>
 									<angular-editor name="the_brief" formControlName="the_brief" [config]="editorConfig">
@@ -167,22 +145,20 @@
 										Scope Of Work is required
 									</span>
 								</div>
-								<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Key Features</label>
-								<angular-editor name="key_features" formControlName="key_features" [config]="editorConfig">
-								</angular-editor>
-								<span *ngIf="submitted && hasError('key_features','required')" class="alert-danger">
-									Key Features is required
-								</span>
-							</div> -->
-
-								<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Description 2</label>
-								<angular-editor name="desc_2" formControlName="desc_2" [config]="editorConfig">
-								</angular-editor>
-								<span *ngIf="submitted && hasError('desc_2','required')" class="alert-danger">Description 2 is
-									required</span>
-							</div> -->
+								<div class="form-group">
+									<label for="exampleInputEmail1">Scope <span> * </span> </label>
+									<input type="text" name="scope" autocomplete="off" formControlName="scope" class="form-control"
+										placeholder="Scope">
+									<span *ngIf="submitted && hasError('scope','required')" class="alert-danger">Scope is
+										required</span>
+								</div>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Client <span> * </span></label>
+									<input type="text" name="owner" autocomplete="off" formControlName="owner" class="form-control"
+										placeholder="Client">
+									<span *ngIf="submitted && hasError('owner','required')" class="alert-danger">Client is
+										required</span>
+								</div>
 
 								<div class="form-group">
 									<label for="exampleInputEmail1">Description 3</label>
@@ -190,15 +166,7 @@
 									</angular-editor>
 									<span *ngIf="submitted && hasError('desc_3','required')" class="alert-danger">Description 3 is
 										required</span>
-								</div>
-
-								<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Link</label>
-								<input type="text" name="link" autocomplete="off" formControlName="link" class="form-control"
-									placeholder="Project Link">
-								<span *ngIf="submitted && hasError('link','required')" class="alert-danger">Link is
-									required</span>
-							</div> -->
+								</div> -->
 
 								<div class="form-group">
 									<label for="exampleInputEmail1">Project Thumbnail Image <div class="tooltip-wrapper">
@@ -222,7 +190,6 @@
 									</label>
 									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputProjectThumb($event)"
 										[uploadInput]="uploadInput" />
-									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 510 *720)</label> -->
 									<div class="row" *ngIf="projectImageThumb">
 										<div class="col-md-2">
 											<img alt="logo" style="height: 100px; width: 100px;"
@@ -254,7 +221,6 @@
 										</div> </label>
 									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
 										[uploadInput]="uploadInput" />
-									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 1920 *1080)</label> -->
 									<div class="row" *ngIf="projectImage">
 										<div class="col-md-2">
 											<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{projectImage}}">
@@ -264,53 +230,6 @@
 									</div>
 								</div>
 								<hr>
-								<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Project Thumbnail Image <div class="tooltip-wrapper">
-										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show1 = true"
-											(mouseleave)="show1 = false" style="transform: none;  color: #525f7f;">
-											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
-													stroke-linecap="round" />
-												<circle cx="12" cy="7" r="1" fill="currentColor" />
-											</svg></button>
-										<div class="tooltip-card" *ngIf="show1">
-											<h5 class="tooltip-title">Note</h5>
-											<p class="tooltip-text">
-												Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 510 * 720 px)
-											</p>
-											<span class="tooltip-arrow"></span>
-										</div>
-									</div>
-								</label>
-								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputProjectThumb($event)"
-									[uploadInput]="uploadInput" /> -->
-								<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 510 *720)</label> -->
-								<!-- <div class="row" *ngIf="projectImageThumb">
-									<div class="col-md-2">
-										<img alt="logo" style="height: 100px; width: 100px;"
-											src="{{imagePath}}project/{{projectImageThumb}}">
-										<a href="javascript:;" (click)="removeImageThumb(projectImageThumb)" class="small-box-footer"><i
-												class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
-									</div>
-								</div>
-							</div> -->
-								<!-- <hr> -->
-								<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Project Multil Image</label>
-								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputProjectImage($event)"
-									[uploadInput]="uploadInput" />
-								<label for="exampleInputEmail2" style="display: block;">(Required Size 780 * 700)px</label>
-
-								<div class="row">
-									<div class="col-md-2" *ngFor="let proimage of projectMultiImages; let i = index;">
-										<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{proimage}}">
-										<a href="javascript:;" (click)="removeImageHover(i)" class="small-box-footer"><i class="fa fa-trash"
-												style="color: red;" aria-hidden="true"></i></a>
-									</div>
-								</div>
-							</div>
-							<hr> -->
 
 								<div class="form-group">
 									<label for="exampleInputEmail1">Image 1 <div class="tooltip-wrapper">
@@ -333,7 +252,6 @@
 										</div></label>
 									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD1($event)"
 										[uploadInput]="uploadInput" />
-									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 1635 * 700)px</label> -->
 									<div class="row" *ngIf="designImage1">
 										<div class="col-md-2">
 											<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage1}}">
@@ -366,7 +284,6 @@
 									</label>
 									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD2($event)"
 										[uploadInput]="uploadInput" />
-									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 1635 * 700)px</label> -->
 									<div class="row" *ngIf="designImage2">
 										<div class="col-md-2">
 											<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage2}}">
@@ -376,34 +293,6 @@
 										</div>
 									</div>
 								</div>
-
-								<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Image 3</label>
-								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD3($event)"
-									[uploadInput]="uploadInput" />
-								<label for="exampleInputEmail1" style="display: block;">(Required Size 450 * 520)px</label>
-								<div class="row" *ngIf="designImage3">
-									<div class="col-md-2">
-										<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage3}}">
-										<a href="javascript:;" (click)="removeD3Image(designImage3)" class="small-box-footer"><i
-												class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Image 4</label>
-								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD4($event)"
-									[uploadInput]="uploadInput" />
-								<label for="exampleInputEmail1" style="display: block;">(Required Size 1080 *
-									700)px</label>
-								<div class="row" *ngIf="designImage4">
-									<div class="col-md-2">
-										<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage4}}">
-										<a href="javascript:;" (click)="removeD4Image(designImage4)" class="small-box-footer"><i
-												class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
-									</div>
-								</div>
-							</div> -->
 								<hr>
 								<div class="form-group">
 									<label for="exampleInputEmail1">Project Design Image <div class="tooltip-wrapper">
@@ -459,8 +348,6 @@
 									</label>
 									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutputD5($event)"
 										[uploadInput]="uploadInput" />
-									<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 1635 *
-									700)px</label> -->
 									<div class="row" *ngIf="designImage5">
 										<div class="col-md-2">
 											<img alt="logo" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{designImage5}}">
@@ -476,9 +363,7 @@
 										placeholder="Select Projects" [multiple]="true" formControlName="related_prjects">
 									</ng-select>
 									<span *ngIf="submitted && hasError('related_prjects','required')" class="alert-danger">Related
-										Projects
-										is
-										required</span>
+										Projects is required</span>
 								</div>
 
 								<div class="form-group">

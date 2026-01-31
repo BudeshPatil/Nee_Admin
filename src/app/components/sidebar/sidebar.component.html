@@ -102,11 +102,6 @@
 					</a>
 				</li>
 			</ul>
-			<!-- Divider -->
-			<!-- <hr class="my-3"> -->
-			<!-- Heading -->
-			<!-- <h6 class="navbar-heading text-muted">Home Page</h6> -->
-			<!-- Navigation -->
 			<ul class="navbar-nav">
 				<li *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
 					<a routerLinkActive="active" [routerLink]="[menuItem.path]" class="nav-link"
@@ -122,9 +117,9 @@
 			<!-- Divider -->
 			<ul class="navbar-nav mb-md-3">
 				<li class="nav-item">
-					<a class="nav-link" [routerLink]="['/homepage/banner-view']" routerLinkActive="active">
+					<a class="nav-link" [routerLink]="['/banner-images/view']" routerLinkActive="active">
 						<i class="ni ni-image text-black"></i>
-						Banner Image
+						Banner Images
 					</a>
 				</li>
 				<li class="nav-item">
@@ -137,21 +132,17 @@
 				<li class="nav-item">
 					<a class="nav-link" [routerLink]="['/category/view']" routerLinkActive="active">
 						<i class="ni ni-briefcase-24 text-black"></i>
-						Services / Categories
+						Categories
 					</a>
 				</li>
-
 				<li class="nav-item">
-					<a class="nav-link" [routerLink]="['/tvshow/view']" routerLinkActive="active">
-						<i class="ni ni-single-02 text-black"></i>
-						Our Clients
+					<a class="nav-link" [routerLink]="['/project/view']" routerLinkActive="active">
+						<i class="ni ni-folder-17 text-black"></i> Projects
 					</a>
 				</li>
-
 				<li class="nav-item">
-					<a class="nav-link" [routerLink]="['/counter/view']" routerLinkActive="active">
-						<i class="ni ni-chart-bar-32 text-black"></i>
-						Counters
+					<a class="nav-link" [routerLink]="['/service/view']" routerLinkActive="active">
+						<i class="ni ni-briefcase-24 text-black"></i> Services
 					</a>
 				</li>
 
@@ -166,74 +157,32 @@
 			<!-- Divider -->
 			<hr class="my-3">
 			<!-- Heading -->
-			<h6 class="navbar-heading text-muted">About Page</h6>
+			<h6 class="navbar-heading text-muted">Pages</h6>
 			<!-- Divider -->
 			<ul class="navbar-nav mb-md-3">
-				<li class="nav-item">
-					<a class="nav-link" [routerLink]="['/aboutpage/banner-view']" routerLinkActive="active">
-						<i class="ni ni-image text-black"></i> Banner Image
-					</a>
-				</li>
-				<li class="nav-item">
+				<!-- <li class="nav-item">
 					<a class="nav-link" [routerLink]="['/aboutpage/about-view']" routerLinkActive="active">
 						<i class="ni ni-single-copy-04 text-black"></i> About Description
 					</a>
-				</li>
-			</ul>
-
-			<!-- Divider -->
-			<hr class="my-3">
-			<!-- Heading -->
-			<h6 class="navbar-heading text-muted">Service Page</h6>
-			<!-- Divider -->
-			<ul class="navbar-nav mb-md-3">
-				<li class="nav-item">
-					<a class="nav-link" [routerLink]="['/service/view']" routerLinkActive="active">
-						<i class="ni ni-briefcase-24 text-black"></i> Banner Image
-					</a>
-				</li>
-			</ul>
-
-			<!-- Divider -->
-			<hr class="my-3">
-			<!-- Heading -->
-			<h6 class="navbar-heading text-muted">Portfolio Page</h6>
-			<!-- Divider -->
-			<ul class="navbar-nav mb-md-3">
-				<li class="nav-item">
-					<a class="nav-link" [routerLink]="['/project/view']" routerLinkActive="active">
-						<i class="ni ni-folder-17 text-black"></i> Portfolio
-					</a>
-				</li>
-			</ul>
-
-					<!-- Divider -->
-			<hr class="my-3">
-			<!-- Heading -->
-			<h6 class="navbar-heading text-muted">CONTACT PAGE</h6>
-			<!-- Divider -->
-			<ul class="navbar-nav mb-md-3">
-				<li class="nav-item">
-					<a class="nav-link" [routerLink]="['/contact/list']" routerLinkActive="active">
-						<i class="ni ni-email-83 text-black"></i> Contact List
-					</a>
-				</li>
-			</ul>
-
-			<!-- Divider -->
-			<hr class="my-3">
-			<!-- Heading -->
-			<h6 class="navbar-heading text-muted">Add Master Data</h6>
-			<!-- Divider -->
-			<ul class="navbar-nav mb-md-3">
-				<li class="nav-item">
-					<a class="nav-link" [routerLink]="['/banner-images/view']" routerLinkActive="active">
-						<i class="ni ni-single-copy-04 text-black"></i> Banner
-					</a>
-				</li>
+				</li> -->
 				<li class="nav-item">
 					<a class="nav-link" [routerLink]="['/about/view']" routerLinkActive="active">
 						<i class="ni ni-app text-black"></i> About
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" [routerLink]="['/project/view']" routerLinkActive="active">
+						<i class="ni ni-folder-17 text-black"></i> Projects
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" [routerLink]="['/service/view']" routerLinkActive="active">
+						<i class="ni ni-briefcase-24 text-black"></i> Services
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" [routerLink]="['/contact/list']" routerLinkActive="active">
+						<i class="ni ni-email-83 text-black"></i> Contact List
 					</a>
 				</li>
 			</ul>
