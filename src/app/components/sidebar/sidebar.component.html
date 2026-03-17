@@ -7,9 +7,10 @@
 		</button>
 		<!-- Brand -->
 		<a class="navbar-brand pt-0 m-0" routerLinkActive="active" [routerLink]="['/dashboard']">
-			<!-- <p>neelgund Admin Dashboard</p> -->
+			<p>Neelgund Admin Dashboard</p>
 			<!-- <img src="assets/img/dr-minnie-logo.svg" alt="Logo" class="custom-logo"> -->
-			<img src="assets/img/brand/phdesign-logo.png" alt="Logo" class="custom-logo mx-auto d-block">
+			<img src="../../../assets/logo/neelgund.png" alt="Logo" class="custom-logo mx-auto d-block">
+			 <!-- Neelgund -->
 
 		</a>
 		<!-- User -->
@@ -123,21 +124,27 @@
 					</a>
 				</li>
 				<li class="nav-item">
+					<a class="nav-link" [routerLink]="['/counter/view']" routerLinkActive="active">
+						<i class="ni ni-briefcase-24 text-black"></i>
+						Counter
+					</a>
+				</li>
+				<li class="nav-item">
 					<a class="nav-link" [routerLink]="['/homepage/about-view']" routerLinkActive="active">
 						<i class="ni ni-single-copy-04 text-black"></i>
-						Founder Message
+						About Neelgund
 					</a>
 				</li>
 
 				<li class="nav-item">
 					<a class="nav-link" [routerLink]="['/category/view']" routerLinkActive="active">
 						<i class="ni ni-briefcase-24 text-black"></i>
-						Categories
+						Project Status
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" [routerLink]="['/project/view']" routerLinkActive="active">
-						<i class="ni ni-folder-17 text-black"></i> Projects
+						<i class="ni ni-folder-17 text-black"></i>OnGoing Projects
 					</a>
 				</li>
 				<li class="nav-item">

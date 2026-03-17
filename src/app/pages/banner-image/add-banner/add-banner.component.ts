@@ -74,7 +74,7 @@ export class AddBannerComponent {
 		this.uploadInput = new EventEmitter<UploadInput>();
 		this.options = { concurrency: 0, allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif'] };
 		this.addbannerForm = this.formBuilder.group({
-			name: ['', Validators.required],
+			name: [''],
 			status: [true, Validators.required],
 			description: [''],
 			short_desc: [''],

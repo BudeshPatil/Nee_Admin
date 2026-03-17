@@ -102,13 +102,7 @@
 								<span *ngIf="submitted && hasError('price','required')" class="alert-danger">Price is
 									required</span>
 							</div> -->
-							<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Link</label>
-								<input type="text" name="link" autocomplete="off" formControlName="link" class="form-control"
-									placeholder="Service Link">
-								<span *ngIf="submitted && hasError('link','required')" class="alert-danger">Link is
-									required</span>
-							</div> -->
+							
 							<div class="form-group">
 								<label for="exampleInputEmail1">Service Banner <div class="tooltip-wrapper">
 										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show2 = true"
@@ -151,6 +145,13 @@
 								<span *ngIf="submitted && hasError('sequence_number','required')" class="alert-danger">Sequence Number
 									is required</span>
 							</div> -->
+							<div class="form-group">
+								<label for="exampleInputEmail1">URL Key</label>
+								<input type="text" name="link" autocomplete="off" formControlName="link" class="form-control"
+									placeholder="URL Key">
+								<span *ngIf="submitted && hasError('link','required')" class="alert-danger">URL Key is
+									required</span>
+							</div>
 							<div class="form-group">
 								<label for="exampleInputEmail1">Status</label>
 								<select name="status" formControlName="status" class="form-control">

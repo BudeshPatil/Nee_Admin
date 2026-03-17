@@ -22,7 +22,7 @@ export class PageService {
   };
 
   GenrateXml = (data:any): Observable<any> => {
-    const endpoint = environment.baseUrl+'/api/home/pixtarxml';
+    const endpoint = environment.baseUrl+'/api/home/innoventiesxml';
     return this.http.post(endpoint, data,this.getRequestHeaders()).pipe(
       catchError((err) => {
         return throwError(err);

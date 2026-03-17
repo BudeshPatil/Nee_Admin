@@ -39,14 +39,14 @@ export class ViewCounterComponent implements OnInit {
 		private toastr: ToastrManager,
 	) {
 		this.addForm = this.formBuilder.group({
-			total_reviews: [''],
+			total_plots: [''],
+			plots_desc: [''],
+			total_clients: [''],
+			clients_desc: [''],
+			total_experience: [''],
+			experience_desc: [''],
 			total_projects: [''],
-			total_years_exp: [''],
-			total_countries: [''],
-			total_home: [''],
-			total_commercial: [''],
-			total_client: [''],
-			total_year: [''],
+			projects_desc: [''],
 		});
 		this.token = localStorage.getItem('neelgund-admin-token');
 
@@ -71,14 +71,14 @@ export class ViewCounterComponent implements OnInit {
 						this.totalRecord = response?.count;
 						let data = this.CounterData[0];
 						this.addForm.patchValue({
-							total_reviews: data?.total_reviews,
+							total_plots: data?.total_plots,
+							plots_desc: data?.plots_desc,
+							total_clients: data?.total_clients,
+							clients_desc: data?.clients_desc,
+							total_experience: data?.total_experience,
+							experience_desc: data?.experience_desc,
 							total_projects: data?.total_projects,
-							total_years_exp: data?.total_years_exp,
-							total_countries: data?.total_countries,
-							total_home: data?.total_home,
-							total_commercial: data?.total_commercial,
-							total_client: data?.total_client,
-							total_year: data?.total_year,
+							projects_desc: data?.projects_desc,
 						});
 						window.scroll(0, 0);
 					}

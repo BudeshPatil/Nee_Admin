@@ -172,7 +172,7 @@
 				<span *ngIf="submittedMedia && hasMediaFormError('name','required')" class="alert-danger">File Name is
 					required</span>
 			</div>
-			<div class="form-group">
+			<!-- <div class="form-group">
 				<label for="exampleInputEmail1">File Type</label>
 				<select name="file_type" formControlName="file_type" class="form-control">
 					<option value="">Select File Type</option>
@@ -182,13 +182,13 @@
 				<span *ngIf="submittedMedia && hasMediaFormError('file_type','required')" class="alert-danger">Please
 					Select
 					File Type</span>
-			</div>
-			<div class="form-group">
+			</div> -->
+			<!-- <div class="form-group">
 				<label for="exampleInputEmail1">Alt</label>
 				<input type="text" name="alt" autocomplete="off" formControlName="alt" class="form-control"
 					placeholder="Alt Tag">
 				<span *ngIf="submitted && hasMediaFormError('alt','required')" class="alert-danger">Alt is required</span>
-			</div>
+			</div> -->
 			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'image'">
 				<label for="exampleInputEmail1">Media Image <span class="required">*</span></label><br>
 				<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'image')"
@@ -208,7 +208,7 @@
 				<span *ngIf="submittedMedia && hasMediaFormError('src','required')" class="alert-danger">Please Select
 					Video</span>
 			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'image'">
+			<!-- <div class="form-group" *ngIf="addmediaForm.value.file_type == 'image'">
 				<label for="exampleInputEmail1">Role</label>
 				<select name="role" #selectRole formControlName="role" class="form-control"
 					(change)="selectImageRole($event,selectRole.value)">
@@ -229,13 +229,13 @@
 				<label for="exampleInputEmail1">Width</label>
 				<input type="number" name="width" autocomplete="off" formControlName="width" class="form-control"
 					placeholder="Width">
-			</div>
+			</div> -->
 			<div class="form-group">
 				<label for="exampleInputEmail1">Sequence Number</label>
 				<input type="number" name="sequence_number" autocomplete="off" formControlName="sequence_number"
 					class="form-control" placeholder="Sequence Number">
 			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+			<!-- <div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
 				<label for="exampleInputEmail1">Mute</label>
 				<input type="text" name="mute" autocomplete="off" formControlName="mute" class="form-control"
 					placeholder="Mute">
@@ -259,14 +259,14 @@
 					<option value="false">Deactive</option>
 				</select>
 				<span *ngIf="submitted && hasMediaFormError('loop','required')" class="alert-danger">Please Select Loop</span>
-			</div>
-			<div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
+			</div> -->
+			<!-- <div class="form-group" *ngIf="addmediaForm.value.file_type == 'video'">
 				<label for="exampleInputEmail1">Full Screen</label>
 				<input type="text" name="full_screen" autocomplete="off" formControlName="full_screen" class="form-control"
 					placeholder="Full Screen">
 				<span *ngIf="submitted && hasMediaFormError('full_screen','required')" class="alert-danger">Full Screen is
 					required</span>
-			</div>
+			</div> -->
 			<div class="form-group">
 				<label for="exampleInputEmail1">Select Status</label>
 				<select name="status" formControlName="status" class="form-control">

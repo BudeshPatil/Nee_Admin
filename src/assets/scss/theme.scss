@@ -75,28 +75,29 @@ body{
 }
 body.bg-default
 {
-    background-color: #eae3e1 !important;
+    background-color: #f0f1f2 !important;
 }
 .nav-link {
-	color: #323232 !important;
+	color: #2d465e !important;
 }
 
 .nav-link i.ni {
-	color: #323232 !important;
+	color: #2d465e !important;
 }
 
 .navbar-vertical .navbar-nav .nav-link.active {
-	background-color: #eae3e1;
+	background-color: #2986cc;
+	color: #ffffff;
 	font-weight: 600;
 }
 
 .bg-gradient-info {
-	background: transparent !important;
+	background: linear-gradient(87deg, #2986cc 0, #2986cc 100%) !important;
 }
 
 .btn-info {
-	background-color: #423f3f;
-	border-color: #423f3f;
+	background-color: #2986cc;
+	border-color: #2986cc;
 }
 
 .btn-info:hover,

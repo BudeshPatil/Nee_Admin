@@ -22,8 +22,8 @@
 					<div class="row align-items-center">
 						<div class="col-8">
 							<!-- <h3 class="mb-0">Update/Edit Services</h3> -->
-							<h3 class="mb-0" *ngIf="id">Update/Edit Services</h3>
-							<h3 class="mb-0" *ngIf="!id">Add New Services</h3>
+							<h3 class="mb-0" *ngIf="id">Update/Edit Project Status</h3>
+							<h3 class="mb-0" *ngIf="!id">Add New Project Status</h3>
 						</div>
 					</div>
 					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
@@ -38,173 +38,10 @@
 					<form [formGroup]="addcategoryForm" (ngSubmit)="onSubmit()" method="post" novalidate>
 						<div class="box-body">
 							<div class="form-group">
-								<label for="exampleInputEmail1">Service Name <span>*</span></label>
+								<label for="exampleInputEmail1">Project Status Name <span>*</span></label>
 								<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
-									placeholder="Service Name">
+									placeholder="Project Status">
 								<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Service Name is
-									required</span>
-							</div>
-
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Short Description <span>* </span>
-									<div class="tooltip-wrapper">
-										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show = true"
-											(mouseleave)="show = false" style="transform: none;  color: #525f7f;">
-											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
-													stroke-linecap="round" />
-												<circle cx="12" cy="7" r="1" fill="currentColor" />
-											</svg></button>
-										<div class="tooltip-card" *ngIf="show">
-											<h5 class="tooltip-title">Note</h5>
-											<p class="tooltip-text">
-												To maintain the website design, please keep the content within 200–300 characters.
-											</p>
-											<span class="tooltip-arrow"></span>
-										</div>
-									</div>
-								</label>
-								<textarea type="text" name="short_desc" id="short_desc" autocomplete="off" formControlName="short_desc"
-									class="form-control" placeholder="Short Description"> </textarea>
-								<span *ngIf="submitted && hasError('short_desc','required')" class="alert-danger">
-									Short Description is required
-								</span>
-							</div>
-
-							<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Description</label>
-								<angular-editor name="description" formControlName="description"
-									[config]="editorConfig"></angular-editor>
-								<span *ngIf="submitted && hasError('description','required')" class="alert-danger">Description is
-									required</span>
-							</div> -->
-
-
-
-							<div class="form-group">
-								<!-- <h4 class="text-lg-start">Home Page - Thumbnail Image <span class="required">*</span></h4> -->
-								<label class="text-lg-start">Home Page - Thumbnail Image
-									<div class="tooltip-wrapper">
-										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show1 = true"
-											(mouseleave)="show1 = false" style="transform: none;  color: #525f7f;">
-											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
-													stroke-linecap="round" />
-												<circle cx="12" cy="7" r="1" fill="currentColor" />
-											</svg></button>
-										<div class="tooltip-card" *ngIf="show1">
-											<h5 class="tooltip-title">Note</h5>
-											<p class="tooltip-text">
-												Upload images in the recommended sizes to avoid layout issues. <br>
-												(Required Size for Image w-510 px * h-720 px)
-											</p>
-											<span class="tooltip-arrow"></span>
-										</div>
-									</div>
-
-								</label>
-
-								<div class="row text-lg-start">
-									<div class="col-lg-3 col-md-4 col-6" *ngIf="mediaData">
-										<a class="cursor:pointer;text-center" (click)="deleteMedia('media', null, mediaData)">
-											<i class="ni ni-fat-remove" aria-hidden="true"></i></a>
-										<a class="d-block mb-4 h-100">
-											<img src="{{imagePath}}category/{{mediaData.src}}" class="img-fluid img-thumbnail"
-												*ngIf="mediaData && mediaData.file_type == 'image'" width="200" height="350"
-												(click)="editMedia(media,mediaData,'media')">
-											<video class="img-fluid img-thumbnail" *ngIf="mediaData && mediaData.file_type == 'video'"
-												width="200" height="350" (click)="editMedia(media,mediaData,'media')" controls>
-												<source src="{{imagePath}}category/{{mediaData.src}}" type="video/mp4">
-											</video>
-										</a>
-									</div>
-									<div class="col-lg-3 col-md-4 col-6">
-										<a (click)="openMedia(media)" class="d-block mb-4 h-100">
-											<img src="{{url}}/img/addimage.svg" class="img-fluid img-thumbnail" width="150" height="150">
-										</a>
-									</div>
-								</div>
-								<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size for Image w510-px *
-									h-720px)</label> -->
-								<!-- <span *ngIf="submitted && hasError('product_gallery','required')" class="alert-danger">Gallery Images is required</span> -->
-							</div>
-							<hr>
-							<div class="form-group">
-								<!-- <h4 class="text-lg-start">Service Image <span class="required">*</span></h4> -->
-								<label class="text-lg-start">Home Page - Service Image
-									<div class="tooltip-wrapper">
-										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show2 = true"
-											(mouseleave)="show2 = false" style="transform: none;  color: #525f7f;">
-											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
-													stroke-linecap="round" />
-												<circle cx="12" cy="7" r="1" fill="currentColor" />
-											</svg></button>
-										<div class="tooltip-card" *ngIf="show2">
-											<h5 class="tooltip-title">Note</h5>
-											<p class="tooltip-text">
-												Upload images in the recommended sizes to avoid layout issues. <br>
-												(Required Size for Image w-1642 px * h-711 px)
-											</p>
-											<span class="tooltip-arrow"></span>
-										</div>
-									</div>
-
-								</label>
-
-								<div class="row text-lg-start">
-									<div class="col-lg-3 col-md-4 col-6" *ngFor="let mediaval of galleryData;let i = index">
-										<a class="cursor:pointer;text-center" (click)="deleteMedia('gallery', i, mediaval)">
-											<i class="ni ni-fat-remove" aria-hidden="true"></i></a>
-										<a class="d-block mb-4 h-100">
-											<img src="{{imagePath}}category/{{mediaval.src}}" class="img-fluid img-thumbnail"
-												*ngIf="mediaval && mediaval.file_type == 'image'" width="200" height="350"
-												(click)="editMedia(gallery,mediaval,'gallery')">
-											<video class="img-fluid img-thumbnail" *ngIf="mediaval && mediaval.file_type == 'video'"
-												width="400" height="450" (click)="editMedia(gallery,mediaval,'gallery')" controls>
-												<source src="{{imagePath}}category/{{mediaval.src}}" type="video/mp4">
-											</video>
-										</a>
-									</div>
-									<div class="col-lg-3 col-md-4 col-6">
-										<a (click)="openMedia(gallery)" class="d-block mb-4 h-100">
-											<img src="{{url}}/img/addimage.svg" class="img-fluid img-thumbnail" width="150" height="150">
-										</a>
-									</div>
-								</div>
-								<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size for Image w-1642px * h-711px)
-								</label> -->
-								<br>
-								<!-- <span *ngIf="submitted && hasError('product_gallery','required')" class="alert-danger">Gallery Images is required</span> -->
-							</div>
-							<hr>
-							<div class="form-group">
-								<label for="exampleInputEmail1">URL Key <span> * </span>
-									<div class="tooltip-wrapper">
-										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show3 = true"
-											(mouseleave)="show3 = false" style="transform: none;  color: #525f7f;">
-											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
-													stroke-linecap="round" />
-												<circle cx="12" cy="7" r="1" fill="currentColor" />
-											</svg></button>
-										<div class="tooltip-card" *ngIf="show3">
-											<h5 class="tooltip-title">Note</h5>
-											<p class="tooltip-text">
-												Enter a unique word or the project’s first word to generate the Service URL.
-											</p>
-											<span class="tooltip-arrow"></span>
-										</div>
-									</div>
-								</label>
-								<input type="text" name="url_key" autocomplete="off" formControlName="url_key" class="form-control"
-									placeholder="URL Key">
-								<span *ngIf="submitted && hasError('url_key','required')" class="alert-danger">URL Key is
 									required</span>
 							</div>
 							<div class="form-group">
