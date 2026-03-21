@@ -13,7 +13,7 @@ import { AddBlogComponent } from './add-blog/add-blog.component';
 import { ViewBlogComponent } from './view-blog/view-blog.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgToggleModule } from 'ng-toggle-button';
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { PipemoduleModule } from '../../pipemodule.module';
 
 @NgModule({
@@ -32,7 +32,7 @@ import { PipemoduleModule } from '../../pipemodule.module';
     AngularEditorModule,
     NgxPaginationModule,
     Ng2SearchPipeModule,
-    NgToggleModule,
+    UiSwitchModule,
     PipemoduleModule
   ],
   exports:[PaginationComponent]

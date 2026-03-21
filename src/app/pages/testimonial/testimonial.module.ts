@@ -10,7 +10,7 @@ import { AddTestimonialComponent } from './add-testimonial/add-testimonial.compo
 import { ViewTestimonialComponent } from './view-testimonial/view-testimonial.component';
 import { NgSelectModule } from "@ng-select/ng-select";
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgToggleModule } from 'ng-toggle-button';
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { PipemoduleModule } from '../../pipemodule.module';
 
 @NgModule({ 
@@ -28,7 +28,7 @@ import { PipemoduleModule } from '../../pipemodule.module';
     BlogModule,
     NgSelectModule,
     Ng2SearchPipeModule,
-    NgToggleModule,
+    UiSwitchModule,
     PipemoduleModule
   ]
 })

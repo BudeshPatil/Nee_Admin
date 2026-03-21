@@ -45,12 +45,12 @@
 												<label for="exampleInputEmail1">Display on Home Page : </label>
 											</div>
 											<div class="col-6">
-												<ng-toggle name="display_on_home" formControlName="display_on_home" class="toogle_btn"
-													[disabled]="config.disabled" [width]="config.width" [height]="config.height"
-													[margin]="config.margin" [labels]="config.yes_no_labels" [color]="config.color"
-													[switchColor]="config.switchColor" [fontColor]="config.fontColor" [fontSize]="config.fontSize"
-													required>
-												</ng-toggle>
+												<ui-switch
+  formControlName="display_on_home"
+  class="toogle_btn"
+  [disabled]="config.disabled"
+  color="green">
+</ui-switch>
 											</div>
 										</div>
 									</div>

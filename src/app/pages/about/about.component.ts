@@ -9,7 +9,6 @@ import { environment } from '../../../environments/environment';
 import { from } from 'rxjs';
 import { AboutService } from '../../providers/about/about.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { NgxQrcodeStylingComponent, NgxQrcodeStylingService } from 'ngx-qrcode-styling';
 import { MediaService } from 'src/app/providers/media/media.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ResponseService } from 'src/app/providers/response/response.service';
@@ -103,7 +102,6 @@ export class AboutComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private toastr: ToastrManager,
 		private mediaService: MediaService,
-		private testDI: NgxQrcodeStylingService,
 		private modalService: NgbModal,
 		public responseService: ResponseService
 	) {

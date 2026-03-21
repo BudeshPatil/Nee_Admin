@@ -7,7 +7,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { PageModule } from '../page/page.module';
 import { BlogModule } from '../blog/blog.module';// search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgToggleModule } from 'ng-toggle-button';
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { PipemoduleModule } from '../../pipemodule.module';
 import { StudentRoutingModule } from './student-routing.module';
 import { AddStudentComponent } from './add-student/add-student.component';
@@ -30,7 +30,7 @@ import { ViewStudentComponent } from './view-student/view-student.component';
     PageModule,
     BlogModule,
     Ng2SearchPipeModule,
-    NgToggleModule,
+    UiSwitchModule,
     PipemoduleModule
   ]
 })

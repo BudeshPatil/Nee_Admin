@@ -18,10 +18,9 @@ import { NgxUploaderModule } from 'ngx-uploader';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { ToastrModule } from 'ng6-toastr-notifications';
 import { NgSelectModule } from "@ng-select/ng-select";
-import { NgxQrcodeStylingModule } from 'ngx-qrcode-styling';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AngMusicPlayerModule } from  'ang-music-player';
-import { NgToggleModule } from 'ng-toggle-button';
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { PipemoduleModule } from './pipemodule.module';
 
 @NgModule({
@@ -38,12 +37,12 @@ import { PipemoduleModule } from './pipemodule.module';
     NgxUploaderModule,
     AngularEditorModule,
     ToastrModule.forRoot(),
-    NgxQrcodeStylingModule,
     NgSelectModule,
     Ng2SearchPipeModule,
-    NgToggleModule,
+    UiSwitchModule,
     PipemoduleModule.forRoot(),
-    AngMusicPlayerModule
+    AngMusicPlayerModule,
+    UiSwitchModule
   ],
   declarations: [
     AppComponent,

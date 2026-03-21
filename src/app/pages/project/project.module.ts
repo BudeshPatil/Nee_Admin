@@ -11,7 +11,7 @@ import { ViewProjectComponent } from './view-project/view-project.component';
 import { BlogModule } from '../blog/blog.module';
 import { NgSelectModule } from "@ng-select/ng-select";
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgToggleModule } from 'ng-toggle-button';
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { PipemoduleModule } from '../../pipemodule.module';
 
 @NgModule({
@@ -30,7 +30,7 @@ import { PipemoduleModule } from '../../pipemodule.module';
 		BlogModule,
 		NgSelectModule,
 		Ng2SearchPipeModule,
-		NgToggleModule,
+		UiSwitchModule,
 		PipemoduleModule
 	]
 })

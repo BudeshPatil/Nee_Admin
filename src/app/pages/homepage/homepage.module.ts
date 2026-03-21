@@ -12,7 +12,7 @@ import { HomeBannerEditComponent } from './home-banner/home-banner-edit/home-ban
 import { PageModule } from '../page/page.module';
 import { BlogModule } from '../blog/blog.module';// search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgToggleModule } from 'ng-toggle-button';
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { PipemoduleModule } from '../../pipemodule.module';
 import { HomeAboutEditComponent } from './home-about/home-about-edit/home-about-edit.component';
 import { HomeAboutViewComponent } from './home-about/home-about-view/home-about-view.component';
@@ -34,7 +34,7 @@ import { HomeAboutViewComponent } from './home-about/home-about-view/home-about-
 		PageModule,
 		BlogModule,
 		Ng2SearchPipeModule,
-		NgToggleModule,
+		UiSwitchModule,
 		PipemoduleModule
 	]
 })

@@ -7,7 +7,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { PageModule } from '../page/page.module';
 import { BlogModule } from '../blog/blog.module';// search module
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgToggleModule } from 'ng-toggle-button';
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { PipemoduleModule } from '../../pipemodule.module';
 import { AwardRoutingModule } from './award-routing.module';
 import { AddAwardComponent } from './add-award/add-award.component';
@@ -30,7 +30,7 @@ import { ViewAwardComponent } from './view-award/view-award.component';
     PageModule,
     BlogModule,
     Ng2SearchPipeModule,
-    NgToggleModule,
+    UiSwitchModule,
     PipemoduleModule
   ]
 })

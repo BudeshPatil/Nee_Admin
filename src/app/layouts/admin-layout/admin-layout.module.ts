@@ -15,7 +15,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 // import { ToastrModule } from 'ngx-toastr';
 import { NgSelectModule } from "@ng-select/ng-select";
-import { NgToggleModule } from 'ng-toggle-button';
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { PipemoduleModule } from '../../pipemodule.module';
 
 @NgModule({
@@ -29,7 +29,7 @@ import { PipemoduleModule } from '../../pipemodule.module';
     ReactiveFormsModule,
     NgxPaginationModule,
     NgSelectModule,
-    NgToggleModule,
+    UiSwitchModule,
     PipemoduleModule
   ],
   declarations: [

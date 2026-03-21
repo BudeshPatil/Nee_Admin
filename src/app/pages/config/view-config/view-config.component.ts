@@ -9,7 +9,6 @@ import { environment } from '../../../../environments/environment';
 import { from } from 'rxjs';
 import { ConfigService } from '../../../providers/config/config.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { NgxQrcodeStylingComponent, NgxQrcodeStylingService } from 'ngx-qrcode-styling';
 
 @Component({
   selector: 'app-view-config',
@@ -58,8 +57,7 @@ export class ViewConfigComponent implements OnInit {
     private configService: ConfigService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private toastr: ToastrManager,
-    private testDI: NgxQrcodeStylingService
+    private toastr: ToastrManager
   ) {
     this.uploadInput = new EventEmitter<UploadInput>();
     this.addconfigForm = this.formBuilder.group({
@@ -235,7 +233,7 @@ export class ViewConfigComponent implements OnInit {
   /**
    * Update
    */
-  public onUpdate(qrcode: NgxQrcodeStylingComponent) {
+  public onUpdate(qrcode) {
     qrcode
       .update(qrcode.config, {
         // frameOptions: {
@@ -256,7 +254,7 @@ export class ViewConfigComponent implements OnInit {
   /**
    * Download
    */
-  onDownload(qrcode: NgxQrcodeStylingComponent): void {
+  onDownload(qrcode): void {
     qrcode.download('QR.png').subscribe((res) => {
       // TO DO something!
       console.log('download:', res);

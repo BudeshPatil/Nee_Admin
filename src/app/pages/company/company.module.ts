@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxUploaderModule } from 'ngx-uploader';
 import { BlogModule } from '../blog/blog.module';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { NgToggleModule } from 'ng-toggle-button';
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { PipemoduleModule } from '../../pipemodule.module';
 import { CompanyAddComponent } from './company-add/company-add.component';
 import { CompanyViewComponent } from './company-view/company-view.component';
@@ -30,7 +30,7 @@ import { CompanyViewComponent } from './company-view/company-view.component';
 		NgxUploaderModule,
 		BlogModule,
 		Ng2SearchPipeModule,
-		NgToggleModule,
+		UiSwitchModule,
 		PipemoduleModule
 	]
 })

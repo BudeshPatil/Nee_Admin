@@ -36,20 +36,12 @@
 								<th>Description</th>
 								<th>Image</th>
 								<!-- <th>Category</th> -->
-								<th>Status <ng-toggle
+								<th>Status <ui-switch
 									[(ngModel)]="isactive"
 									[disabled]="config.disabled"
-									[width]="config.width"
-									[height]="config.height"
-									[margin]="config.margin"
-									[labels]="config.labels"
-									[color]="config.color"
-									[switchColor]="config.switchColor"
-									[fontColor]="config.fontColor"
-									[fontSize]="config.fontSize"
-									(click)="changeStatus()"
-									required
-							></ng-toggle> <a (click)="resetFilter()" class="btn btn-sm btn-info mr-4">Reset</a></th>
+									
+									(change)="changeStatus()">
+									</ui-switch> <a (click)="resetFilter()" class="btn btn-sm btn-info mr-4">Reset</a></th>
 								<th>Created At</th>
 								<th>Action</th>
 							</tr>

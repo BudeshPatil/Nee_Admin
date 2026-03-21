@@ -9,7 +9,6 @@ import { BlogModule } from '../blog/blog.module';// search module
 
 import { ConfigRoutingModule } from './config-routing.module';
 import { ViewConfigComponent } from './view-config/view-config.component';
-import { NgxQrcodeStylingModule } from 'ngx-qrcode-styling';
 
 @NgModule({
   declarations: [
@@ -24,8 +23,7 @@ import { NgxQrcodeStylingModule } from 'ngx-qrcode-styling';
     NgxUploaderModule,
     AngularEditorModule,
     PageModule,
-    BlogModule,
-    NgxQrcodeStylingModule
+    BlogModule
   ]
 })
 export class ConfigModule { }
