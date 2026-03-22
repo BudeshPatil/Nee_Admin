@@ -71,7 +71,7 @@
 									Banner List is Empty
 								</div>
 							</td>
-							<tr *ngFor="let listBanner of BannerData | filter:searchText | activefilter:isactive; let i = index">
+							<tr *ngFor="let listBanner of BannerData | filter:searchText; let i = index">
 								<td *ngIf="currentPage == 1">{{i+1}}</td>
 								<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
 								<td>{{listBanner.name}}</td>

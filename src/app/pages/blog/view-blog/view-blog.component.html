@@ -62,7 +62,7 @@
 									Blog List is Empty
 								</div>
 							</td>
-							<tr *ngFor="let listblog of blogData | filter:searchText | activefilter:isactive; let i = index">
+							<tr *ngFor="let listblog of blogData | filter:searchText; let i = index">
 								<td>{{listblog.name}}</td>
 								<td><img src="{{imagePath}}{{listblog.image}}" alt="logo" style="height: 100px;width: 100px;"></td>
 								<td>{{listblog.category_name}}</td>
