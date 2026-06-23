@@ -1,0 +1,88 @@
+.neelgund-pagination {
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	background-color: #36aef5;
+}
+
+.btn-primary {
+	color: #ffffff;
+	background-color: #423f3f;
+	border-color: #423f3f;
+}
+.card.shadow {
+	margin-bottom: 5rem;
+}
+
+/* message popup css */
+
+/* Backdrop */
+.modal-backdrop-custom {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.55);
+	z-index: 1000;
+}
+
+/* Modal wrapper */
+.modal-custom {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1001;
+}
+
+/* Modal box */
+.modal-content-custom {
+	background: #ffffff;
+	width: 100%;
+	max-width: 520px;
+	padding: 20px 24px;
+	border-radius: 6px;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+	animation: modalFadeIn 0.25s ease-out;
+}
+
+/* Title */
+.modal-content-custom h4 {
+	margin: 0 0 12px;
+	font-size: 18px;
+	font-weight: 600;
+}
+
+/* Text */
+.modal-content-custom p {
+	margin: 6px 0;
+	color: #444;
+	line-height: 1.5;
+}
+
+/* Footer buttons */
+.modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 20px;
+	gap: 10px;
+}
+
+/* Animation */
+@keyframes modalFadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+.modal-close-btn {
+	background: transparent;
+	border: none;
+	font-size: 22px;
+	cursor: pointer;
+	line-height: 1;
+}
+/* message popup css */

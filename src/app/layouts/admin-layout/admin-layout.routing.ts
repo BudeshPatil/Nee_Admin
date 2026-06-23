@@ -194,4 +194,9 @@ export const AdminLayoutRoutes: Routes = [
 		loadChildren: () => import("./../../pages/aboutpage/aboutpage.module").then((m) => m.AboutpageModule),
 		data: { title: 'About Module' },
 	},
+	{
+		path: 'priceonrequest',
+		loadChildren: () => import("./../../pages/priceonrequest/priceonrequest.module").then((m) => m.PriceonrequestModule),
+		data: { title: 'Price On Request Module' },
+	},
 ];

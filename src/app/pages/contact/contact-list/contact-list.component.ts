@@ -44,7 +44,14 @@ export class ContactListComponent implements OnInit {
 			(response) => {
 				if (response.code == 200) {
 					if (response.result != null && response.result != '') {
-						this.contactData = response.result;
+						// this.contactData = response.result;
+						if(response.result.length > 0 ){
+						this.contactData = response.result.filter((item: any) => {
+						if(item.subject != 'price_on_request'){
+							return true; // Keep items with subject "Price On Request"th
+						}  
+						});
+						}
 						this.totalRecord = response?.count;
 					}
 					else {
