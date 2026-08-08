@@ -306,6 +306,21 @@ export class AddBannerComponent {
 		}
 	}
 
+	onUploadOutputMobile(output: UploadOutput): void {
+		if (output.type === 'allAddedToQueue') {
+			const event: UploadInput = {
+				type: 'uploadAll',
+				url: environment.baseUrl + '/api/banner/addimage',
+				method: 'POST',
+				data: {},
+			};
+			this.uploadInput.emit(event);
+		}
+		else if (output.type === 'done' && typeof output.file !== 'undefined') {
+			this.ImageName = output.file.response.result;
+		}
+	}
+
 	selectImageRole(event, role) {
 		if (role == 'base') {
 			this.addmediaForm.patchValue({

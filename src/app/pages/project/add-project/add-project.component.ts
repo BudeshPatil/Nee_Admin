@@ -40,6 +40,8 @@ export class AddProjectComponent implements OnInit {
 	submitted: boolean = false;
 	msg_success: boolean = false;
 	msg_danger: boolean = false;
+	phaseSlugError: string = '';
+	phaseExpanded: boolean[] = [];
 
 	// Edit Action Here
 	applyAction: any;
@@ -144,7 +146,8 @@ export class AddProjectComponent implements OnInit {
 			noofplots: [''],
 			amenties: [''],
 			dimentions: [''],
-			price: ['']
+			price: [''],
+			phases: this.formBuilder.array([])
 		})
 		this.imagePath = environment.baseUrl + '/public/';
 
@@ -152,6 +155,148 @@ export class AddProjectComponent implements OnInit {
 
 	public hasError = (controlName: string, errorName: string) => {
 		return this.addProjectForm.controls[controlName].hasError(errorName);
+	}
+
+	get phases(): FormArray {
+		return this.addProjectForm.get('phases') as FormArray;
+	}
+
+	createPhaseGroup(): FormGroup {
+		return this.formBuilder.group({
+			name: ['', [Validators.required, Validators.maxLength(255)]],
+			slug: ['', Validators.required],
+			description: [''],
+			area: [''],
+			noofplots: [''],
+			dimensions: [''],
+			price: [''],
+			map: [''],
+			location: [''],
+			image: [''],
+			image_thumbnail: [''],
+			project_images: [[]],
+			featured: [false],
+			status: [true]
+		});
+	}
+
+	addPhase(): void {
+		this.phases.push(this.createPhaseGroup());
+		this.phaseExpanded.push(true);
+		this.phaseSlugError = '';
+	}
+
+	removePhase(index: number): void {
+		if (confirm('Are you sure to remove this phase?')) {
+			this.phases.removeAt(index);
+			this.phaseExpanded.splice(index, 1);
+			this.phaseSlugError = '';
+		}
+	}
+
+	togglePhase(index: number): void {
+		this.phaseExpanded[index] = !this.phaseExpanded[index];
+	}
+
+	phaseHasError(index: number, controlName: string, errorName: string): boolean {
+		const control = this.phases.at(index)?.get(controlName);
+		return !!(control && control.hasError(errorName));
+	}
+
+	setProjectPhases(phases: any[]): void {
+		this.phases.clear();
+		this.phaseExpanded = [];
+		if (!Array.isArray(phases) || phases.length === 0) {
+			return;
+		}
+		phases.forEach((phase: any) => {
+			const phaseGroup = this.createPhaseGroup();
+			phaseGroup.patchValue({
+				name: phase?.name || '',
+				slug: phase?.slug || '',
+				description: phase?.description || '',
+				area: phase?.area || '',
+				noofplots: phase?.noofplots || '',
+				dimensions: phase?.dimensions || '',
+				price: phase?.price || '',
+				map: phase?.map || '',
+				location: phase?.location || '',
+				image: phase?.image || '',
+				image_thumbnail: phase?.image_thumbnail || '',
+				project_images: Array.isArray(phase?.project_images) ? phase.project_images : [],
+				featured: phase?.featured || false,
+				status: phase?.status !== undefined ? phase.status : true
+			});
+			this.phases.push(phaseGroup);
+			this.phaseExpanded.push(true);
+		});
+	}
+
+	onUploadOutputPhaseImage(output: UploadOutput, index: number): void {
+		if (output.type === 'allAddedToQueue') {
+			const event: UploadInput = {
+				type: 'uploadAll',
+				url: environment.baseUrl + '/api/project/addimage',
+				method: 'POST',
+				data: {},
+			};
+			this.uploadInput.emit(event);
+		}
+		else if (output.type === 'done' && typeof output.file !== 'undefined') {
+			this.phases.at(index)?.get('image')?.setValue(output.file.response.result);
+		}
+	}
+
+	onUploadOutputPhaseThumb(output: UploadOutput, index: number): void {
+		if (output.type === 'allAddedToQueue') {
+			const event: UploadInput = {
+				type: 'uploadAll',
+				url: environment.baseUrl + '/api/project/addimage',
+				method: 'POST',
+				data: {},
+			};
+			this.uploadInput.emit(event);
+		}
+		else if (output.type === 'done' && typeof output.file !== 'undefined') {
+			this.phases.at(index)?.get('image_thumbnail')?.setValue(output.file.response.result);
+		}
+	}
+
+	onUploadOutputPhaseGallery(output: UploadOutput, index: number): void {
+		if (output.type === 'allAddedToQueue') {
+			const event: UploadInput = {
+				type: 'uploadAll',
+				url: environment.baseUrl + '/api/project/addimage',
+				method: 'POST',
+				data: {},
+			};
+			this.uploadInput.emit(event);
+		}
+		else if (output.type === 'done' && typeof output.file !== 'undefined') {
+			const currentImages = this.phases.at(index)?.get('project_images')?.value || [];
+			currentImages.push(output.file.response.result);
+			this.phases.at(index)?.get('project_images')?.setValue(currentImages);
+		}
+	}
+
+	removePhaseImage(index: number): void {
+		if (confirm('Are you sure to delete this image')) {
+			this.phases.at(index)?.get('image')?.setValue('');
+		}
+	}
+
+	removePhaseThumbnail(index: number): void {
+		if (confirm('Are you sure to delete this image')) {
+			this.phases.at(index)?.get('image_thumbnail')?.setValue('');
+		}
+	}
+
+	removePhaseGalleryImage(index: number, imageIndex: number): void {
+		if (confirm('Are you sure to delete this image')) {
+			const currentImages = this.phases.at(index)?.get('project_images')?.value || [];
+			currentImages.splice(imageIndex, 1);
+			this.phases.at(index)?.get('project_images')?.setValue(currentImages);
+		}
 	}
 
 	ngOnInit(): void {
@@ -211,7 +356,8 @@ export class AddProjectComponent implements OnInit {
 						noofplots: data?.noofplots,
 						price: data?.price,
 						dimentions: data?.dimentions
-					})
+					});
+					this.setProjectPhases(data?.phases || []);
 				} else {
 
 				}
@@ -222,9 +368,30 @@ export class AddProjectComponent implements OnInit {
 
 	onSubmit() {
 		this.submitted = true;
+		this.phaseSlugError = '';
 		let obj = this.addProjectForm.value;
 		let id = this.id;
 
+		if (this.addProjectForm.invalid) {
+			return;
+		}
+
+		const phaseValues = (this.phases.value || []).map((phase: any) => ({
+			...phase,
+			project_images: Array.isArray(phase?.project_images) ? phase.project_images : []
+		}));
+		const phaseSlugs = phaseValues
+			.map((phase: any) => (phase?.slug || '').toString().trim().toLowerCase())
+			.filter((slug: string) => slug.length > 0);
+		const duplicateSlug = phaseSlugs.some((slug: string, index: number) => phaseSlugs.indexOf(slug) !== index);
+
+		if (duplicateSlug) {
+			this.phaseSlugError = 'Phase slug must be unique.';
+			this.toastr.errorToastr(this.phaseSlugError);
+			return;
+		}
+
+		obj.phases = phaseValues;
 		obj['design_image_1'] = this.designImage1;
 		obj['design_image_2'] = this.designImage2;
 		// obj['design_image_3'] = this.designImage3;
@@ -234,9 +401,6 @@ export class AddProjectComponent implements OnInit {
 		obj['image_thumnail'] = this.projectImageThumb;
 		obj['project_images'] = this.projectMultiImages;
 		obj['project_design_images'] = this.projectDesignImages;
-		if (this.addProjectForm.invalid) {
-			return;
-		}
 
 		if (!this.isEdit) {
 			this.projectservice.addProject(obj).subscribe(
@@ -424,12 +588,12 @@ export class AddProjectComponent implements OnInit {
 		this.router.navigate(['/project/view']);
 	}
 
-	removeD1Image(index) {
+	removeD1Image(index: number) {
 		if (confirm("Are you sure to delete this image")) {
 			this.designImage1 = "";
 		}
 	}
-	removeD2Image(index) {
+	removeD2Image(index: number) {
 		if (confirm("Are you sure to delete this image")) {
 			this.designImage2 = "";
 		}
@@ -444,36 +608,36 @@ export class AddProjectComponent implements OnInit {
 	// 		this.designImage4 = "";
 	// 	}
 	// }
-	removeD5Image(index) {
+	removeD5Image(index: number) {
 		if (confirm("Are you sure to delete this image")) {
 			this.designImage5 = "";
 		}
 	}
-	removeImage(index) {
+	removeImage(index: number) {
 		if (confirm("Are you sure to delete this image")) {
 			this.projectImage = "";
 		}
 	}
-	removeImageThumb(index) {
+	removeImageThumb(index: number) {
 		if (confirm("Are you sure to delete this image")) {
 			this.projectImageThumb = "";
 		}
 	}
 
-	removeImageHover(index) {
+	removeImageHover(index: number) {
 		if (confirm("Are you sure to delete this image")) {
 			this.projectMultiImages.splice(index, 1)
 		}
 	}
 
-	removeDesignImage(index) {
+	removeDesignImage(index: number) {
 		if (confirm("Are you sure to delete this image")) {
 			this.projectDesignImages.splice(index, 1)
 		}
 	}
 
 	getAllProjects() {
-		let obj = {};
+		let obj: any = {};
 		if (this.isEdit) {
 			obj['existedproject'] = this.id;
 			if (this.projectData) {

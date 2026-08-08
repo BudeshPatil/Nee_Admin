@@ -129,6 +129,32 @@
 								<img *ngIf="serviceImage" alt="logo" style="height: 100px; width: 100px;"
 									src="{{imagePath}}{{serviceImage}}">
 							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Service Icon <div class="tooltip-wrapper">
+										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show3 = true"
+											(mouseleave)="show3 = false" style="transform: none;  color: #525f7f;">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
+												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
+													stroke-linecap="round" />
+												<circle cx="12" cy="7" r="1" fill="currentColor" />
+											</svg></button>
+										<div class="tooltip-card" *ngIf="show3">
+											<h5 class="tooltip-title">Note</h5>
+											<p class="tooltip-text">
+												Upload images in the recommended sizes to avoid layout issues. <br>(Required Size 80 * 80 px)
+											</p>
+											<span class="tooltip-arrow"></span>
+										</div>
+									</div>
+								</label><br>
+								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadIcon($event,'icon')"
+									[uploadInput]="uploadInput" /><br>
+								<!-- <label for="exampleInputEmail1" style="display: block;">(Required Size 141 *
+									141)</label> -->
+								<img *ngIf="serviceIcon" alt="logo" style="height: 100px; width: 100px;"
+									src="{{imagePath}}{{serviceIcon}}">
+							</div>
 							<!-- <div class="form-group">
 								<label for="exampleInputEmail1">Home Page Service Image</label><br>
 								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'home')"
@@ -138,13 +164,13 @@
 								<img *ngIf="homeserviceImage" alt="logo" style="height: 100px; width: 100px;"
 									src="{{imagePath}}{{homeserviceImage}}">
 							</div> -->
-							<!-- <div class="form-group">
+							<div class="form-group">
 								<label for="exampleInputEmail1">Sequence Number</label>
 								<input type="number" name="sequence_number" autocomplete="off" formControlName="sequence_number"
 									class="form-control" placeholder="Sequence Number">
 								<span *ngIf="submitted && hasError('sequence_number','required')" class="alert-danger">Sequence Number
 									is required</span>
-							</div> -->
+							</div>
 							<div class="form-group">
 								<label for="exampleInputEmail1">URL Key</label>
 								<input type="text" name="link" autocomplete="off" formControlName="link" class="form-control"

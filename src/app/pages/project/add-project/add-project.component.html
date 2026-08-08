@@ -170,7 +170,112 @@
 								</div> -->
 
 								<div class="form-group">
-									<label for="exampleInputEmail1">Project Thumbnail Image <div class="tooltip-wrapper">
+									<label for="exampleInputEmail1">Project Phases</label>
+										<div class="mb-3">
+											<button type="button" class="btn btn-outline-primary" (click)="addPhase()">+ Add Phase</button>
+										</div>
+										<div *ngIf="phaseSlugError" class="alert alert-danger">{{phaseSlugError}}</div>
+										<div formArrayName="phases" class="mt-3">
+											<div *ngFor="let phase of phases.controls; let i = index" [formGroupName]="i" class="card mb-3">
+												<div class="card-header d-flex justify-content-between align-items-center">
+													<h5 class="mb-0">Phase {{ i + 1 }}</h5>
+													<div>
+														<button type="button" class="btn btn-sm btn-outline-secondary mr-2" (click)="togglePhase(i)">{{ phaseExpanded[i] ? 'Collapse' : 'Expand' }}</button>
+														<button type="button" class="btn btn-sm btn-danger" (click)="removePhase(i)">Remove</button>
+													</div>
+												</div>
+												<div class="card-body" *ngIf="phaseExpanded[i]">
+													<h6 class="mb-3">Basic Information</h6>
+													<div class="form-group">
+														<label>Phase Name <span>*</span></label>
+														<input type="text" formControlName="name" class="form-control" placeholder="Phase Name">
+														<span *ngIf="submitted && phaseHasError(i, 'name', 'required')" class="alert-danger">Phase Name is required</span>
+													</div>
+													<div class="form-group">
+														<label>Phase Slug <span>*</span></label>
+														<input type="text" formControlName="slug" class="form-control" placeholder="Phase Slug">
+														<span *ngIf="submitted && phaseHasError(i, 'slug', 'required')" class="alert-danger">Phase Slug is required</span>
+													</div>
+													<div class="form-group">
+														<label>Description</label>
+														<textarea rows="3" formControlName="description" class="form-control" placeholder="Description"></textarea>
+													</div>
+													<h6 class="mb-3 mt-4">Project Information</h6>
+													<div class="form-group">
+														<label>Area</label>
+														<input type="text" formControlName="area" class="form-control" placeholder="Area">
+													</div>
+													<div class="form-group">
+														<label>Number Of Plots</label>
+														<input type="text" formControlName="noofplots" class="form-control" placeholder="Number Of Plots">
+													</div>
+													<div class="form-group">
+														<label>Dimensions</label>
+														<input type="text" formControlName="dimensions" class="form-control" placeholder="Dimensions">
+													</div>
+													<div class="form-group">
+														<label>Price</label>
+														<input type="text" formControlName="price" class="form-control" placeholder="Price">
+													</div>
+													<div class="form-group">
+														<label>Location</label>
+														<input type="text" formControlName="location" class="form-control" placeholder="Location">
+													</div>
+													<div class="form-group">
+														<label>Google Map URL</label>
+														<input type="text" formControlName="map" class="form-control" placeholder="Google Map URL">
+													</div>
+													<h6 class="mb-3 mt-4">Media</h6>
+													<div class="form-group">
+														<label>Phase Image</label>
+														<input type="file" ngFileSelect (uploadOutput)="onUploadOutputPhaseImage($event, i)" [uploadInput]="uploadInput" />
+														<div class="row" *ngIf="phases.at(i).get('image')?.value">
+															<div class="col-md-2 mt-2">
+																<img alt="phase image" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{phases.at(i).get('image')?.value}}">
+																<a href="javascript:;" (click)="removePhaseImage(i)" class="small-box-footer"><i class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label>Phase Thumbnail Image</label>
+														<input type="file" ngFileSelect (uploadOutput)="onUploadOutputPhaseThumb($event, i)" [uploadInput]="uploadInput" />
+														<div class="row" *ngIf="phases.at(i).get('image_thumbnail')?.value">
+															<div class="col-md-2 mt-2">
+																<img alt="phase thumbnail" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{phases.at(i).get('image_thumbnail')?.value}}">
+																<a href="javascript:;" (click)="removePhaseThumbnail(i)" class="small-box-footer"><i class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label>Phase Gallery Images</label>
+														<input type="file" ngFileSelect (uploadOutput)="onUploadOutputPhaseGallery($event, i)" [uploadInput]="uploadInput" />
+														<div class="row">
+															<div class="col-md-2 mt-2" *ngFor="let galleryImage of phases.at(i).get('project_images')?.value; let j = index;">
+																<img alt="phase gallery" style="height: 100px; width: 100px;" src="{{imagePath}}project/{{galleryImage}}">
+																<a href="javascript:;" (click)="removePhaseGalleryImage(i, j)" class="small-box-footer"><i class="fa fa-trash" style="color: red;" aria-hidden="true"></i></a>
+															</div>
+														</div>
+													</div>
+													<h6 class="mb-3 mt-4">Settings</h6>
+													<div class="form-group row mb-3">
+														<div class="col-md-4">
+															<div class="row">
+																<div class="col-6"><label>Featured</label></div>
+																<div class="col-6"><ui-switch formControlName="featured" class="toogle_btn" [disabled]="config.disabled" color="green"></ui-switch></div>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label>Status</label>
+														<select formControlName="status" class="form-control">
+															<option [ngValue]="true">Active</option>
+															<option [ngValue]="false">InActive</option>
+														</select>
+													</div>
+												</div>
+											</div>
+										</div>
+										<label for="exampleInputEmail1">Project Thumbnail Image <div class="tooltip-wrapper">
 											<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show1 = true"
 												(mouseleave)="show1 = false" style="transform: none;  color: #525f7f;">
 												<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

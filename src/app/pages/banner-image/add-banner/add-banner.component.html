@@ -136,6 +136,16 @@
 								1920 × 1080 px)</label><br> -->
 						</div>
 						<div class="form-group">
+							<label for="exampleInputEmail1">Mobile Image</label>
+							<input type="file" ngFileSelect (uploadOutput)="onUploadOutputMobile($event)"
+								[uploadInput]="uploadInput" accept="image/*" />
+							<div class="row mt-2" *ngIf="ImageName">
+								<div class="col-md-3">
+									<img alt="mobile banner" style="height: 100px; width: 100px;" src="{{imagePath}}{{ImageName}}">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
 							<label for="exampleTextarea1">Status</label>
 							<select name="status" formControlName="status" class="form-control">
 								<option value="">Select Status</option>

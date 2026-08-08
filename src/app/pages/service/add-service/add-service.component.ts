@@ -26,6 +26,7 @@ export class AddServiceComponent implements OnInit {
 	serviceImage: any;
 	imagePath: any;
 	homeserviceImage: any;
+	serviceIcon: any;
 
 	// Data Assign
 
@@ -42,6 +43,7 @@ export class AddServiceComponent implements OnInit {
 	show = false; // for tooltip
 	show1 = false; // for tooltip
 	show2 = false; // for tooltip
+	show3 = false; // for tooltip
 	isEdit = this.route.snapshot.data.title === 'edit' ? true : false;
 	editorConfig: AngularEditorConfig = {
 		editable: true,
@@ -120,6 +122,7 @@ export class AddServiceComponent implements OnInit {
 					let data = response?.result;
 					this.serviceImage = data?.image;
 					this.homeserviceImage = data?.home_image;
+					this.serviceIcon = data?.icon_image;
 					this.addServiceForm.patchValue({
 						name: data?.name,
 						desc: data?.desc,
@@ -145,6 +148,7 @@ export class AddServiceComponent implements OnInit {
 		obj['image'] = this.serviceImage;
 		obj['user'] = this.user._id;
 		obj['home_image'] = this.homeserviceImage;
+		obj['icon_image'] = this.serviceIcon;
 		if (this.addServiceForm.invalid) {
 			return;
 		}
@@ -205,6 +209,23 @@ export class AddServiceComponent implements OnInit {
 			this.homeserviceImage = output.file.response.result;
 		} else if (output.type === 'done' && typeof output.file !== 'undefined') {
 			this.serviceImage = output.file.response.result;
+		}
+	}
+
+	onUploadIcon(output: UploadOutput,type:any): void {
+		if (output.type === 'allAddedToQueue') {
+			const event: UploadInput = {
+				type: 'uploadAll',
+				url: environment.baseUrl + '/api/service/addimage',
+				method: 'POST',
+				data: {},
+			};
+			this.uploadInput.emit(event);
+		}
+		else if (output.type === 'done' && typeof output.file !== 'undefined' && type == 'home') {
+			this.serviceIcon = output.file.response.result;
+		} else if (output.type === 'done' && typeof output.file !== 'undefined') {
+			this.serviceIcon = output.file.response.result;
 		}
 	}
 
