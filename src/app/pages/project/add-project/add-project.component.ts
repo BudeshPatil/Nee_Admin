@@ -164,8 +164,8 @@ export class AddProjectComponent implements OnInit {
 	createPhaseGroup(): FormGroup {
 		return this.formBuilder.group({
 			name: ['', [Validators.required, Validators.maxLength(255)]],
-			slug: ['', Validators.required],
-			description: [''],
+			slug: [''],
+			amenties: [''],
 			area: [''],
 			noofplots: [''],
 			dimensions: [''],
@@ -214,7 +214,7 @@ export class AddProjectComponent implements OnInit {
 			phaseGroup.patchValue({
 				name: phase?.name || '',
 				slug: phase?.slug || '',
-				description: phase?.description || '',
+				amenties: phase?.amenties || '',
 				area: phase?.area || '',
 				noofplots: phase?.noofplots || '',
 				dimensions: phase?.dimensions || '',
