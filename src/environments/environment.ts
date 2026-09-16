@@ -14,8 +14,8 @@ export const environment = {
 	// Url: 'https://neelgund.pixtar.ae/admin',
 
 	// Local
-	baseUrl: 'http://localhost:5015',
-	Url: 'http://localhost:4315',
+	baseUrl: 'http://localhost:5001',
+	Url: 'http://localhost:4301',
 
 
 

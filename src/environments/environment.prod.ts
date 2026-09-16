@@ -7,7 +7,7 @@ export const environment = {
 
 
 	// Staging
-	baseUrl: 'https://neelgund.pixtar.ae:5015',
-	Url: 'https://neelgund.pixtar.ae/admin',
+	baseUrl: 'https://www.neelgund.com',
+	Url: 'https://www.neelgund.com/admin_dashboard',
 
 };
