@@ -1,102 +1,173 @@
-<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
-	<div class="container-fluid">
-		<div class="header-body">
-			<!-- Card stats -->
-
+<main class="category-page">
+	<header class="category-page-header">
+		<div>
+			<p class="category-eyebrow">CONTENT MANAGEMENT</p>
+			<h1>Project status</h1>
+			<p class="category-page-description">Manage the project statuses shown throughout the site.</p>
 		</div>
-	</div>
-</div>
-<!-- Page content -->
-<div class="container-fluid mt--7">
-	<!-- Table -->
-	<div class="row">
-		<div class="col">
-			<div class="card shadow">
-				<div class="card-header border-0">
-					<h3 class="mb-0">Project Status</h3>
-				</div>
-				<div class="col-md-12">
-					<div class="row">
-						<div class="col-md-6">
-							<h4 class="title"></h4>
-						</div>
-						<div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
-								routerLink="/category/add">Add Project Status</button></div>
-					</div>
-					<div class="col-md-6">
-						<h4 class="title"></h4>
-					</div>
-				</div>
-				<div class="table-responsive">
-					<table class="table align-items-center table-flush">
-						<thead>
-							<tr>
-								<th>SL No</th>
-								<th>Project Status</th>
-								<!-- <th>Collection Type</th> -->
-								<th>Status</th>
-								<!-- <th>Approved</th> -->
-								<th>Sequence Number</th>
-								<th>Created At</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<td colspan="5" *ngIf="msg_danger">
-								<div class="alert alert-dismissable" style="text-align: center;">
-									List is Empty
-								</div>
-							</td>
-							<tr *ngFor="let listCategory of CategoryData; let i = index">
-								<td *ngIf="currentPage == 1">{{i+1}}</td>
-								<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-								<td>{{listCategory.name}}</td>
-								<!-- <td>
-									<p *ngFor="let col of listCategory.collectiondata">{{col.name}}</p>
-								</td> -->
-								<td>{{listCategory.status == true ? 'Active':'InActive' }}</td>
-								<!-- <td>{{listCategory.isApproved == true ? 'Yes':'No'}}</td> -->
-								<td>{{listCategory.sequence_number}}</td>
-								<td>{{listCategory.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-								<td>
-									<a routerLink="/category/edit/{{listCategory._id}}" style="cursor:pointer"><i
-											class="fa fa-pencil-square-o" aria-hidden="true"></i>
-									</a>
-									<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listCategory)"><i
-											class="fa fa-trash-o" aria-hidden="true"></i></a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="neelgund-pagination" *ngIf="totalRecord > 0 ">
-						<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
-							(changePage)="onListChangePage($event)"></app-pagination>
-					</div>
-				</div>
+		<a class="category-add-button" routerLink="/category/add">
+			<i class="ni ni-fat-add" aria-hidden="true"></i>
+			Add project status
+		</a>
+	</header>
+
+	<section class="category-list-card" aria-label="Project status list">
+		<div class="category-toolbar">
+			<div class="category-toolbar-copy">
+				<h2>All project statuses</h2>
+				<p>Organize and update the status labels used by your projects.</p>
+			</div>
+			<div class="category-toolbar-controls">
+				<label class="category-search">
+					<i class="fa fa-search" aria-hidden="true"></i>
+					<input
+						class="form-control"
+						type="search"
+						name="search"
+						[(ngModel)]="searchText"
+						autocomplete="off"
+						placeholder="Search this page"
+						aria-label="Search project statuses on this page">
+					<button
+						*ngIf="searchText"
+						type="button"
+						class="category-clear-search"
+						(click)="clearSearch()"
+						aria-label="Clear search">
+						<i class="fa fa-times" aria-hidden="true"></i>
+					</button>
+				</label>
+				<span class="category-result-count">
+					{{filteredCategoryData.length}} shown / {{CategoryData.length}} on page
+				</span>
 			</div>
 		</div>
-	</div>
-</div>
+		<p class="category-search-hint">Search filters the currently loaded page. Use pagination to browse other pages.</p>
 
-<!-- Delete Category popup modal -->
-<ng-template #content let-modal style="z-index: 0;">
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-title">Services</h4>
-		<button type="button" class="btn btn-button" aria-describedby="modal-title"
-			(click)="modal.dismiss('Cross click')">close</button>
+		<div class="category-table-wrap">
+			<table class="table category-table">
+				<thead>
+					<tr>
+						<th scope="col" class="category-number-heading">#</th>
+						<th scope="col">Project status</th>
+						<th scope="col">Sequence</th>
+						<th scope="col">Created</th>
+						<th scope="col">Status</th>
+						<th scope="col" class="category-actions-heading">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngIf="isLoading">
+						<td colspan="6">
+							<div class="category-state" role="status">
+								<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+								Loading project statuses…
+							</div>
+						</td>
+					</tr>
+					<tr *ngIf="!isLoading && loadError">
+						<td colspan="6">
+							<div class="category-state" role="alert">
+								<strong>Couldn’t load project statuses</strong>
+								<span>Please try again.</span>
+								<button type="button" class="category-retry-button" (click)="get_CategoryData()">Retry</button>
+							</div>
+						</td>
+					</tr>
+					<tr *ngIf="!isLoading && !loadError && filteredCategoryData.length === 0">
+						<td colspan="6">
+							<div class="category-state">
+								<span class="category-empty-icon"><i class="ni ni-collection" aria-hidden="true"></i></span>
+								<strong>{{searchText ? 'No statuses match your search' : 'No project statuses yet'}}</strong>
+								<span>{{searchText ? 'Try another search or clear the filter.' : 'Add a project status to get started.'}}</span>
+								<button *ngIf="searchText" type="button" class="category-retry-button" (click)="clearSearch()">
+									Clear search
+								</button>
+								<a *ngIf="!searchText && totalRecord === 0" routerLink="/category/add" class="category-empty-link">
+									Add your first project status
+								</a>
+							</div>
+						</td>
+					</tr>
+					<tr *ngFor="let listCategory of filteredCategoryData; let i = index">
+						<td class="category-row-number">
+							{{i + 1 + ((currentPage - 1) * currentLimit)}}
+						</td>
+						<td>
+							<strong class="category-name">{{listCategory.name || 'Untitled status'}}</strong>
+						</td>
+						<td>
+							<span class="category-sequence">{{listCategory.sequence_number ?? '—'}}</span>
+						</td>
+						<td class="category-date">{{listCategory.created_at | date: 'dd MMM yyyy, hh:mm a'}}</td>
+						<td>
+							<span class="category-status" [class.category-status-active]="listCategory.status == true">
+								{{listCategory.status == true ? 'Active' : 'Inactive'}}
+							</span>
+						</td>
+						<td class="category-row-actions">
+							<a
+								class="category-icon-button"
+								routerLink="/category/edit/{{listCategory._id}}"
+								[attr.aria-label]="'Edit ' + listCategory.name"
+								title="Edit project status">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+							</a>
+							<button
+								type="button"
+								class="category-icon-button category-delete-button"
+								(click)="open(content, listCategory)"
+								[attr.aria-label]="'Delete ' + listCategory.name"
+								title="Delete project status">
+								<i class="fa fa-trash" aria-hidden="true"></i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="neelgund-pagination category-pagination" *ngIf="totalRecord > 0">
+			<app-pagination
+				#pagination
+				[initialPage]="currentPage"
+				[count]="totalRecord"
+				(changePage)="onListChangePage($event)">
+			</app-pagination>
+		</div>
+	</section>
+</main>
+
+<ng-template #content let-modal>
+	<div class="category-delete-modal-header">
+		<div>
+			<span class="category-delete-icon"><i class="fa fa-trash" aria-hidden="true"></i></span>
+			<div>
+				<h2 class="modal-title" id="category-delete-title">Delete project status?</h2>
+				<p>This will remove the status from your project list.</p>
+			</div>
+		</div>
+		<button
+			type="button"
+			class="category-modal-close"
+			aria-label="Close dialog"
+			(click)="modal.dismiss('Cross click')">
+			<i class="fa fa-times" aria-hidden="true"></i>
+		</button>
 	</div>
-	<div class="modal-body">
+	<div class="category-delete-modal-body">
 		<p *ngIf="selectedCategory">
-			<strong>Are you sure you want to delete <span class="text-primary">"{{selectedCategory.name}}"</span>
-				Services?</strong>
+			Are you sure you want to delete <strong>{{selectedCategory.name}}</strong>?
 		</p>
-		<p>
-			All information associated to this Services will be permanently deleted.
-			<span class="text-danger">This operation can not be undone.</span>
-		</p>
+		<p class="category-delete-note">This action cannot be undone.</p>
 	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
-		<button type="button" class="btn btn-button" (click)="deleteCategory()">Ok</button>
+	<div class="category-delete-modal-actions">
+		<button type="button" class="category-modal-cancel" [disabled]="isDeleting" (click)="modal.dismiss('cancel click')">
+			Cancel
+		</button>
+		<button type="button" class="category-modal-confirm" [disabled]="isDeleting" (click)="deleteCategory()">
+			<span *ngIf="isDeleting" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+			{{isDeleting ? 'Deleting…' : 'Delete status'}}
+		</button>
 	</div>
 </ng-template>

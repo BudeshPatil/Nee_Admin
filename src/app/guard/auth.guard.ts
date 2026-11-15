@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanDeactivate<u
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.checkSession(route);
+    return this.checkSession(state);
   }
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
@@ -35,14 +35,16 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanDeactivate<u
     return true;
   }
 
-  checkSession(route:any) {
+  checkSession(state: RouterStateSnapshot) {
     this.token = localStorage.getItem('neelgund-admin-token');
     if (this.token != undefined) {
       return true;
     } else {
-      this.router.navigate(['login']);
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: state.url }
+      });
       return false;
     }
-  } //Check Session ends here
+  }
 
 }

@@ -1,456 +1,131 @@
-<!-- <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 400px;  background-size: cover; background-position: center top;">
-    <span class="mask bg-gradient-info opacity-8"></span>
-    <div class="container-fluid d-flex align-items-center">
-      <div class="row">
-        <div class="col-lg-7 col-md-10">
-          <h1 class="display-2 text-white">Hello Jesse</h1>
-          <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with your work and manage your projects or assigned tasks</p>
-          <a href="#!" class="btn btn-info">Edit profile</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="container-fluid mt--7">
-    <div class="row">
-      <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
-        <div class="card card-profile shadow">
-          <div class="row justify-content-center">
-            <div class="col-lg-3 order-lg-2">
-              <div class="card-profile-image">
-                <a href="javascript:void(0)">
-                  <img src="assets/img/theme/team-4-800x800.jpg" class="rounded-circle">
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-            <div class="d-flex justify-content-between">
-              <a href="javascript:void(0)" class="btn btn-sm btn-info mr-4">Connect</a>
-              <a href="javascript:void(0)" class="btn btn-sm btn-default float-right">Message</a>
-            </div>
-          </div>
-          <div class="card-body pt-0 pt-md-4">
-            <div class="row">
-              <div class="col">
-                <div class="card-profile-stats d-flex justify-content-center mt-md-5">
-                  <div>
-                    <span class="heading">22</span>
-                    <span class="description">Friends</span>
-                  </div>
-                  <div>
-                    <span class="heading">10</span>
-                    <span class="description">Photos</span>
-                  </div>
-                  <div>
-                    <span class="heading">89</span>
-                    <span class="description">Comments</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="text-center">
-              <h3>
-                Jessica Jones<span class="font-weight-light">, 27</span>
-              </h3>
-              <div class="h5 font-weight-300">
-                <i class="ni location_pin mr-2"></i>Bucharest, Romania
-              </div>
-              <div class="h5 mt-4">
-                <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
-              </div>
-              <div>
-                <i class="ni education_hat mr-2"></i>University of Computer Science
-              </div>
-              <hr class="my-4" />
-              <p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music.</p>
-              <a href="javascript:void(0)">Show more</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-8 order-xl-1">
-        <div class="card bg-secondary shadow">
-          <div class="card-header bg-white border-0">
-            <div class="row align-items-center">
-              <div class="col-8">
-                <h3 class="mb-0">My account</h3>
-              </div>
-              <div class="col-4 text-right">
-                <a href="#!" class="btn btn-sm btn-primary">Settings</a>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <form>
-              <h6 class="heading-small text-muted mb-4">User information</h6>
-              <div class="pl-lg-4">
-                <div class="row">
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label class="form-control-label" for="input-username">Username</label>
-                      <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value="lucky.jesse">
-                    </div>
-                  </div>
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label class="form-control-label" for="input-email">Email address</label>
-                      <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="jesse@example.com">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label class="form-control-label" for="input-first-name">First name</label>
-                      <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value="Lucky">
-                    </div>
-                  </div>
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label class="form-control-label" for="input-last-name">Last name</label>
-                      <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Last name" value="Jesse">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr class="my-4" />
-              <h6 class="heading-small text-muted mb-4">Contact information</h6>
-              <div class="pl-lg-4">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label class="form-control-label" for="input-address">Address</label>
-                      <input id="input-address" class="form-control form-control-alternative" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09" type="text">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-lg-4">
-                    <div class="form-group">
-                      <label class="form-control-label" for="input-city">City</label>
-                      <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="City" value="New York">
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    <div class="form-group">
-                      <label class="form-control-label" for="input-country">Country</label>
-                      <input type="text" id="input-country" class="form-control form-control-alternative" placeholder="Country" value="United States">
-                    </div>
-                  </div>
-                  <div class="col-lg-4">
-                    <div class="form-group">
-                      <label class="form-control-label" for="input-country">Postal code</label>
-                      <input type="number" id="input-postal-code" class="form-control form-control-alternative" placeholder="Postal code">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr class="my-4" />
-              <h6 class="heading-small text-muted mb-4">About me</h6>
-              <div class="pl-lg-4">
-                <div class="form-group">
-                  <label>About Me</label>
-                  <textarea rows="4" class="form-control form-control-alternative" placeholder="A few words about you ...">A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.</textarea>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-   -->
+<div class="container-fluid config-page">
+	<header class="page-heading">
+		<div>
+			<p class="eyebrow">SITE MANAGEMENT</p>
+			<h1>Configuration</h1>
+			<p class="page-description">Manage contact email delivery and the SMTP settings used by your website.</p>
+		</div>
+		<span class="status-badge" [class.enabled]="isSmtpEnabled" [class.disabled]="!isSmtpEnabled">
+			<i aria-hidden="true"></i>{{ isSmtpEnabled ? 'SMTP enabled' : 'SMTP disabled' }}
+		</span>
+	</header>
 
-<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center">
-  <span class="mask bg-gradient-info opacity-8"></span>
-  <div class="container-fluid d-flex align-items-center">
-    <div class="row">
-      <div class="col-lg-7 col-md-10">
-        <!-- <h1 class="display-2 text-white">Hello {{user.username}}</h1> -->
-      </div>
-    </div>
-  </div>
+	<div *ngIf="isLoading" class="state-panel" role="status"><span class="loading-spinner"></span><strong>Loading configuration…</strong><p>Your site settings will appear shortly.</p></div>
+	<div *ngIf="loadError" class="state-panel error-state" role="alert">
+		<span class="state-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+		<strong>Configuration couldn't be loaded</strong>
+		<p>Check your connection and try again.</p>
+		<button type="button" class="secondary-action" (click)="get_ConfigData()">Try again</button>
+	</div>
+
+	<div class="config-layout" *ngIf="!isLoading && !loadError">
+		<section class="settings-card">
+			<header class="card-heading">
+				<span class="section-icon"><i class="fa fa-sliders" aria-hidden="true"></i></span>
+				<div><h2>Site settings</h2><p>Configure the name and contact address used for website enquiries.</p></div>
+			</header>
+			<form [formGroup]="addconfigForm" (ngSubmit)="onSubmit()" novalidate>
+				<div class="form-content">
+					<div class="form-section-heading">
+						<span class="section-mark"><i class="fa fa-globe" aria-hidden="true"></i></span>
+						<div><h3>General information</h3><p>Basic details for this configuration.</p></div>
+					</div>
+					<div class="field-group">
+						<label for="config-name">Configuration name <span>*</span></label>
+						<input id="config-name" type="text" name="name" formControlName="name" autocomplete="off" placeholder="For example, Neelgund website" [class.invalid]="submitted && hasError('name', 'required')" [attr.aria-invalid]="submitted && hasError('name', 'required')">
+						<span class="field-error" *ngIf="submitted && hasError('name', 'required')">Configuration name is required.</span>
+					</div>
+
+					<div class="form-divider"></div>
+					<div class="form-section-heading">
+						<span class="section-mark"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+						<div><h3>Contact enquiries</h3><p>Set the destination address for messages submitted through the contact form.</p></div>
+					</div>
+					<div class="field-group">
+						<label for="contact-email">Contact email address <span>*</span></label>
+						<input id="contact-email" type="email" name="contactEmail" formControlName="contactEmail" autocomplete="email" placeholder="contact@example.com" [class.invalid]="submitted && (hasError('contactEmail', 'required') || hasError('contactEmail', 'email'))" [attr.aria-invalid]="submitted && (hasError('contactEmail', 'required') || hasError('contactEmail', 'email'))">
+						<span class="field-error" *ngIf="submitted && hasError('contactEmail', 'required')">Contact email is required.</span>
+						<span class="field-error" *ngIf="submitted && !hasError('contactEmail', 'required') && hasError('contactEmail', 'email')">Enter a valid email address.</span>
+					</div>
+
+					<div class="form-divider"></div>
+					<div class="form-section-heading">
+						<span class="section-mark"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></span>
+						<div><h3>SMTP delivery</h3><p>Configure the mail server used to send website notifications.</p></div>
+					</div>
+					<div class="smtp-status-row">
+						<div><strong>Use SMTP</strong><span>Enable or disable SMTP-based email delivery.</span></div>
+						<label class="select-control">
+							<span class="sr-only">SMTP status</span>
+							<select id="smtp-status" name="smtp_status" formControlName="smtp_status" aria-label="SMTP status">
+								<option value="">Select status</option><option value="active">Enabled</option><option value="deactive">Disabled</option>
+							</select>
+						</label>
+					</div>
+
+					<div class="form-grid">
+						<div class="field-group">
+							<label for="smtp-host">SMTP host</label>
+							<input id="smtp-host" type="text" name="smtp_host" formControlName="smtp_host" autocomplete="off" placeholder="smtp.example.com">
+						</div>
+						<div class="field-group">
+							<label for="smtp-port">SMTP port</label>
+							<input id="smtp-port" type="number" name="smtp_port" formControlName="smtp_port" inputmode="numeric" placeholder="587">
+						</div>
+						<div class="field-group">
+							<label for="smtp-user">SMTP username</label>
+							<input id="smtp-user" type="text" name="smtp_user" formControlName="smtp_user" autocomplete="username" placeholder="Mail server username">
+						</div>
+						<div class="field-group">
+							<label for="smtp-password">SMTP password</label>
+							<div class="password-control">
+								<input id="smtp-password" [type]="showSmtpPassword ? 'text' : 'password'" name="smtp_password" formControlName="smtp_password" autocomplete="new-password" placeholder="Mail server password">
+								<button type="button" class="password-toggle" (click)="showSmtpPassword = !showSmtpPassword" [attr.aria-label]="showSmtpPassword ? 'Hide SMTP password' : 'Show SMTP password'"><i class="fa" [class.fa-eye]="!showSmtpPassword" [class.fa-eye-slash]="showSmtpPassword" aria-hidden="true"></i></button>
+							</div>
+						</div>
+					</div>
+
+					<div class="secure-control">
+						<div><strong>Secure connection</strong><span>Choose whether SMTP should use a secure connection.</span></div>
+						<label class="select-control">
+							<span class="sr-only">Secure connection</span>
+							<select id="smtp-secure" name="smtp_secure" formControlName="smtp_secure" aria-label="Secure connection">
+								<option value="">Select option</option><option value="active">Enabled</option><option value="deactive">Disabled</option>
+							</select>
+						</label>
+					</div>
+					<p class="save-error" *ngIf="saveError" role="alert">{{ saveError }}</p>
+				</div>
+
+				<footer class="form-footer">
+					<p><i class="fa fa-info-circle" aria-hidden="true"></i> Changes apply to new website enquiries.</p>
+					<button type="submit" class="primary-action" [disabled]="isSaving">
+						<span *ngIf="isSaving" class="button-spinner"></span>
+						<i *ngIf="!isSaving" class="fa fa-check" aria-hidden="true"></i>
+						{{ isSaving ? 'Saving…' : (ConfigData && ConfigData.length ? 'Save configuration' : 'Create configuration') }}
+					</button>
+				</footer>
+			</form>
+		</section>
+
+		<aside class="test-card">
+			<div class="test-card-icon"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
+			<p class="eyebrow">DELIVERY CHECK</p>
+			<h2>Send a test email</h2>
+			<p class="test-description">Verify that your email delivery settings can send messages to a recipient.</p>
+			<div class="field-group">
+				<label for="test-email">Recipient email</label>
+				<input id="test-email" type="email" [formControl]="testEmailControl" autocomplete="email" placeholder="you@example.com" [class.invalid]="testEmailControl.touched && testEmailControl.invalid" [attr.aria-invalid]="testEmailControl.touched && testEmailControl.invalid">
+				<span class="field-error" *ngIf="testEmailControl.touched && testEmailControl.hasError('required')">Enter a recipient email.</span>
+				<span class="field-error" *ngIf="testEmailControl.touched && !testEmailControl.hasError('required') && testEmailControl.hasError('email')">Enter a valid email address.</span>
+			</div>
+			<p class="test-feedback" *ngIf="testEmailMessage" [class.error]="testEmailError" role="status">{{ testEmailMessage }}</p>
+			<button type="button" class="test-button" (click)="onTestEmail()" [disabled]="isTestingEmail">
+				<span *ngIf="isTestingEmail" class="button-spinner"></span>
+				<i *ngIf="!isTestingEmail" class="fa fa-send-o" aria-hidden="true"></i>
+				{{ isTestingEmail ? 'Sending test…' : 'Send test email' }}
+			</button>
+			<div class="test-tip"><i class="fa fa-lightbulb-o" aria-hidden="true"></i><span>Save your settings before testing if you have changed the SMTP details.</span></div>
+		</aside>
+	</div>
 </div>
-<div class="container-fluid mt--7">
-  <div class="row">
-    <div class="col-xl-12 order-xl-1">
-      <div class="card bg-secondary shadow">
-        <div class="card-header bg-white border-0">
-          <div class="row align-items-center">
-            <div class="col-8">
-              <h3 class="mb-0">Configuration</h3>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <form [formGroup]="addconfigForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-            <div class="box-body">
-              <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Name</label>
-                <input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
-                  placeholder="Config Name">
-                <span *ngIf="submitted && hasError('name','required')" class="alert-danger">Config Name
-                  is
-                  required</span>
-              </div>
-              <h4>Contact Form Email Config</h4>
-              <hr>
-              <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Contact Email</label>
-                <input type="text" name="contactEmail" autocomplete="off" formControlName="contactEmail"
-                  class="form-control" placeholder="Contact Email">
-                <span *ngIf="submitted && hasError('contactEmail','required')" class="alert-danger">Contact Email is
-                  required</span>
-              </div>
-              <!-- <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Conatct Email Password</label>
-                <input type="text" name="contactEmailPassword" autocomplete="off" formControlName="contactEmailPassword"
-                  class="form-control" placeholder="Conatct Email Password">
-                <span *ngIf="submitted && hasError('contactEmailPassword','required')" class="alert-danger">Conatct
-                  Email Password</span>
-              </div>
-              <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Contact Email Subject</label>
-                <input type="text" name="contactEmailSubject" autocomplete="off" formControlName="contactEmailSubject"
-                  class="form-control" placeholder="Contact Email Subject">
-                <span *ngIf="submitted && hasError('contactEmailSubject','required')" class="alert-danger">contact Email
-                  Subject is required</span>
-              </div>
-              <h4>Career Form Email Config</h4>
-              <hr>
-              <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Career Email</label>
-                <input type="text" name="careerEmail" autocomplete="off" formControlName="careerEmail"
-                  class="form-control" placeholder="Career Email">
-                <span *ngIf="submitted && hasError('careerEmail','required')" class="alert-danger">Career Email is
-                  required</span>
-              </div>
-              <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Career Email Password</label>
-                <input type="text" name="careerEmailPassword" autocomplete="off" formControlName="careerEmailPassword"
-                  class="form-control" placeholder="Career Email Password">
-                <span *ngIf="submitted && hasError('careerEmailPassword','required')" class="alert-danger">Career Email
-                  Password is required</span>
-              </div>
-              <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Career Email Subject</label>
-                <input type="text" name="careerEmailSubject" autocomplete="off" formControlName="careerEmailSubject"
-                  class="form-control" placeholder="Career Email Subject">
-                <span *ngIf="submitted && hasError('careerEmailSubject','required')" class="alert-danger">Career Email
-                  Subject is required</span>
-              </div>
-              <hr> -->
-              <hr>
-              <h4>SMTP Configuration</h4>
-              <div class="form-group">
-                <label for="smtp_status">SMTP Enable/Disable</label>
-                <select name="smtp_status" formControlName="smtp_status" class="form-control">
-                  <option value="">Select Status</option>
-                  <option value="active">Active</option>
-                  <option value="deactive">Deactive</option>
-                </select>
-                <span *ngIf="submitted && hasError('smtp_status','required')" class="alert-danger">Please
-                  Select
-                  Smtp Status</span>
-              </div>
-              <div class="form-group">
-                <label for="smtp_host">Smtp Host</label>
-                <input type="text" name="smtp_host" autocomplete="off" formControlName="smtp_host" class="form-control"
-                  placeholder="SMTP HostName">
-              </div>
-              <div class="form-group">
-                <label for="smtp_port">Smtp Port</label>
-                <input type="text" name="smtp_port" autocomplete="off" formControlName="smtp_port" class="form-control"
-                  placeholder="SMTP Port">
-              </div>
-
-              <div class="form-group">
-                <label for="smtp_secure"> Secure</label>
-                <select name="smtp_secure" formControlName="smtp_secure" class="form-control">
-                  <option value="">Select Status</option>
-                  <option value="active">Active</option>
-                  <option value="deactive">Deactive</option>
-                </select>
-                <span *ngIf="submitted && hasError('smtp_secure','required')" class="alert-danger">Please Select Smtp
-                  Secure</span>
-              </div>
-              <div class="form-group">
-                <label for="smtp_user">Username</label>
-                <input type="text" name="smtp_user" autocomplete="off" formControlName="smtp_user" class="form-control"
-                  placeholder="SMTP Usename">
-              </div>
-              <div class="form-group">
-                <label for="smtp_password">Password</label>
-                <input type="text" name="smtp_password" autocomplete="off" formControlName="smtp_password"
-                  class="form-control" placeholder="SMTP Password">
-              </div>
-              <div class="form-group">
-                <label for="smtp_user">Email </label>
-                <input type="text" name="smtp_test_email" autocomplete="off" id="smtp_test_email" class="form-control"
-                  placeholder="Test Email" #smtp_test_email>
-              </div>
-
-              <button type="button" (click)="onTestEmail(smtp_test_email.value)" class="btn btn-danger">Test Mail</button>
-              <hr>
-              <!-- <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Gmail User</label>
-                <input type="text" name="gmail_user" autocomplete="off" formControlName="gmail_user"
-                  class="form-control" placeholder="Gmail User">
-                <span *ngIf="submitted && hasError('gmail_user','required')" class="alert-danger">Gmail
-                  User
-                  is required</span>
-              </div>
-              <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Gmail APP Password</label>
-                <input type="text" name="gmail_password" autocomplete="off" formControlName="gmail_password"
-                  class="form-control" placeholder="Gmail Password">
-                <span *ngIf="submitted && hasError('gmail_password','required')" class="alert-danger">Gmail
-                  Password is required</span>
-              </div>
-              <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Status</label>
-                <select name="status" formControlName="status" class="form-control">
-                  <option value="">Select Status</option>
-                  <option value="active">Active</option>
-                  <option value="deactive">Deactive</option>
-                </select>
-                <span *ngIf="submitted && hasError('status','required')" class="alert-danger">Please
-                  Select
-                  Art</span>
-              </div> -->
-              <!-- <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">QRcode URL</label>
-                <input type="text" name="qrcode_url" autocomplete="off" formControlName="qrcode_url"
-                  class="form-control" placeholder="QRcode URL">
-              </div> -->
-              <!-- <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Calendly Link</label>
-                <input type="text" name="calendly_link" autocomplete="off" formControlName="calendly_link"
-                  class="form-control" placeholder="Calendly Link">
-              </div> -->
-              <!-- <div class="form-group col-lg-12">
-                <label for="exampleInputEmail1">Upload Document</label><br>
-                <input type="file" #uploader ngFileSelect (uploadOutput)="onUploadFile($event)"
-                  [uploadInput]="uploadInput" /><br>
-                <a *ngIf="document" href="{{imagePath}}config/{{document}}" target="_blank">{{document}}</a>
-              </div> -->
-            </div>
-            <div class="box-footer col-lg-12">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- <div class="container-fluid px-1 py-5 mx-auto">
-    <div class="row d-flex justify-content-center">
-        <div class="col-xl-12 col-lg-12 col-md-12 col-11">
-            <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
-                {{throw_msg}}
-            </div>
-            <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
-                {{throw_msg}}
-            </div>
-            <div class="card">
-                <form [formGroup]="addconfigForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-                    <h3 class="text-center">Configuration</h3>
-                    <div class="box-body">
-                        <div class="form-group col-lg-12">
-                            <label for="exampleInputEmail1">Name</label>
-                            <input type="text" name="name" autocomplete="off" formControlName="name"
-                                class="form-control" placeholder="Config Name">
-                            <span *ngIf="submitted && hasError('name','required')" class="alert-danger">Config Name is
-                                required</span>
-                        </div>
-                        <div class="form-group col-lg-12 config">
-                            <label for="exampleInputEmail1">Config Featured Image</label>
-                            <input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'image')"
-                                [uploadInput]="uploadInput" />
-                                <span *ngFor="let item of configImage; let i = index">
-                                    <img class="config-image" *ngIf="item" alt="logo"
-                                    src="{{imagePath}}{{item}}">
-                                    <a class="config-link"
-                                                    (click)="deleteImage(i)"><i class="fa fa-times"
-                                                        aria-hidden="true"></i></a>
-                                </span>
-                            
-                        </div>
-                        <div class="form-group col-lg-12">
-                            <label for="exampleInputEmail1">Gmail User</label>
-                            <input type="text" name="gmail_user" autocomplete="off" formControlName="gmail_user"
-                                class="form-control" placeholder="Gmail User">
-                            <span *ngIf="submitted && hasError('gmail_user','required')" class="alert-danger">Gmail User
-                                is required</span>
-                        </div>
-
-                        <div class="form-group col-lg-12">
-                            <label for="exampleInputEmail1">Gmail Password</label>
-                            <input type="text" name="gmail_password" autocomplete="off" formControlName="gmail_password"
-                                class="form-control" placeholder="Gmail Password">
-                            <span *ngIf="submitted && hasError('gmail_password','required')" class="alert-danger">Gmail
-                                Password is required</span>
-                        </div>
-                        <div class="form-group col-lg-12">
-                            <label for="exampleInputEmail1">Status</label>
-                            <select name="status" formControlName="status" class="form-control">
-                                <option value="">Select Status</option>
-                                <option value="active">Active</option>
-                                <option value="deactive">Deactive</option>
-                            </select>
-                            <span *ngIf="submitted && hasError('status','required')" class="alert-danger">Please Select
-                                Art</span>
-                        </div>
-                        <div class="form-group col-lg-12">
-                            <label for="exampleInputEmail1">QRcode URL</label>
-                            <input type="text" name="qrcode_url" autocomplete="off" formControlName="qrcode_url"
-                                class="form-control" placeholder="QRcode URL">
-                        </div>
-                        <div class="form-group col-lg-6 config" *ngIf="addconfigForm.value.qrcode_url">
-                            <label for="exampleInputEmail1">QR Code Image</label>
-                            <input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event,'QRcode')"
-                                [uploadInput]="uploadInput" />
-                                    <img class="config-image" *ngIf="QRcodeImage" alt="logo" src="{{QRcodeImage}}">
-                                    <a class="config-link"
-                                                    (click)="deleteQRImage()"><i class="fa fa-times"
-                                                        aria-hidden="true"></i></a>
-                        </div>
-                        
-                        <div class="form-group col-lg-6 config" *ngIf="QRcodeImage">
-                            <ngx-qrcode-styling
-                                #qrcode
-                                [template]="'starbucks'"
-                                [data]="qrcodeurl"
-                                [width]="200"
-                                [height]="200"
-                                [image]="QRcodeImage"
-                            >
-                            </ngx-qrcode-styling>
-                            <br>
-                            <a *ngIf="isUpdate" (click)="onUpdate(qrcode)" class="btn btn-primary" >Update </a> <span *ngIf="isUpdate">|</span>
-                            <button (click)="onDownload(qrcode)" class="btn btn-primary">Download</button>
-                        </div>
-                        <div class="form-group col-lg-6 config" *ngIf="!QRcodeImage">
-                            <ngx-qrcode-styling
-                                #qrcode
-                                [template]="'starbucks'"
-                                [data]="qrcodeurl"
-                                [width]="200"
-                                [height]="200"
-                                [image]="QRcodeImage"
-                            >
-                            </ngx-qrcode-styling>
-                            <br>
-                        </div>
-                          
-                    </div>
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> -->

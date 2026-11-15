@@ -1,96 +1,74 @@
-<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
-    <div class="container-fluid">
-      <div class="header-body">
-        <!-- Card stats -->
+<div class="container-fluid pages-page">
+	<header class="page-heading">
+		<div>
+			<p class="eyebrow">SITE MANAGEMENT</p>
+			<h1>SEO pages</h1>
+			<p class="page-description">Manage page titles, descriptions, and keywords that help your site appear in search results.</p>
+		</div>
+		<a class="primary-action" routerLink="/page/addpage"><i class="fa fa-plus" aria-hidden="true"></i>Add page</a>
+	</header>
 
-      </div>
-    </div>
-  </div>
-  <!-- Page content -->
-  <div class="container-fluid mt--7">
-    <!-- Table -->
-    <div class="row">
-      <div class="col">
-        <div class="card shadow">
-          <div class="card-header border-0">
-            <h3 class="mb-0">SEO Pages</h3>
-          </div>
-          <div class="col-md-12 mb-4">
-            <div class="row">
-              <div class="col-md-6">
-                <input class="form-control mt-4" type="text" (keyup)="searchPage()" name="search" [(ngModel)]="searchText"
-                                            autocomplete="off" placeholder="&#61442;  Start searching a Pages  name">
-              </div>
-              <div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
-                  routerLink="/page/addpage">Add Page</button></div>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>SL No</th>
-                            <th>Page Name</th>
-                            <th>Meta Title</th>
-                            <th>Meta Description</th>
-                            <th>Meta Keywords</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <td colspan="5" *ngIf="msg_danger">
-                            <div class="alert alert-dismissable" style="text-align: center;">
-                                Page List is Empty
-                            </div>
-                        </td>
-                        <tr *ngFor="let listPage of pageData | filter:searchText; let i = index">
-                            <td *ngIf="currentPage == 1">{{i+1}}</td>
-                            <td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-                            <td>{{listPage.page_name}}</td>
-                            <td>{{listPage.meta_title}}</td>
-                            <td>{{listPage.meta_description}}</td>
-                            <td>{{listPage.meta_keywords}}</td>
-                            <td>
-                                <a routerLink="/page/edit/{{listPage._id}}" style="cursor:pointer"><i
-                                        class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                </a>
-                                <a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listPage)"><i
-                                  class="fa fa-trash-o" aria-hidden="true"></i></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
-                    <app-pagination
-                        #pagination
-                        [initialPage]="currentPage"
-                        [count]="totalRecord"
-                        (changePage)="onListChangePage($event)"
-                    ></app-pagination>
-                  </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-<!-- Banner Delete Popup -->
-<ng-template #content let-modal style="z-index: 0;">
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-title">Page deletion</h4>
-    <button type="button" class="btn btn-danger" aria-describedby="modal-title"
-      (click)="modal.dismiss('Cross click')">close</button>
-  </div>
-  <div class="modal-body">
-    <p *ngIf="selectedPage">
-      <strong>Are you sure you want to delete <span class="text-primary">"{{selectedPage.page_name}}"</span> Page?</strong>
-    </p>
-    <!-- <p>
-      All information associated to this Banner Image will be permanently deleted.
-      <span class="text-danger">This operation can not be undone.</span>
-    </p> -->
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="modal.dismiss('cancel click')">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="deletePage()">Ok</button>
-  </div>
-</ng-template>
+	<section class="summary-card" aria-label="SEO page overview">
+		<span class="summary-icon"><i class="fa fa-file-text-o" aria-hidden="true"></i></span>
+		<div><span>Total SEO pages</span><strong>{{ totalRecord | number }}</strong></div>
+	</section>
+
+	<section class="records-card">
+		<div class="card-heading">
+			<div><h2>Page metadata</h2><p>Review and update search metadata for each site page.</p></div>
+			<span class="result-count" *ngIf="!isLoading">{{ filteredPages.length }} shown</span>
+		</div>
+
+		<div class="list-toolbar">
+			<label class="search-control">
+				<i class="fa fa-search" aria-hidden="true"></i>
+				<input type="search" name="search" [(ngModel)]="searchText" (ngModelChange)="searchPage()" placeholder="Search pages, titles, descriptions or keywords" autocomplete="off" aria-label="Search SEO pages">
+				<button *ngIf="searchText" type="button" class="clear-search" (click)="searchText = ''; searchPage()" aria-label="Clear search"><i class="fa fa-times" aria-hidden="true"></i></button>
+			</label>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table records-table">
+				<thead><tr><th>#</th><th>Page</th><th>Meta title</th><th>Meta description</th><th>Keywords</th><th class="actions-heading">Actions</th></tr></thead>
+				<tbody>
+					<tr *ngIf="isLoading"><td colspan="6" class="state-cell"><span class="loading-spinner"></span>Loading SEO pages…</td></tr>
+					<tr *ngIf="!isLoading && loadError"><td colspan="6" class="state-cell"><div class="empty-state"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><strong>SEO pages couldn't be loaded</strong><p>Check your connection and try again.</p><button class="secondary-action" type="button" (click)="get_pageData()">Try again</button></div></td></tr>
+					<tr *ngIf="!isLoading && !loadError && displayedPages.length === 0"><td colspan="6" class="state-cell"><div class="empty-state"><i class="fa fa-file-text-o" aria-hidden="true"></i><strong>{{ totalRecord === 0 ? 'No SEO pages yet' : 'No matching pages' }}</strong><p>{{ totalRecord === 0 ? 'Add your first page to manage its search metadata.' : 'Try a different search term.' }}</p><a *ngIf="totalRecord === 0" class="secondary-action" routerLink="/page/addpage">Add your first page</a></div></td></tr>
+					<tr *ngFor="let page of displayedPages; let i = index">
+						<td class="number-cell">{{ i + 1 + ((currentPage - 1) * currentLimit) }}</td>
+						<td><div class="page-name"><strong>{{ page.page_name || 'Untitled page' }}</strong><span>Website page</span></div></td>
+						<td><span class="meta-title">{{ page.meta_title || 'No meta title added' }}</span></td>
+						<td><span class="meta-description">{{ page.meta_description || 'No meta description added' }}</span></td>
+						<td><span class="keyword-list">{{ page.meta_keywords || '—' }}</span></td>
+						<td><div class="action-group"><a class="icon-action" [routerLink]="['/page/edit', page._id]" [attr.aria-label]="'Edit ' + (page.page_name || 'SEO page')" title="Edit page"><i class="fa fa-pencil" aria-hidden="true"></i></a><button type="button" class="icon-action danger-action" (click)="openDeleteDialog(page)" [disabled]="!page._id" [attr.aria-label]="'Delete ' + (page.page_name || 'SEO page')" title="Delete page"><i class="fa fa-trash" aria-hidden="true"></i></button></div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<p class="action-error" *ngIf="actionError && !isDeleteOpen" role="alert">{{ actionError }}</p>
+		<div class="records-pagination" *ngIf="filteredPages.length > currentLimit"><app-pagination [initialPage]="currentPage" [count]="filteredPages.length" [perPage]="currentLimit" (changePage)="onListChangePage($event)"></app-pagination></div>
+	</section>
+
+	<div class="modal-backdrop-custom" *ngIf="isDeleteOpen" (click)="closeDeleteDialog()"></div>
+	<section class="modal-custom" *ngIf="isDeleteOpen" role="dialog" aria-modal="true" aria-labelledby="delete-page-title" (click)="closeDeleteDialog()">
+		<div class="modal-content-custom" (click)="$event.stopPropagation()">
+			<header class="modal-header-custom">
+				<span class="delete-icon"><i class="fa fa-trash" aria-hidden="true"></i></span>
+				<button type="button" class="modal-close-btn" (click)="closeDeleteDialog()" [disabled]="isDeleting" aria-label="Close dialog"><i class="fa fa-times" aria-hidden="true"></i></button>
+			</header>
+			<div class="modal-body-custom">
+				<h2 id="delete-page-title">Delete this page?</h2>
+				<p>This will permanently remove the SEO metadata for <strong>{{ selectedPage?.page_name || 'this page' }}</strong>. This action cannot be undone.</p>
+				<p class="modal-error" *ngIf="actionError" role="alert">{{ actionError }}</p>
+			</div>
+			<footer class="modal-footer-custom">
+				<button type="button" class="secondary-action" (click)="closeDeleteDialog()" [disabled]="isDeleting">Cancel</button>
+				<button type="button" class="delete-action" (click)="deletePage()" [disabled]="isDeleting">
+					<span *ngIf="isDeleting" class="button-spinner"></span>
+					<i *ngIf="!isDeleting" class="fa fa-trash" aria-hidden="true"></i>
+					{{ isDeleting ? 'Deleting…' : 'Delete page' }}
+				</button>
+			</footer>
+		</div>
+	</section>
+</div>

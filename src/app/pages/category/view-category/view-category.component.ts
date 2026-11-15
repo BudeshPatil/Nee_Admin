@@ -13,12 +13,15 @@ import { ResponseService } from '../../../providers/response/response.service';
 	styleUrls: ['./view-category.component.scss']
 })
 export class ViewCategoryComponent implements OnInit {
-	msg_danger: boolean = false;
-	CategoryData: any;
+	CategoryData: any[] = [];
 	imagePath: any;
 	token: any;
 	VendorData: any;
 	vendorid: any = '';
+	searchText = '';
+	isLoading = true;
+	loadError = false;
+	isDeleting = false;
 
 	// pagination
 	currentPage: number = 1;
@@ -47,47 +50,60 @@ export class ViewCategoryComponent implements OnInit {
 	}
 
 	get_CategoryData() {
+		this.isLoading = true;
+		this.loadError = false;
 		const obj = {
 			limit: this.currentLimit,
 			page: this.currentPage,
 			token: this.token,
 		};
-		this.categoryService.getCategoryDetails(obj).subscribe(
-			(response) => {
+		this.categoryService.getCategoryDetails(obj).subscribe({
+			next: (response) => {
+				this.isLoading = false;
 				if (response.code == 200) {
-					if (response.result != null && response.result != '') {
-						this.CategoryData = response.result;
-						this.totalRecord = response?.count;
-					}
-					else {
-						this.msg_danger = true;
-					}
-
+					this.CategoryData = Array.isArray(response.result) ? response.result : [];
+					this.totalRecord = Number(response.count) || this.CategoryData.length;
+					return;
 				}
+
+				this.CategoryData = [];
+				this.totalRecord = 0;
+				this.loadError = true;
+				this.toastr.errorToastr(response.message || 'Project statuses could not be loaded.');
 			},
-		);
+			error: () => {
+				this.isLoading = false;
+				this.CategoryData = [];
+				this.totalRecord = 0;
+				this.loadError = true;
+				this.toastr.errorToastr('Project statuses could not be loaded. Check your connection and try again.');
+			}
+		});
 	}
 
 	deleteCategory()
   {
     if (this.selectedCategory) {
-			var mylist = { id: this.selectedCategory._id };
-			mylist['token'] = this.token;
-      this.categoryService.deletecategory(mylist).subscribe(
-        (response)=> {
-          if (response.code == 200)
-          {
+			const mylist = { id: this.selectedCategory._id, token: this.token };
+			this.isDeleting = true;
+      this.categoryService.deletecategory(mylist).subscribe({
+        next: (response)=> {
+					this.isDeleting = false;
+          if (response.code == 200) {
 						this.modalService.dismissAll();
             this.get_CategoryData();
 						this.deleteMediaData();
-            this.router.navigate(['/category/view']);
           } else {
 						this.modalService.dismissAll();
 						this.toastr.errorToastr(response.message);
 						this.CreateErrorResponse(response);
 					}
         },
-      );
+				error: () => {
+					this.isDeleting = false;
+					this.toastr.errorToastr('The project status could not be deleted. Check your connection and try again.');
+				}
+      });
     }
   }
 
@@ -96,11 +112,32 @@ export class ViewCategoryComponent implements OnInit {
 		this.get_CategoryData();
 	}
 
+	get filteredCategoryData(): any[] {
+		const query = this.searchText.trim().toLowerCase();
+		if (!query) {
+			return this.CategoryData;
+		}
+
+		return this.CategoryData.filter((category) => {
+			const searchableText = [category.name, category.sequence_number, category.status]
+				.filter((value) => value !== null && value !== undefined)
+				.join(' ')
+				.toLowerCase();
+			return searchableText.includes(query);
+		});
+	}
+
+	clearSearch(): void {
+		this.searchText = '';
+	}
+
 	open(content,data) {
     this.selectedCategory = data;
 		if (this.selectedCategory) {
-		var mylist = { id: this.selectedCategory._id };
-		this.modalReference = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+		this.modalReference = this.modalService.open(content, {
+			ariaLabelledBy: 'category-delete-title',
+			centered: true
+		}).result.then(
 			(result) => {
 				this.closeResult = `Closed with: ${result}`;
 			},

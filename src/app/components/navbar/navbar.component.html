@@ -1,53 +1,43 @@
-<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
-  <div class="container-fluid">
-    <!-- Brand -->
-    <a class="h4 mb-0 text-uppercase d-none d-lg-inline-block" routerLinkActive="active" [routerLink]="['/dashboard']">{{getTitle()}}</a>
-    <!-- Form -->
-    <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
-      <div class="form-group mb-0" [ngClass]="{ 'focused': focus === true }">
-      </div>
-    </form>
-    <!-- User -->
-    <ul class="navbar-nav align-items-center d-none d-md-flex">
-      <li class="nav-item" ngbDropdown placement="bottom-right">
-        <a class="nav-link pr-0" role="button" ngbDropdownToggle>
-          <div class="media align-items-center">
-            <span class="avatar avatar-sm rounded-circle">
-              <!-- <p>neelgund Admin Dashboard</p> -->
-               <i class="ni ni-circle-08 user-icon"></i>
-            </span>
-            <div class="media-body ml-2 d-none d-lg-block">
-              <span class="mb-0 text-sm  font-weight-bold">{{user.username}}</span>
-            </div>
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main" aria-label="Top navigation">
+  <div class="container-fluid admin-topbar-content">
+    <div class="admin-topbar-title">
+      <span>NEELGUND ADMIN</span>
+      <h1>{{getTitle()}}</h1>
+    </div>
+
+    <div class="admin-topbar-actions">
+      <div class="admin-account-menu" ngbDropdown placement="bottom-right">
+        <button type="button" class="admin-account-trigger" ngbDropdownToggle aria-label="Open account menu">
+          <span class="admin-account-avatar" aria-hidden="true">
+            <i class="ni ni-circle-08"></i>
+          </span>
+          <span class="admin-account-copy">
+            <small>Signed in as</small>
+            <strong>{{user?.username || 'Administrator'}}</strong>
+          </span>
+          <i class="ni ni-bold-down admin-account-chevron" aria-hidden="true"></i>
+        </button>
+
+        <div class="dropdown-menu dropdown-menu-right admin-account-dropdown" ngbDropdownMenu>
+          <div class="admin-dropdown-heading">
+            <strong>{{user?.username || 'Administrator'}}</strong>
+            <span>Account settings</span>
           </div>
-        </a>
-        <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
-          <div class=" dropdown-header noti-title">
-            <h6 class="text-overflow m-0">Welcome!</h6>
-          </div>
-          <a routerLinkActive="active" [routerLink]="['/user-profile']" class="dropdown-item">
-            <i class="ni ni-single-02"></i>
+          <a routerLink="/user-profile" routerLinkActive="active" class="dropdown-item">
+            <i class="ni ni-single-02" aria-hidden="true"></i>
             <span>My profile</span>
           </a>
-          <a routerLinkActive="active" [routerLink]="['/config/view']" class="dropdown-item">
-            <i class="ni ni-settings-gear-65"></i>
+          <a routerLink="/config/view" routerLinkActive="active" class="dropdown-item">
+            <i class="ni ni-settings-gear-65" aria-hidden="true"></i>
             <span>Settings</span>
           </a>
-          <!-- <a routerLinkActive="active" [routerLink]="['/user-profile']" class="dropdown-item">
-            <i class="ni ni-calendar-grid-58"></i>
-            <span>Activity</span>
-          </a>
-          <a routerLinkActive="active" [routerLink]="['/user-profile']" class="dropdown-item">
-            <i class="ni ni-support-16"></i>
-            <span>Support</span>
-          </a> -->
           <div class="dropdown-divider"></div>
-          <a (click)="onLogout()" class="dropdown-item">
-            <i class="ni ni-user-run"></i>
-            <span>Logout</span>
-          </a>
+          <button type="button" class="dropdown-item admin-logout" (click)="onLogout()">
+            <i class="ni ni-user-run" aria-hidden="true"></i>
+            <span>Sign out</span>
+          </button>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </nav>

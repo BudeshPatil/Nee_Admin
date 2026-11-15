@@ -1,81 +1,75 @@
-<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
-    <div class="container-fluid">
-        <div class="header-body">
-            <!-- Card stats -->
+<div class="container-fluid career-page">
+	<header class="page-heading">
+		<div>
+			<p class="eyebrow">TALENT ENQUIRIES</p>
+			<h1>Career applications</h1>
+			<p class="page-description">Review applicant details, application messages, and submitted documents.</p>
+		</div>
+		<a class="primary-action" routerLink="/career/add"><i class="fa fa-plus" aria-hidden="true"></i>Add career</a>
+	</header>
 
-        </div>
-    </div>
+	<section class="summary-card" aria-label="Career application overview">
+		<span class="summary-icon"><i class="fa fa-briefcase" aria-hidden="true"></i></span>
+		<div><span>Total applications</span><strong>{{ totalRecord | number }}</strong></div>
+	</section>
+
+	<section class="records-card">
+		<div class="card-heading">
+			<div><h2>Applicant inbox</h2><p>Applicant contact details, application message, and resume.</p></div>
+			<span class="result-count" *ngIf="!isLoading">{{ filteredCareers.length }} shown</span>
+		</div>
+
+		<div class="list-toolbar">
+			<label class="search-control">
+				<i class="fa fa-search" aria-hidden="true"></i>
+				<input type="search" name="search" [(ngModel)]="searchText" (ngModelChange)="searchCareer()" placeholder="Search applicant, email, phone or message" autocomplete="off" aria-label="Search career applications">
+				<button *ngIf="searchText" type="button" class="clear-search" (click)="searchText = ''; searchCareer()" aria-label="Clear search"><i class="fa fa-times" aria-hidden="true"></i></button>
+			</label>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table records-table">
+				<thead>
+					<tr><th>#</th><th>Applicant</th><th>Contact</th><th>Type</th><th>Submitted</th><th>Resume</th><th class="actions-heading">Actions</th></tr>
+				</thead>
+				<tbody>
+					<tr *ngIf="isLoading"><td colspan="7" class="state-cell"><span class="loading-spinner"></span>Loading career applications…</td></tr>
+					<tr *ngIf="!isLoading && loadError"><td colspan="7" class="state-cell"><div class="empty-state"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><strong>Applications couldn't be loaded</strong><p>Check your connection and try again.</p><button class="secondary-action" type="button" (click)="get_careerData()">Try again</button></div></td></tr>
+					<tr *ngIf="!isLoading && !loadError && displayedCareers.length === 0"><td colspan="7" class="state-cell"><div class="empty-state"><i class="fa fa-inbox" aria-hidden="true"></i><strong>{{ totalRecord === 0 ? 'No applications yet' : 'No matching applications' }}</strong><p>{{ totalRecord === 0 ? 'New career applications will appear here.' : 'Try a different search term.' }}</p></div></td></tr>
+					<tr *ngFor="let career of displayedCareers; let i = index">
+						<td class="number-cell">{{ i + 1 + ((currentPage - 1) * currentLimit) }}</td>
+						<td><div class="applicant-name"><strong>{{ career.firstname || 'Applicant' }} {{ career.lastname || '' }}</strong><button type="button" class="message-link" (click)="openApplication(career)">View application message</button></div></td>
+						<td><div class="contact-details"><a *ngIf="career.email" [href]="'mailto:' + career.email">{{ career.email }}</a><a *ngIf="career.mobile" [href]="'tel:' + career.mobile">{{ career.mobile }}</a><span *ngIf="!career.email && !career.mobile">No contact details</span></div></td>
+						<td><span class="type-badge">{{ career.type || 'General' }}</span></td>
+						<td class="date-cell">{{ career.created_at ? (career.created_at | date: 'dd MMM yyyy, h:mm a') : '—' }}</td>
+						<td><a *ngIf="career.documents" class="document-link" [href]="imagePath + 'career/' + career.documents" target="_blank" rel="noopener noreferrer"><i class="fa fa-file-text-o" aria-hidden="true"></i>View resume</a><span *ngIf="!career.documents" class="no-document">Not provided</span></td>
+						<td><div class="action-group"><a class="icon-action" [routerLink]="['/career/edit', career._id]" [attr.aria-label]="'Edit ' + (career.firstname || 'applicant')" title="Edit application"><i class="fa fa-pencil" aria-hidden="true"></i></a><button type="button" class="icon-action danger-action" (click)="deleteCareer(career._id)" [disabled]="!career._id" aria-label="Delete application" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button></div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<p class="action-error" *ngIf="actionError" role="alert">{{ actionError }}</p>
+		<div class="records-pagination" *ngIf="filteredCareers.length > currentLimit"><app-pagination [initialPage]="currentPage" [count]="filteredCareers.length" [perPage]="currentLimit" (changePage)="onListChangePage($event)"></app-pagination></div>
+	</section>
+
+	<div class="modal-backdrop-custom" *ngIf="isApplicationOpen" (click)="closeApplication()"></div>
+	<section class="modal-custom" *ngIf="isApplicationOpen" role="dialog" aria-modal="true" aria-labelledby="application-title" (click)="closeApplication()">
+		<div class="modal-content-custom" (click)="$event.stopPropagation()">
+			<header class="modal-header-custom">
+				<div><p class="eyebrow">CAREER APPLICATION</p><h2 id="application-title">{{ selectedCareer?.firstname || 'Applicant' }} {{ selectedCareer?.lastname || '' }}</h2></div>
+				<button type="button" class="modal-close-btn" (click)="closeApplication()" aria-label="Close dialog"><i class="fa fa-times" aria-hidden="true"></i></button>
+			</header>
+			<div class="modal-contact-grid">
+				<div><span>Email</span><a *ngIf="selectedCareer?.email" [href]="'mailto:' + selectedCareer?.email">{{ selectedCareer?.email }}</a><strong *ngIf="!selectedCareer?.email">—</strong></div>
+				<div><span>Mobile</span><a *ngIf="selectedCareer?.mobile" [href]="'tel:' + selectedCareer?.mobile">{{ selectedCareer?.mobile }}</a><strong *ngIf="!selectedCareer?.mobile">—</strong></div>
+				<div><span>Type</span><strong>{{ selectedCareer?.type || 'General' }}</strong></div>
+				<div><span>Submitted</span><strong>{{ selectedCareer?.created_at ? (selectedCareer?.created_at | date: 'dd MMM yyyy, h:mm a') : '—' }}</strong></div>
+			</div>
+			<div class="message-section"><span>Application message</span><div class="application-message" [innerHTML]="selectedCareer?.subject || 'No application message provided.'"></div></div>
+			<footer class="modal-footer-custom">
+				<a *ngIf="selectedCareer?.documents" class="secondary-action" [href]="imagePath + 'career/' + selectedCareer?.documents" target="_blank" rel="noopener noreferrer"><i class="fa fa-file-text-o" aria-hidden="true"></i>Open resume</a>
+				<button type="button" class="secondary-action" (click)="closeApplication()">Close</button>
+			</footer>
+		</div>
+	</section>
 </div>
-<!-- Page content -->
-<div class="container-fluid mt--7">
-    <!-- Table -->
-    <div class="row">
-        <div class="col">
-            <div class="card shadow">
-                <div class="card-header border-0">
-                    <h3 class="mb-0">Career List</h3>
-                </div>
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input class="form-control mt-4" type="text" (keyup)="searchCareer()" name="search" [(ngModel)]="searchText"
-                                          autocomplete="off" placeholder="&#61442;  Start searching a Career  name">
-                        </div>
-                        <div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
-                                routerLink="/career/add">Add Career</button></div>
-                    </div>
-                    <div class="col-md-6">
-                        <h4 class="title"></h4>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                        <thead>
-                            <tr>
-                                <th>SL No</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Mobile Number</th>
-                                <th>Type</th>
-                                <th>Created At</th>
-                                <th>Action</th>
-                                <th>Document</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <td colspan="5" *ngIf="msg_danger">
-                                <div class="alert alert-dismissable" style="text-align: center;">
-                                    Career List is Empty
-                                </div>
-                            </td>
-                            <tr *ngFor="let cData of careerData | filter:searchText; let i = index">
-                                <td *ngIf="currentPage == 1">{{i+1}}</td>
-                                <td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-                                <td>{{cData.firstname}}</td>
-                                <td>{{cData.lastname}}</td>
-                                <td>{{cData.email}}</td>
-                                <td>{{cData.mobile}}</td>
-                                <td>{{cData.type}}</td>
-                                <td>{{cData.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-                                <td>
-                                    <a routerLink="/career/edit/{{cData._id}}" style="cursor:pointer"><i
-                                            class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    </a>
-                                    <a style="cursor:pointer;padding-left: 15px;" (click)="deleteCareer(cData._id)"><i
-                                            class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                </td>
-                                <td>
-                                    <a *ngIf = "cData.documents" style="cursor:pointer;padding-left: 15px;" href="{{imagePath}}career/{{cData.documents}}" target="_blank">View</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
-                        <app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
-                            (changePage)="onListChangePage($event)"></app-pagination>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>

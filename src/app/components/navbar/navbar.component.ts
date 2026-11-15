@@ -1,6 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { ROUTES } from '../sidebar/sidebar.component';
-import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,36 +7,61 @@ import { Router } from '@angular/router';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  public focus;
-  public listTitles: any[];
-  public location: Location;
-  public user : any;
-  constructor(location: Location,  private element: ElementRef, private router: Router) {
-    this.location = location;
-  }
+  public user: { username?: string } | null = null;
+
+  private readonly routeTitles: { [path: string]: string } = {
+    dashboard: 'Dashboard',
+    'banner-images': 'Banner images',
+    counter: 'Counters',
+    tvshow: 'Clients',
+    category: 'Categories',
+    project: 'Projects',
+    service: 'Services',
+    testimonial: 'Testimonials',
+    blog: 'Blogs',
+    priceonrequest: 'Price requests',
+    about: 'About',
+    homepage: 'Homepage',
+    contact: 'Contact list',
+    career: 'Careers',
+    page: 'SEO pages',
+    'user-profile': 'My profile',
+    auth: 'Users',
+    config: 'Settings',
+    achievement: 'Achievements',
+    award: 'Awards',
+    gallery: 'Gallery',
+    podcast: 'Podcasts',
+    subscriber: 'Subscribers',
+    tag: 'Tags',
+    catalog: 'Catalog',
+    company: 'Company',
+    client: 'Clients',
+    course: 'Courses',
+    download: 'Downloads',
+    maps: 'Maps',
+    icons: 'Icons'
+  };
+
+  constructor(private router: Router) { }
 
   ngOnInit() {
-    this.listTitles = ROUTES.filter(listTitle => listTitle);
-    let tempUser = localStorage.getItem('user');
-    this.user = JSON.parse(tempUser);
-
-  }
-  getTitle(){
-    var titlee = this.location.prepareExternalUrl(this.location.path());
-    if(titlee.charAt(0) === '#'){
-        titlee = titlee.slice( 1 );
-    }
-
-    for(var item = 0; item < this.listTitles.length; item++){
-        if(this.listTitles[item].path === titlee){
-            return this.listTitles[item].title;
-        }
-    }
-    return 'Dashboard';
+    const storedUser = localStorage.getItem('user');
+    this.user = storedUser ? JSON.parse(storedUser) : null;
   }
 
-  onLogout(){
+  getTitle() {
+    const routePath = this.router.url.split('?')[0].split('#')[0];
+    const activeRoute = routePath.split('/').filter(Boolean)[0] || 'dashboard';
+
+    return this.routeTitles[activeRoute] || activeRoute
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  onLogout() {
     localStorage.clear();
-    this.router.navigate(['/login'])
+    this.router.navigate(['/login']);
   }
 }

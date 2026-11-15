@@ -1,134 +1,156 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { environment } from '../../../../environments/environment';
-
-// Services
+import { Component, HostListener, OnInit } from '@angular/core';
 import { PageService } from '../../../providers/page/page.service';
-import { from } from 'rxjs';
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import { MediaService } from '../../../providers/media/media.service';
-import { BannerService } from 'src/app/providers/banner/banner.service';
+
+interface SeoPageRecord {
+	_id?: string;
+	page_name?: string;
+	meta_title?: string;
+	meta_description?: string;
+	meta_keywords?: string;
+}
 
 @Component({
-  selector: 'app-view-page',
-  templateUrl: './view-page.component.html',
-  styleUrls: ['./view-page.component.css']
+	selector: 'app-view-page',
+	templateUrl: './view-page.component.html',
+	styleUrls: ['./view-page.component.css']
 })
 export class ViewPageComponent implements OnInit {
-  
-  msg_danger: boolean = false;
-  pageData: any;
+	pageData: SeoPageRecord[] = [];
+	selectedPage: SeoPageRecord | null = null;
+	isDeleteOpen = false;
+	isLoading = false;
+	isDeleting = false;
+	loadError = false;
+	actionError = '';
 
-  // pagination
-  currentPage: number  = 1;
-  initialized: boolean = false;
-  currentLimit: number = 10;
-  totalRecord: number  = 0;
-  searchText = '';
-  selectedPage:any;
-  modalReference = null;
-  closeResult = '';
-  constructor(
-    private router: Router,
-    private pageService:PageService,
-    private modalService: NgbModal,
-    private activeModal: NgbActiveModal,
-    private mediaService: MediaService,
-    public bannerservice: BannerService,
-    ) 
-  { 
+	currentPage = 1;
+	currentLimit = 10;
+	totalRecord = 0;
+	searchText = '';
 
-  }
+	constructor(private pageService: PageService) { }
 
-  ngOnInit(): void {
-    this.get_pageData();
-  }
+	ngOnInit(): void {
+		this.get_pageData();
+	}
 
-  get_pageData()
-  {
-    const obj = {
-      limit: this.currentLimit,
-      page: this.currentPage,
-    };
-    this.pageService.getPageDetails(obj).subscribe(
-        (response)=> {
-          if (response.code == 200) 
-          {
-            if(response.result != null && response.result != '')
-            {
-              this.pageData    = response.result;
-              this.totalRecord = response?.count;
-            }
-            else
-            {
-              this.msg_danger   = true;
-            }
-           
-          }
-        },
-      );
-  }
+	get filteredPages(): SeoPageRecord[] {
+		const query = this.searchText.trim().toLowerCase();
+		return this.pageData.filter(page => {
+			const searchable = [
+				page.page_name,
+				page.meta_title,
+				page.meta_description,
+				page.meta_keywords
+			].filter(Boolean).join(' ').toLowerCase();
+			return !query || searchable.includes(query);
+		});
+	}
 
-  
-  onListChangePage(event:any) {
-    this.currentPage = event;
-    this.get_pageData();
-  } 
+	get displayedPages(): SeoPageRecord[] {
+		const start = (this.currentPage - 1) * this.currentLimit;
+		return this.filteredPages.slice(start, start + this.currentLimit);
+	}
 
-  searchPage(){
-    if(this.searchText){
-      this.currentLimit = 1000;
-      this.currentPage = 1; 
-    } else {
-      this.currentLimit = 10;
-    }
-    this.get_pageData();
-  }
+	get_pageData(): void {
+		this.isLoading = true;
+		this.loadError = false;
+		this.actionError = '';
+		this.pageData = [];
+		this.pageService.getPageDetails({ limit: 1000, page: 1 }).subscribe({
+			next: (response: any) => {
+				this.isLoading = false;
+				if (!response || response.code !== 200) {
+					this.loadError = true;
+					this.pageData = [];
+					this.totalRecord = 0;
+					return;
+				}
+				if (response.result == null || response.result === '') {
+					this.pageData = [];
+					this.totalRecord = 0;
+					this.clampCurrentPage();
+					return;
+				}
+				if (!Array.isArray(response.result)) {
+					this.loadError = true;
+					this.pageData = [];
+					this.totalRecord = 0;
+					return;
+				}
+				this.pageData = response.result;
+				this.totalRecord = this.pageData.length;
+				this.clampCurrentPage();
+			},
+			error: error => {
+				console.error('Error loading SEO pages:', error);
+				this.isLoading = false;
+				this.loadError = true;
+				this.pageData = [];
+				this.totalRecord = 0;
+			}
+		});
+	}
 
-  open(content,data) {
-      this.selectedPage = data;
-      this.modalReference = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-        (result) => {
-          this.closeResult = `Closed with: ${result}`;
-        },
-        (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        },
-      );
-    }
-  
-    private getDismissReason(reason: any): string {
-      if (reason === ModalDismissReasons.ESC) {
-        return 'by pressing ESC';
-      } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-        return 'by clicking on a backdrop';
-      } else {
-        return `with: ${reason}`;
-      }
-    }
-  
-    closeModal(){
-      this.activeModal.close();
-    }
+	onListChangePage(page: number): void {
+		this.currentPage = page;
+	}
 
-    deletePage() {
-      if (this.selectedPage) {
-        var mylist = { id: this.selectedPage._id };
-        this.pageService.deletePage(mylist).subscribe(
-          (response) => {
-            this.get_pageData();
-            if (response.code == 200) {
-              this.modalService.dismissAll();
-            }
-          },
-        );
-      }
-    }
+	searchPage(): void {
+		this.currentPage = 1;
+	}
+
+	openDeleteDialog(page: SeoPageRecord): void {
+		this.selectedPage = page;
+		this.actionError = '';
+		this.isDeleteOpen = true;
+	}
+
+	closeDeleteDialog(): void {
+		if (this.isDeleting) {
+			return;
+		}
+		this.isDeleteOpen = false;
+		this.selectedPage = null;
+		this.actionError = '';
+	}
+
+	deletePage(): void {
+		const id = this.selectedPage && this.selectedPage._id;
+		if (!id || this.isDeleting) {
+			return;
+		}
+		this.isDeleting = true;
+		this.actionError = '';
+		this.pageService.deletePage({ id }).subscribe({
+			next: (response: any) => {
+				this.isDeleting = false;
+				if (response && response.code === 200) {
+					this.isDeleteOpen = false;
+					this.selectedPage = null;
+					this.get_pageData();
+				} else {
+					this.actionError = 'This page could not be deleted. Please try again.';
+					console.error('Unable to delete SEO page:', response && response.message);
+				}
+			},
+			error: error => {
+				console.error('Error deleting SEO page:', error);
+				this.isDeleting = false;
+				this.actionError = 'This page could not be deleted. Please try again.';
+			}
+		});
+	}
+
+	@HostListener('document:keydown.escape')
+	onEscapeKey(): void {
+		if (this.isDeleteOpen) {
+			this.closeDeleteDialog();
+		}
+	}
+
+	private clampCurrentPage(): void {
+		const pageCount = Math.max(1, Math.ceil(this.filteredPages.length / this.currentLimit));
+		this.currentPage = Math.min(this.currentPage, pageCount);
+	}
 }

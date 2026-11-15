@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { environment } from '../../../../environments/environment'
-
-// Services
+import { environment } from '../../../../environments/environment';
 import { BlogService } from '../../../providers/blog/blog.service';
-import { from } from 'rxjs';
 
 @Component({
 	selector: 'app-view-blog',
@@ -12,135 +8,110 @@ import { from } from 'rxjs';
 	styleUrls: ['./view-blog.component.css']
 })
 export class ViewBlogComponent implements OnInit {
-	msg_danger: boolean = false;
-	blogData: any;
-	imagePath: any;
-
-	// pagination
-	currentPage: number = 1;
-	initialized: boolean = false;
-	currentLimit: number = 10;
-	totalRecord: number = 0;
+	blogData: any[] = [];
+	imagePath = environment.baseUrl + '/public/blog/';
+	currentPage = 1;
+	currentLimit = 10;
+	totalRecord = 0;
 	searchText = '';
-	config = {
-		value: true,
-		name: '',
-		disabled: false,
-		height: 25,
-		width: 90,
-		margin: 3,
-		fontSize: 10,
-		speed: 300,
-		color: {
-			checked: '#36aef5',
-			unchecked: '#423f3f',
-		},
-		switchColor: {
-			checked: '#3366FF',
-			unchecked: 'crimson',
-		},
-		labels: {
-			unchecked: 'Deactive',
-			checked: 'Active',
-		},
-		checkedLabel: '',
-		uncheckedLabel: '',
-		fontColor: {
-			checked: '#fafafa',
-			unchecked: '#ffffff',
-		},
-	};
-	isactive: any;
-	constructor(
-		private router: Router,
-		private blogService: BlogService
-	) {
-		this.imagePath = environment.baseUrl + '/public/blog/';
+	isactive: 'all' | boolean = 'all';
+	isLoading = false;
+	loadError = false;
+	private searchTimer: ReturnType<typeof setTimeout> | null = null;
+	private loadRequestId = 0;
 
-	}
+	constructor(private blogService: BlogService) { }
 
 	ngOnInit(): void {
 		this.get_blogData();
-		this.config.switchColor.checked = '#dcdcdc';
-		this.config.color.checked = '#dcdcdc';
-		this.config.labels.checked = 'Change';
-		this.isactive = 'none';
 	}
 
-	get_blogData() {
-		const obj = {
+	get filteredBlogs(): any[] {
+		const query = this.searchText.trim().toLowerCase();
+		return this.blogData.filter(blog => {
+			const searchable = `${blog.name || ''} ${blog.category_name || ''} ${blog.meta_description || ''} ${blog.author_name || ''}`.toLowerCase();
+			const active = blog.status === true || blog.status === 'true';
+			return (!query || searchable.includes(query)) &&
+				(this.isactive === 'all' || active === this.isactive);
+		});
+	}
+
+	get hasFilters(): boolean {
+		return !!this.searchText.trim() || this.isactive !== 'all';
+	}
+
+	get_blogData(): void {
+		const requestId = ++this.loadRequestId;
+		this.isLoading = true;
+		this.loadError = false;
+		this.blogService.getblogDetails({
 			limit: this.currentLimit,
-			page: this.currentPage,
-		};
-		this.blogService.getblogDetails(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					if (response.result != null && response.result != '') {
-						this.blogData = response.result;
-						this.totalRecord = response?.count;
-					}
-					else {
-						this.msg_danger = true;
-					}
-
+			page: this.currentPage
+		}).subscribe({
+			next: (response: any) => {
+				if (requestId !== this.loadRequestId) {
+					return;
 				}
+				this.isLoading = false;
+				if (response.code !== 200) {
+					this.loadError = true;
+					this.blogData = [];
+					return;
+				}
+				this.blogData = Array.isArray(response.result) ? response.result : [];
+				this.totalRecord = Number(response.count) || this.blogData.length;
 			},
-		);
+			error: error => {
+				if (requestId !== this.loadRequestId) {
+					return;
+				}
+				console.error('Error loading blogs:', error);
+				this.isLoading = false;
+				this.loadError = true;
+				this.blogData = [];
+			}
+		});
 	}
 
-	onListChangePage(event: any) {
+	onListChangePage(event: number): void {
 		this.currentPage = event;
 		this.get_blogData();
 	}
 
-	deleteblog(listid: any) {
-		if (confirm("Are you sure to delete this Blog")) {
-			var mylist = { id: listid };
-			this.blogService.deleteblog(mylist).subscribe(
-				(response) => {
-					if (response.code == 200) {
-						this.get_blogData();
-						this.router.navigate(['/blog/view']);
-					}
-				},
-			);
+	searchBlog(): void {
+		if (this.searchTimer) {
+			clearTimeout(this.searchTimer);
 		}
+		this.currentPage = 1;
+		this.currentLimit = this.hasFilters ? 1000 : 10;
+		this.searchTimer = setTimeout(() => this.get_blogData(), 250);
 	}
 
-	searchBlog() {
-		if (this.searchText) {
-			this.currentLimit = 1000;
-			this.currentPage = 1;
-		} else {
-			this.currentLimit = 10;
-		}
-		this.get_blogData();
+	clearFilters(): void {
+		this.searchText = '';
+		this.isactive = 'all';
+		this.searchBlog();
 	}
 
-	changeStatus() {
-		if (this.isactive != 'none') {
-			this.config.switchColor.checked = '#ffffff';
-			this.config.color.checked = 'green';
-			this.config.labels.checked = 'Active';
-		} else {
-			if (this.isactive) {
-				this.isactive = false;
-				this.config.switchColor.unchecked = 'crimson';
-				this.config.color.unchecked = '#423f3f';
-				this.config.labels.unchecked = 'Deactive';
-			} else {
-				this.isactive = true
-			}
+	deleteblog(id: string): void {
+		if (!confirm('Are you sure you want to delete this blog?')) {
+			return;
 		}
+		this.blogService.deleteblog({ id }).subscribe({
+			next: (response: any) => {
+				if (response.code === 200) {
+					this.get_blogData();
+				} else {
+					console.error('Unable to delete blog:', response.message);
+				}
+			},
+			error: error => console.error('Error deleting blog:', error)
+		});
 	}
 
-	resetFilter() {
-		this.config.switchColor.checked = '#dcdcdc';
-		this.config.color.checked = '#dcdcdc';
-		this.config.labels.checked = 'Change';
-		this.config.switchColor.unchecked = '#dcdcdc';
-		this.config.color.unchecked = '#dcdcdc';
-		this.config.labels.unchecked = 'Change';
-		this.isactive = 'none';
+	onImageError(event: Event): void {
+		const image = event.target as HTMLImageElement;
+		image.onerror = null;
+		image.src = 'assets/img/placeholder.webp';
 	}
 }

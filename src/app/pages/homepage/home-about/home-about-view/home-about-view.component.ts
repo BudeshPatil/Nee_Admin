@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
-import { from } from 'rxjs';
-
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AboutService } from 'src/app/providers/about/about.service';
 
 @Component({
@@ -13,204 +9,96 @@ import { AboutService } from 'src/app/providers/about/about.service';
 	styleUrls: ['./home-about-view.component.scss']
 })
 export class HomeAboutViewComponent implements OnInit {
-
-	msg_danger: boolean = false;
-	AboutData: any;
-	imagePath: any;
-	token: any;
-
-
-	isactive: any;
-	// pagination
-	currentPage: number = 1;
-	initialized: boolean = false;
-	currentLimit: number = 10;
-	totalRecord: number = 0;
-	selectedFiles?: FileList;
-	currentFile?: File;
-	progress = 0;
-	message = '';
+	AboutData: any[] = [];
+	imagePath = environment.baseUrl + '/public/about/';
+	token: string;
+	currentPage = 1;
+	currentLimit = 10;
+	totalRecord = 0;
 	searchText = '';
-	closeResult = '';
-	modalReference = null;
-	selectedAbout: any;
-	config = {
-		value: true,
-		name: '',
-		disabled: false,
-		height: 25,
-		width: 90,
-		margin: 3,
-		fontSize: 10,
-		speed: 300,
-		color: {
-			checked: '#36aef5',
-			unchecked: '#423f3f',
-		},
-		switchColor: {
-			checked: '#3366FF',
-			unchecked: 'crimson',
-		},
-		labels: {
-			unchecked: 'Deactive',
-			checked: 'Active',
-		},
-		checkedLabel: '',
-		uncheckedLabel: '',
-		fontColor: {
-			checked: '#fafafa',
-			unchecked: '#ffffff',
-		},
-	};
+	isLoading = true;
+	loadError = false;
 
 	constructor(
-		private router: Router,
-		// private loginService: LoginService,
 		private toastr: ToastrManager,
-		private aboutservice: AboutService,
-		private modalService: NgbModal,
-		private activeModal: NgbActiveModal
+		private aboutservice: AboutService
 	) {
-		this.imagePath = environment.baseUrl + '/public/about/';
 		this.token = localStorage.getItem('token');
 	}
 
 	ngOnInit(): void {
 		this.get_AboutData();
-		this.config.switchColor.checked = '#dcdcdc';
-		this.config.color.checked = '#dcdcdc';
-		this.config.labels.checked = 'Change';
-		this.isactive = 'none';
 	}
 
 	get_AboutData() {
-		const obj = {
+		this.isLoading = true;
+		this.loadError = false;
+
+		const request = {
 			limit: this.currentLimit,
 			page: this.currentPage,
-
-			token: this.token,
+			token: this.token
 		};
-		this.aboutservice.getaboutDetails(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					if (response.result != null && response.result != '') {
-						this.AboutData = response.result.filter(data => data.page_section === 'home');
-						this.totalRecord = response?.count;
-						// console.log(this.AboutData); page_section
-					}
-					else {
-						this.msg_danger = true;
-					}
 
+		this.aboutservice.getaboutDetails(request).subscribe({
+			next: (response) => {
+				this.isLoading = false;
+
+				if (response.code === 200) {
+					const results = Array.isArray(response.result) ? response.result : [];
+					this.AboutData = results.filter((item) => item.page_section === 'home');
+					this.totalRecord = Number(response.count) || 0;
+					return;
 				}
+
+				this.AboutData = [];
+				this.totalRecord = 0;
+				this.loadError = true;
+				this.toastr.errorToastr(response.message || 'Homepage content could not be loaded.');
 			},
-		);
+			error: () => {
+				this.isLoading = false;
+				this.AboutData = [];
+				this.totalRecord = 0;
+				this.loadError = true;
+				this.toastr.errorToastr('Homepage content could not be loaded.');
+			}
+		});
 	}
 
-	onListChangePage(event: any) {
-		this.currentPage = event;
+	onListChangePage(page: number) {
+		this.currentPage = page;
 		this.get_AboutData();
 	}
 
-	selectFile(event: any): void {
-		this.selectedFiles = event.target.files;
-	}
-
-
-
 	searchAbout() {
-		if (this.searchText) {
+		if (this.searchText.trim()) {
 			this.currentLimit = 1000;
 			this.currentPage = 1;
 		} else {
 			this.currentLimit = 10;
+			this.currentPage = 1;
 		}
+
 		this.get_AboutData();
 	}
 
-	open(content, data) {
-		this.selectedAbout = data;
-		this.modalReference = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-			(result) => {
-				this.closeResult = `Closed with: ${result}`;
-			},
-			(reason) => {
-				this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-			},
-		);
-	}
-
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
-		} else {
-			return `with: ${reason}`;
+	get filteredAboutData(): any[] {
+		if (this.isLoading || this.loadError) {
+			return [];
 		}
-	}
 
-	closeModal() {
-		this.activeModal.close();
-	}
-
-
-	deleteAbout() {
-		if (this.selectedAbout) {
-			var mylist = { id: this.selectedAbout._id };
-			this.aboutservice.getAboutDelete(mylist).subscribe(
-				(response) => {
-					if (response.code == 200) {
-
-						this.get_AboutData();
-						this.router.navigate(['/About/view']);
-						window.location.reload();
-						this.toastr.successToastr("About Deleted")
-					}
-				},
-			);
+		const query = this.searchText.trim().toLowerCase();
+		if (!query) {
+			return this.AboutData;
 		}
+
+		return this.AboutData.filter((item) => {
+			const searchableText = [item.title_name, item.desc_short, item.page_section]
+				.filter(Boolean)
+				.join(' ')
+				.toLowerCase();
+			return searchableText.includes(query);
+		});
 	}
-
-	changeStatus() {
-		if (this.isactive != 'none') {
-			this.config.switchColor.checked = '#ffffff';
-			this.config.color.checked = 'green';
-			this.config.labels.checked = 'Active';
-		} else {
-			if (this.isactive) {
-				this.isactive = false;
-				this.config.switchColor.unchecked = 'crimson';
-				this.config.color.unchecked = '#423f3f';
-				this.config.labels.unchecked = 'Deactive';
-			} else {
-				this.isactive = true;
-
-			}
-		}
-	}
-
-	resetFilter() {
-		this.config.switchColor.checked = '#dcdcdc';
-		this.config.color.checked = '#dcdcdc';
-		this.config.labels.checked = 'Change';
-		this.config.switchColor.unchecked = '#dcdcdc';
-		this.config.color.unchecked = '#dcdcdc';
-		this.config.labels.unchecked = 'Change';
-		this.isactive = 'none';
-	}
-
-	// 	deleteMediaData() {
-	// 	if (this.selectedAbout.media_data && this.selectedAbout.media_data.length > 0) {
-	// 		var mylist = { id: this.selectedAbout.media_data[0]._id, file: this.selectedAbout.media_data[0].src };
-	// 		this.bannerservice.deleteMediaData(mylist).subscribe(
-	// 			(response) => {
-	// 				if (response.code == 200) {
-	// 					this.modalService.dismissAll();
-	// 				}
-	// 			},
-	// 		);
-	// 	}
-	// }
-
 }

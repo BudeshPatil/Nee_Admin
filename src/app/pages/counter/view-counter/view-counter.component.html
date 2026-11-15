@@ -1,75 +1,150 @@
-<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center">
-	<span class="mask bg-gradient-info opacity-8"></span>
-	<div class="container-fluid d-flex align-items-center">
-		<div class="row">
-			<div class="col-lg-7 col-md-10">
-				<!-- <h1 class="display-2 text-white">Hello {{user.username}}</h1> -->
-			</div>
+<main class="counter-page">
+	<header class="counter-page-header">
+		<div>
+			<p class="counter-eyebrow">HOMEPAGE CONTENT</p>
+			<h1>Counter statistics</h1>
+			<p class="counter-page-description">Update the key figures and supporting text shown on your homepage.</p>
 		</div>
+		<span class="counter-section-count">
+			<i class="ni ni-chart-bar-32" aria-hidden="true"></i>
+			4 homepage metrics
+		</span>
+	</header>
+
+	<div class="counter-state" *ngIf="isLoading" role="status">
+		<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+		Loading counter settings…
 	</div>
-</div>
-<div class="container-fluid mt--7">
-	<div class="row justify-content-center">
-		<div class="col-xl-8 order-xl-1">
-			<div class="card bg-secondary shadow">
-				<div class="card-header bg-white border-0">
-					<div class="row align-items-center">
-						<div class="col-8">
-							<h3 class="mb-0">Counter</h3>
+
+	<div class="counter-state counter-state-error" *ngIf="!isLoading && loadError" role="alert">
+		<div>
+			<strong>Counter settings are unavailable</strong>
+			<p>Please try again.</p>
+		</div>
+		<button class="btn btn-secondary" type="button" (click)="get_CounterData()">Retry</button>
+	</div>
+
+	<div class="counter-state counter-state-empty" *ngIf="!isLoading && !loadError && CounterData.length === 0">
+		<span class="counter-empty-icon"><i class="ni ni-chart-bar-32" aria-hidden="true"></i></span>
+		<strong>No counter settings found</strong>
+		<span>There are no homepage statistics available to edit.</span>
+	</div>
+
+	<section class="counter-editor-card" *ngIf="!isLoading && !loadError && CounterData.length > 0">
+		<div class="counter-editor-heading">
+			<div>
+				<h2>Homepage figures</h2>
+				<p>Choose a display value and a short description for each statistic.</p>
+			</div>
+			<span class="counter-editor-badge">
+				<i class="ni ni-check-bold" aria-hidden="true"></i>
+				Editing
+			</span>
+		</div>
+
+		<div class="alert alert-success counter-success-alert" *ngIf="msg_success" role="status">
+			<i class="ni ni-check-bold" aria-hidden="true"></i>
+			{{throw_msg}}
+		</div>
+
+		<form [formGroup]="addForm" (ngSubmit)="onSubmit()" novalidate>
+			<div class="counter-metrics-grid">
+				<section class="counter-metric-card">
+					<div class="counter-metric-heading">
+						<span class="counter-metric-icon"><i class="ni ni-square-pin" aria-hidden="true"></i></span>
+						<div>
+							<h3>Plots</h3>
+							<p>Land and plot statistics</p>
 						</div>
 					</div>
-				</div>
-				<div class="card-body">
-					<form [formGroup]="addForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-						<div class="box-body">
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Total Plots</label>
-								<input type="text" name="total_plots" autocomplete="off" formControlName="total_plots"
-									class="form-control" placeholder="Total Plots">
-							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Plots Description</label>
-								<input type="text" name="plots_desc" autocomplete="off" formControlName="plots_desc"
-									class="form-control" placeholder="Plots Description">
-							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Total Clients</label>
-								<input type="text" name="total_clients" autocomplete="off" formControlName="total_clients"
-									class="form-control" placeholder="Total Clients">
-							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Client Description</label>
-								<input type="text" name="clients_desc" autocomplete="off" formControlName="clients_desc"
-									class="form-control" placeholder="Client Description">
-							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Total Experience</label>
-								<input type="text" name="total_experience" autocomplete="off" formControlName="total_experience"
-									class="form-control" placeholder="Total Experience">
-							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Experience Description</label>
-								<input type="text" name="experience_desc" autocomplete="off" formControlName="experience_desc"
-									class="form-control" placeholder="Experience Description">
-							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Total Projects</label>
-								<input type="text" name="total_projects" autocomplete="off" formControlName="total_projects"
-									class="form-control" placeholder="Total Projects">
-							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Projects Description</label>
-								<input type="text" name="projects_desc" autocomplete="off" formControlName="projects_desc"
-									class="form-control" placeholder="Projects Description">
-							</div>
+					<div class="counter-fields">
+						<div class="form-group">
+							<label for="total-plots">Display value</label>
+							<input id="total-plots" type="text" autocomplete="off"
+								formControlName="total_plots" class="form-control" placeholder="e.g. 250+">
 						</div>
-						<div class="box-footer col-lg-12">
-							<button type="submit" class="btn btn-primary">Submit</button>
-							<button type="button" class="btn btn-danger" routerLink="/dashboard">Cancel</button>
+						<div class="form-group">
+							<label for="plots-description">Description</label>
+							<textarea id="plots-description" rows="4" formControlName="plots_desc"
+								class="form-control" placeholder="Add a short description for this figure"></textarea>
 						</div>
-					</form>
-				</div>
+					</div>
+				</section>
+
+				<section class="counter-metric-card">
+					<div class="counter-metric-heading">
+						<span class="counter-metric-icon"><i class="ni ni-single-02" aria-hidden="true"></i></span>
+						<div>
+							<h3>Clients</h3>
+							<p>Client and customer statistics</p>
+						</div>
+					</div>
+					<div class="counter-fields">
+						<div class="form-group">
+							<label for="total-clients">Display value</label>
+							<input id="total-clients" type="text" autocomplete="off"
+								formControlName="total_clients" class="form-control" placeholder="e.g. 120+">
+						</div>
+						<div class="form-group">
+							<label for="clients-description">Description</label>
+							<textarea id="clients-description" rows="4" formControlName="clients_desc"
+								class="form-control" placeholder="Add a short description for this figure"></textarea>
+						</div>
+					</div>
+				</section>
+
+				<section class="counter-metric-card">
+					<div class="counter-metric-heading">
+						<span class="counter-metric-icon"><i class="ni ni-trophy" aria-hidden="true"></i></span>
+						<div>
+							<h3>Experience</h3>
+							<p>Years of industry experience</p>
+						</div>
+					</div>
+					<div class="counter-fields">
+						<div class="form-group">
+							<label for="total-experience">Display value</label>
+							<input id="total-experience" type="text" autocomplete="off"
+								formControlName="total_experience" class="form-control" placeholder="e.g. 15+ years">
+						</div>
+						<div class="form-group">
+							<label for="experience-description">Description</label>
+							<textarea id="experience-description" rows="4" formControlName="experience_desc"
+								class="form-control" placeholder="Add a short description for this figure"></textarea>
+						</div>
+					</div>
+				</section>
+
+				<section class="counter-metric-card">
+					<div class="counter-metric-heading">
+						<span class="counter-metric-icon"><i class="ni ni-folder-17" aria-hidden="true"></i></span>
+						<div>
+							<h3>Projects</h3>
+							<p>Completed and ongoing projects</p>
+						</div>
+					</div>
+					<div class="counter-fields">
+						<div class="form-group">
+							<label for="total-projects">Display value</label>
+							<input id="total-projects" type="text" autocomplete="off"
+								formControlName="total_projects" class="form-control" placeholder="e.g. 80+">
+						</div>
+						<div class="form-group">
+							<label for="projects-description">Description</label>
+							<textarea id="projects-description" rows="4" formControlName="projects_desc"
+								class="form-control" placeholder="Add a short description for this figure"></textarea>
+						</div>
+					</div>
+				</section>
 			</div>
-		</div>
-	</div>
-</div>
+
+			<div class="counter-form-actions">
+				<a class="btn btn-secondary" routerLink="/dashboard">Cancel</a>
+				<button type="submit" class="btn btn-primary" [disabled]="isSaving">
+					<span *ngIf="isSaving" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+					{{isSaving ? 'Saving…' : 'Save changes'}}
+				</button>
+			</div>
+		</form>
+	</section>
+</main>

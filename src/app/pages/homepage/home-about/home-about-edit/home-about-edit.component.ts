@@ -21,6 +21,11 @@ export class HomeAboutEditComponent implements OnInit {
 	msg_success: boolean = false;
 	msg_danger: boolean = false;
 	token: any;
+	isLoading = false;
+	loadError = false;
+	isSaving = false;
+	uploadingBanner = false;
+	uploadingDesc = false;
 
 	// Image Variables
 	uploadInput: EventEmitter<UploadInput>;
@@ -50,7 +55,7 @@ export class HomeAboutEditComponent implements OnInit {
 		editable: true,
 		spellcheck: true,
 		height: 'auto',
-		minHeight: '200px',
+		minHeight: '280px',
 		maxHeight: 'auto',
 		width: 'auto',
 		minWidth: '0',
@@ -79,11 +84,11 @@ export class HomeAboutEditComponent implements OnInit {
 			desc_short: ['', Validators.required],
 			desc_long: ['', Validators.required],
 			video_url: [''],
-			page_section: ['', Validators.required],
+			page_section: ['home', Validators.required],
 			video_desc: [''],
 			image_banner: [''],
 			image_desc: [''],
-			status: [true, Validators.required],
+			status: ['true', Validators.required],
 		});
 		this.uploadInput = new EventEmitter<UploadInput>();
 		this.token = localStorage.getItem('neelgund-admin-token');
@@ -103,11 +108,20 @@ export class HomeAboutEditComponent implements OnInit {
 	}
 
 	patchingdata(id: any) {
+		this.isLoading = true;
+		this.loadError = false;
+		this.msg_danger = false;
 		let obj = { id: id };
 		this.aboutService.getAboutWithId(obj).subscribe(
 			(response) => {
+				this.isLoading = false;
 				if (response.code == 200) {
 					let data = response?.result;
+					if (!data) {
+						this.loadError = true;
+						this.throw_msg = 'The requested About section could not be found.';
+						return;
+					}
 					// this.addForm = response.result;
 					this.imageDataBanner = data?.image_banner;
 					this.imageDataDesc = data?.image_desc;
@@ -119,13 +133,23 @@ export class HomeAboutEditComponent implements OnInit {
 						video_url: data?.video_url,
 						video_desc: data?.video_desc,
 						page_section: data?.page_section,
-						status: data?.status,
+						status: String(data?.status),
 					});
 					window.scroll(0, 0);
 				} else {
+					this.loadError = true;
+					this.throw_msg = response.message || 'The About section could not be loaded.';
 					this.msg_danger = true;
+					this.toastr.errorToastr(this.throw_msg, 'Unable to load');
 				}
 			},
+			() => {
+				this.isLoading = false;
+				this.loadError = true;
+				this.msg_danger = true;
+				this.throw_msg = 'The About section could not be loaded. Check your connection and try again.';
+				this.toastr.errorToastr(this.throw_msg, 'Unable to load');
+			}
 		);
 	}
 
@@ -135,6 +159,9 @@ export class HomeAboutEditComponent implements OnInit {
 
 		if (this.addForm.invalid) return;
 
+		this.isSaving = true;
+		this.msg_success = false;
+		this.msg_danger = false;
 		const obj = {
 			...this.addForm.value,
 			token: this.token,
@@ -148,6 +175,7 @@ export class HomeAboutEditComponent implements OnInit {
 					if (response.code === 200) {
 						this.throw_msg = response.message;
 						this.msg_success = true;
+						this.msg_danger = false;
 						this.toastr.successToastr('Created Successfully', 'Success');
 						setTimeout(() => this.router.navigate(['/homepage/about-view']), 2000);
 					} else {
@@ -155,6 +183,7 @@ export class HomeAboutEditComponent implements OnInit {
 					}
 				},
 				error: (err) => {
+					this.isSaving = false;
 					const serverError = err?.error?.error || '';
 					const message = err?.error?.message || 'Server error occurred.';
 
@@ -176,6 +205,9 @@ export class HomeAboutEditComponent implements OnInit {
 			this.aboutService.editaboutdata(obj, id).subscribe({
 				next: (response) => {
 					if (response.code === 200) {
+						this.throw_msg = response.message || 'About content updated successfully.';
+						this.msg_success = true;
+						this.msg_danger = false;
 						this.toastr.successToastr('Updated Successfully', 'Success');
 						setTimeout(() => this.router.navigate(['/homepage/about-view']), 2000);
 					} else {
@@ -183,6 +215,7 @@ export class HomeAboutEditComponent implements OnInit {
 					}
 				},
 				error: (err) => {
+					this.isSaving = false;
 					const serverError = err?.error?.error || '';
 					const message = err?.error?.message || 'Server error occurred.';
 
@@ -203,6 +236,7 @@ export class HomeAboutEditComponent implements OnInit {
 	}
 
 	private handleError(response: any): void {
+		this.isSaving = false;
 		const errorMessage = response.message || 'Request failed';
 		const serverError = response.error || '';
 		this.throw_msg = errorMessage;
@@ -218,6 +252,7 @@ export class HomeAboutEditComponent implements OnInit {
 	onUploadFile(output: UploadOutput): void {
 		this.selectedFile = output;
 		if (output.type === 'allAddedToQueue') {
+			this.uploadingBanner = true;
 			const event: UploadInput = {
 				type: 'uploadAll',
 				url: environment.baseUrl + '/api/about/addimage',
@@ -227,40 +262,55 @@ export class HomeAboutEditComponent implements OnInit {
 			this.uploadInput.emit(event);
 		}
 		else if (output.type === 'done' && typeof output.file !== 'undefined') {
-			this.imageDataBanner = output.file.response.result;
-			this.throw_msg = output.file.response.message;
-			this.msg_success = true;
+			this.uploadingBanner = false;
+			if (output.file.response?.result) {
+				this.imageDataBanner = output.file.response.result;
+				this.throw_msg = output.file.response.message || 'Primary image uploaded successfully.';
+				this.msg_success = true;
+				this.msg_danger = false;
+			} else {
+				this.handleUploadError(output.file.response?.message);
+			}
+		} else if (output.type === 'rejected') {
+			this.uploadingBanner = false;
+			this.handleUploadError();
 		}
 	}
 
 	onUploadFile2(output: UploadOutput): void {
 		this.selectedFile = output;
 
-		// If all files are added to the queue
 		if (output.type === 'allAddedToQueue') {
+			this.uploadingDesc = true;
 			const event: UploadInput = {
 				type: 'uploadAll',
 				url: environment.baseUrl + '/api/about/addimage',
 				method: 'POST',
-				data: {}, // You can pass any additional data here if needed
+				data: {},
 			};
 			this.uploadInput.emit(event);
 		}
-
-		// If a file upload is done
 		else if (output.type === 'done' && typeof output.file !== 'undefined') {
-			if (output.file.name.includes('image_banner')) {
-				// Handle banner image
-				this.imageDataBanner = output.file.response.result;
-			} else {
-				// Handle description image
+			this.uploadingDesc = false;
+			if (output.file.response?.result) {
 				this.imageDataDesc = output.file.response.result;
+				this.throw_msg = output.file.response.message || 'Supporting image uploaded successfully.';
+				this.msg_success = true;
+				this.msg_danger = false;
+			} else {
+				this.handleUploadError(output.file.response?.message);
 			}
-
-			// Set messages for both image types
-			this.throw_msg = output.file.response.message;
-			this.msg_success = true;
+		} else if (output.type === 'rejected') {
+			this.uploadingDesc = false;
+			this.handleUploadError();
 		}
+	}
+
+	private handleUploadError(message?: string): void {
+		this.throw_msg = message || 'Image upload failed. Please try again.';
+		this.msg_success = false;
+		this.msg_danger = true;
+		this.toastr.errorToastr(this.throw_msg, 'Upload failed');
 	}
 
 

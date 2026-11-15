@@ -1,92 +1,90 @@
-<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
-    style="min-height: 400px;  background-size: cover; background-position: center top;">
-    <!-- Mask -->
-    <span class="mask bg-gradient-info opacity-8"></span>
-    <!-- Header container -->
-    <div class="container-fluid d-flex align-items-center">
-        <div class="row">
-            <div class="col-lg-7 col-md-10">
-                <h1 class="display-2 text-white">Single Career </h1>
-                <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with
-                    your work
-                    and manage your projects or assigned tasks</p>
-                <!-- <a href="#!" class="btn btn-info">Edit Pages</a> -->
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid mt--7">
-    <div class="row">
-        <div class="col-xl-12 order-xl-1">
-            <div class="card bg-secondary shadow">
-                <div class="card-header bg-white border-0">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <h3 class="mb-0">Edit Career</h3>
-                        </div>
-                    </div>
-                    <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
-                        {{throw_msg}}
-                    </div>
-                    <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
-                        {{throw_msg}}
-                    </div>
-                </div>
-                <div class="card-body">
-                    <!-- form start -->
-                    <form [formGroup]="addCareerForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-                        <div class="box-body">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">First Name</label>
-                                <input type="text" name="firstname" autocomplete="off" formControlName="firstname"
-                                    class="form-control" placeholder="Career Name">
-                                <span *ngIf="submitted && hasError('firstname','required')" class="alert-danger">First Name is
-                                    required</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Last Name</label>
-                                <input type="text" name="lastname" autocomplete="off" formControlName="lastname"
-                                    class="form-control" placeholder="Last Name">
-                                <span *ngIf="submitted && hasError('lastname','required')" class="alert-danger">Last Name is
-                                    required</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Email</label>
-                                <input type="email" name="email" autocomplete="off" formControlName="email"
-                                    class="form-control" placeholder="Career Email">
-                                <span *ngIf="submitted && hasError('email','required')" class="alert-danger">Career Email is
-                                    required</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Mobile</label>
-                                <input type="number" name="mobile" autocomplete="off" formControlName="mobile"
-                                    class="form-control" placeholder="Career Mobile">
-                                <span *ngIf="submitted && hasError('mobile','required')" class="alert-danger">Career Mobile is
-                                    required</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Subject</label>
-                                <angular-editor name="description" formControlName="subject"
-                                    [config]="editorConfig">
-                                </angular-editor>
-                                <span *ngIf="submitted && hasError('subject','required')"
-                                    class="alert-danger">Subject is
-                                    required</span>
-                            </div>
-                            <div class="form-group" >
-								<label for="exampleInputEmail1">Upload Document</label><br>
-								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadFile($event)"
-									[uploadInput]="uploadInput" /><br>
-								<a *ngIf="document" href="{{imagePath}}career/{{document}}" target="_blank" >{{document}}</a>
-							</div>
-                        </div>
-                        <div class="box-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="container-fluid career-form-page">
+	<header class="page-heading">
+		<div>
+			<p class="eyebrow">TALENT ENQUIRIES</p>
+			<h1>{{ isEdit ? 'Edit career application' : 'Add career application' }}</h1>
+			<p class="page-description">{{ isEdit ? 'Update applicant details, message, or attached document.' : 'Add applicant details and include their application message and document.' }}</p>
+		</div>
+		<a class="back-link" routerLink="/career/view"><i class="fa fa-arrow-left" aria-hidden="true"></i>Back to applications</a>
+	</header>
+
+	<section class="form-card">
+		<header class="form-card-heading">
+			<div><h2>Applicant details</h2><p>Fields marked <span aria-hidden="true">*</span> are required.</p></div>
+		</header>
+
+		<div *ngIf="isLoading" class="state-panel" role="status"><span class="loading-spinner"></span><strong>Loading application…</strong></div>
+		<div *ngIf="loadError" class="state-panel error-state" role="alert">
+			<span class="state-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+			<strong>Application couldn't be loaded</strong>
+			<p>Please check your connection and try again.</p>
+			<button type="button" class="secondary-action" (click)="patchingdata(id)">Try again</button>
+		</div>
+
+		<form *ngIf="!isLoading && !loadError" [formGroup]="addCareerForm" (ngSubmit)="onSubmit()" novalidate>
+			<div class="form-content">
+				<div class="form-section-heading">
+					<span class="section-icon"><i class="fa fa-user-o" aria-hidden="true"></i></span>
+					<div><h3>Contact information</h3><p>How to identify and reach the applicant.</p></div>
+				</div>
+
+				<div class="form-grid">
+					<div class="field-group">
+						<label for="career-firstname">First name <span>*</span></label>
+						<input id="career-firstname" type="text" name="firstname" formControlName="firstname" autocomplete="given-name" placeholder="Enter first name" [class.invalid]="submitted && hasError('firstname', 'required')" [attr.aria-invalid]="submitted && hasError('firstname', 'required')">
+						<span class="field-error" *ngIf="submitted && hasError('firstname', 'required')">First name is required.</span>
+					</div>
+					<div class="field-group">
+						<label for="career-lastname">Last name <span>*</span></label>
+						<input id="career-lastname" type="text" name="lastname" formControlName="lastname" autocomplete="family-name" placeholder="Enter last name" [class.invalid]="submitted && hasError('lastname', 'required')" [attr.aria-invalid]="submitted && hasError('lastname', 'required')">
+						<span class="field-error" *ngIf="submitted && hasError('lastname', 'required')">Last name is required.</span>
+					</div>
+					<div class="field-group">
+						<label for="career-email">Email address <span>*</span></label>
+						<input id="career-email" type="email" name="email" formControlName="email" autocomplete="email" placeholder="name@example.com" [class.invalid]="submitted && (hasError('email', 'required') || hasError('email', 'email'))" [attr.aria-invalid]="submitted && (hasError('email', 'required') || hasError('email', 'email'))">
+						<span class="field-error" *ngIf="submitted && hasError('email', 'required')">Email address is required.</span>
+						<span class="field-error" *ngIf="submitted && !hasError('email', 'required') && hasError('email', 'email')">Enter a valid email address.</span>
+					</div>
+					<div class="field-group">
+						<label for="career-mobile">Mobile number <span>*</span></label>
+						<input id="career-mobile" type="tel" name="mobile" formControlName="mobile" autocomplete="tel" placeholder="Enter mobile number" [class.invalid]="submitted && hasError('mobile', 'required')" [attr.aria-invalid]="submitted && hasError('mobile', 'required')">
+						<span class="field-error" *ngIf="submitted && hasError('mobile', 'required')">Mobile number is required.</span>
+					</div>
+				</div>
+
+				<div class="form-divider"></div>
+				<div class="form-section-heading">
+					<span class="section-icon"><i class="fa fa-file-text-o" aria-hidden="true"></i></span>
+					<div><h3>Application details</h3><p>Capture the applicant's note and supporting document.</p></div>
+				</div>
+
+				<div class="field-group message-field">
+					<label for="career-subject">Application message <span>*</span></label>
+					<angular-editor id="career-subject" name="subject" formControlName="subject" [config]="editorConfig"></angular-editor>
+					<span class="field-error" *ngIf="submitted && hasError('subject', 'required')">Application message is required.</span>
+				</div>
+
+				<div class="field-group document-field">
+					<label for="career-document">Resume or supporting document</label>
+					<div class="upload-panel" [class.uploading]="isUploading">
+						<span class="upload-icon"><i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
+						<div class="upload-copy"><strong>{{ isUploading ? 'Uploading document…' : 'Choose a document to upload' }}</strong><span>Upload a resume or other application document.</span></div>
+						<input id="career-document" type="file" name="document" ngFileSelect (uploadOutput)="onUploadFile($event)" [uploadInput]="uploadInput" [disabled]="isUploading" aria-describedby="upload-status">
+					</div>
+					<span id="upload-status" class="field-hint" *ngIf="!isUploading && !uploadError">A new document will replace the current attachment.</span>
+					<span class="field-error" *ngIf="uploadError" role="alert">{{ uploadError }}</span>
+					<a *ngIf="document" class="document-preview" [href]="imagePath + 'career/' + document" target="_blank" rel="noopener noreferrer"><i class="fa fa-file-text-o" aria-hidden="true"></i><span><strong>Attached document</strong><small>{{ document }}</small></span><i class="fa fa-external-link" aria-hidden="true"></i></a>
+				</div>
+			</div>
+
+			<footer class="form-footer">
+				<button type="button" class="secondary-action" (click)="onCancel()">Cancel</button>
+				<button type="submit" class="primary-action" [disabled]="isSaving || isUploading">
+					<span *ngIf="isSaving" class="button-spinner"></span>
+					<i *ngIf="!isSaving" class="fa fa-check" aria-hidden="true"></i>
+					{{ isSaving ? 'Saving…' : (isEdit ? 'Save changes' : 'Add application') }}
+				</button>
+			</footer>
+		</form>
+	</section>
 </div>

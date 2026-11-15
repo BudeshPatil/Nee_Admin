@@ -1,606 +1,110 @@
-<div class="header pb-8 pt-5 pt-md-8">
-  <div class="container-fluid">
-    <div class="header-body">
-      <!-- Card stats -->
-      <div class="row">
-
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Banner</h5>
-                  <span class="h2 font-weight-bold mb-0">{{banner_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                    <i class="ni ni-image"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/banner-images/view']"><span class="text-success mr-2"><i
-                      class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Our Clients</h5>
-                  <span class="h2 font-weight-bold mb-0">{{tvshows_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                    <i class="ni ni-single-02"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/tvshow/view']"><span class="text-success mr-2"><i
-                      class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Services</h5>
-                  <span class="h2 font-weight-bold mb-0">{{category_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                    <i class="ni ni-briefcase-24"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/category/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Portfolio</h5>
-                  <span class="h2 font-weight-bold mb-0">{{project_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                    <i class="ni ni-folder-17"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/project/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i>
-                    view</span></a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Testimonial</h5>
-                  <span class="h2 font-weight-bold mb-0">{{testimonial_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                    <i class="ni ni-satisfied"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/testimonial/view']"><span class="text-success mr-2"><i
-                      class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Contact</h5>
-                  <span class="h2 font-weight-bold mb-0">{{contact_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                    <i class="ni ni-email-83"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/contact/list']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i>
-                    view</span></a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">SEO Pages</h5>
-                  <span class="h2 font-weight-bold mb-0">{{allpage_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                    <i class="ni ni-align-left-2"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/page/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i>
-                    view</span></a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Config</h5>
-                  <span class="h2 font-weight-bold mb-0">1</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                    <i class="ni ni-settings-gear-65"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/config/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i>
-                    view</span></a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Banners</h5>
-                  <span class="h2 font-weight-bold mb-0">{{banner_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                    <i class="ni ni-image"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/banner-images/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div> -->
-        <!-- <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Blogs</h5>
-                  <span class="h2 font-weight-bold mb-0">{{blog_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                    <i class="ni ni-book-bookmark"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/blog/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div> -->
-
-        <!-- <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Catalog</h5>
-                  <span class="h2 font-weight-bold mb-0">{{catalog_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                    <i class="ni ni-chat-round"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/catalog/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div> -->
-
-        <!-- <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Award</h5>
-                  <span class="h2 font-weight-bold mb-0">{{award_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                    <i class="ni ni-chat-round"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/award/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div> -->
-
-        <!-- <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Gallery</h5>
-                  <span class="h2 font-weight-bold mb-0">{{gallery_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                    <i class="ni ni-album-2"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/gallery/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div> -->
-
-        <!-- <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Podcast</h5>
-                  <span class="h2 font-weight-bold mb-0">{{podcast_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                    <i class="ni ni-paper-diploma"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/podcast/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div> -->
-
-        <!-- <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0 mt-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase text-muted mb-0">Home Gallery</h5>
-                  <span class="h2 font-weight-bold mb-0">{{homegallery_count}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                    <i class="ni ni-album-2"></i>
-                  </div>
-                </div>
-              </div>
-              <p class="mt-3 mb-0 text-muted text-sm">
-                <a [routerLink]="['/homegallery/view']"><span class="text-success mr-2"><i class="fa fa-arrow-right"></i> view</span></a>
-              </p>
-            </div>
-          </div>
-        </div> -->
-
-
-      </div>
+<main class="dashboard-page">
+  <header class="dashboard-page-header">
+    <div class="dashboard-welcome-copy">
+      <p class="dashboard-eyebrow"><span></span> NEELGUND ADMIN WORKSPACE</p>
+      <h1>Welcome back</h1>
+      <p class="dashboard-description">A clear view of your website, your content, and what needs attention.</p>
     </div>
+    <nav class="dashboard-header-actions" aria-label="Quick actions">
+      <a class="dashboard-button dashboard-button-secondary" routerLink="/blog/add">
+        <i class="ni ni-single-copy-04" aria-hidden="true"></i>
+        Write a blog
+      </a>
+      <a class="dashboard-button dashboard-button-primary" routerLink="/project/add">
+        <i class="ni ni-fat-add" aria-hidden="true"></i>
+        Create project
+      </a>
+    </nav>
+  </header>
+
+  <div class="dashboard-state" *ngIf="isLoading" role="status">
+    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+    Loading your dashboard…
   </div>
-</div>
-<div class="container-fluid mt--7">
-  <!-- <div class="row">
-    <div class="col-xl-8 mb-5 mb-xl-0">
-      <div class="card shadow">
-        <div class="card-header bg-transparent">
-          <div class="row align-items-center">
-            <div class="col">
-              <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
-              <h2 class="mb-0">Total Pages</h2>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
 
-          <div class="chart">
-            <canvas id="chart-pages" class="chart-canvas"></canvas>
-          </div>
-        </div>
-      </div>
+  <div class="dashboard-state dashboard-state-error" *ngIf="dashboardError" role="alert">
+    <div>
+      <strong>Dashboard data is unavailable</strong>
+      <p>{{dashboardError}}</p>
     </div>
-    <div class="col-xl-4">
-      <div class="card bg-gradient-default shadow">
-        <div class="card-header bg-transparent">
-          <div class="row align-items-center">
-            <div class="col">
-              <h6 class="text-uppercase text-light ls-1 mb-1">Overview</h6>
-              <h2 class="text-white mb-0">value</h2>
-            </div>
-            <div class="col">
-              <ul class="nav nav-pills justify-content-end">
-                <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales"  (click)="data=datasets[0];updateOptions()">
-                  <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{'active':clicked===true}" data-toggle="tab" (click)="clicked=true;clicked1=false">
-                    <span class="d-none d-md-block">Month</span>
-                    <span class="d-md-none">M</span>
-                  </a>
-                </li>
-                <li class="nav-item" data-toggle="chart" data-target="#chart-sales"  (click)="data=datasets[1];updateOptions()">
-                  <a href="javascript:void(0)" class="nav-link py-2 px-3" [ngClass]="{'active':clicked1===true}" data-toggle="tab" (click)="clicked=false;clicked1=true">
-                    <span class="d-none d-md-block">Week</span>
-                    <span class="d-md-none">W</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
+    <button class="dashboard-button dashboard-button-secondary" type="button" (click)="dashboard_data()">
+      Try again
+    </button>
+  </div>
 
-          <div class="chart">
+  <ng-container *ngIf="!isLoading && !dashboardError">
+    <section class="dashboard-stat-grid" aria-label="Key metrics">
+      <a class="dashboard-stat-card" *ngFor="let metric of featuredMetrics" [routerLink]="metric.route">
+        <div class="dashboard-stat-top">
+          <span class="dashboard-stat-icon">
+            <i class="ni {{metric.icon}}" aria-hidden="true"></i>
+          </span>
+          <span class="dashboard-stat-arrow" aria-hidden="true">
+            <i class="fa fa-arrow-up-right"></i>
+          </span>
+        </div>
+        <span class="dashboard-stat-label">{{metric.label}}</span>
+        <strong class="dashboard-stat-value">{{metric.count || 0}}</strong>
+        <span class="dashboard-stat-link">View {{metric.label | lowercase}}</span>
+      </a>
+    </section>
 
-            <canvas id="chart-sales" class="chart-canvas"></canvas>
+    <div class="dashboard-content-grid">
+      <section class="dashboard-panel dashboard-content-panel">
+        <div class="dashboard-panel-heading">
+          <div>
+            <h2>Content overview</h2>
+            <p>Browse and manage the rest of your website content.</p>
           </div>
+          <span class="dashboard-panel-count">{{contentMetrics.length}} sections</span>
         </div>
-      </div>
-    </div>
-  </div> -->
-  <!-- <div class="row mt-5">
-    <div class="col-xl-8 mb-5 mb-xl-0">
-      <div class="card shadow">
-        <div class="card-header border-0">
-          <div class="row align-items-center">
-            <div class="col">
-              <h3 class="mb-0">Page visits</h3>
-            </div>
-            <div class="col text-right">
-              <a href="#!" class="btn btn-sm btn-primary">See all</a>
-            </div>
-          </div>
+
+        <div class="dashboard-content-list">
+          <a class="dashboard-content-item" *ngFor="let metric of contentMetrics" [routerLink]="metric.route">
+            <span class="dashboard-content-icon">
+              <i class="ni {{metric.icon}}" aria-hidden="true"></i>
+            </span>
+            <span class="dashboard-content-label">{{metric.label}}</span>
+            <strong class="dashboard-content-count">{{metric.count || 0}}</strong>
+            <i class="fa fa-angle-right dashboard-content-chevron" aria-hidden="true"></i>
+          </a>
         </div>
-        <div class="table-responsive">
-          <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">Page name</th>
-                <th scope="col">Visitors</th>
-                <th scope="col">Unique users</th>
-                <th scope="col">Bounce rate</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">
-                  /page/
-                </th>
-                <td>
-                  4,569
-                </td>
-                <td>
-                  340
-                </td>
-                <td>
-                  <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  /page/index.html
-                </th>
-                <td>
-                  3,985
-                </td>
-                <td>
-                  319
-                </td>
-                <td>
-                  <i class="fas fa-arrow-down text-warning mr-3"></i> 46,53%
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  /page/charts.html
-                </th>
-                <td>
-                  3,513
-                </td>
-                <td>
-                  294
-                </td>
-                <td>
-                  <i class="fas fa-arrow-down text-warning mr-3"></i> 36,49%
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  /page/tables.html
-                </th>
-                <td>
-                  2,050
-                </td>
-                <td>
-                  147
-                </td>
-                <td>
-                  <i class="fas fa-arrow-up text-success mr-3"></i> 50,87%
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  /page/profile.html
-                </th>
-                <td>
-                  1,795
-                </td>
-                <td>
-                  190
-                </td>
-                <td>
-                  <i class="fas fa-arrow-down text-danger mr-3"></i> 46,53%
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-4">
-      <div class="card shadow">
-        <div class="card-header border-0">
-          <div class="row align-items-center">
-            <div class="col">
-              <h3 class="mb-0">Social traffic</h3>
-            </div>
-            <div class="col text-right">
-              <a href="#!" class="btn btn-sm btn-primary">See all</a>
+      </section>
+
+      <aside class="dashboard-side-column">
+        <section class="dashboard-panel dashboard-actions-panel">
+          <div class="dashboard-panel-heading">
+            <div>
+              <h2>Quick actions</h2>
+              <p>Jump straight into a common task.</p>
             </div>
           </div>
-        </div>
-        <div class="table-responsive">
-          <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">Referral</th>
-                <th scope="col">Visitors</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">
-                  Facebook
-                </th>
-                <td>
-                  1,480
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">60%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  Facebook
-                </th>
-                <td>
-                  5,480
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">70%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  Google
-                </th>
-                <td>
-                  4,807
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">80%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  Instagram
-                </th>
-                <td>
-                  3,678
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">75%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  twitter
-                </th>
-                <td>
-                  2,645
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <span class="mr-2">30%</span>
-                    <div>
-                      <div class="progress">
-                        <div class="progress-bar bg-gradient-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+
+          <a class="dashboard-action-link" routerLink="/banner-images/add">
+            <span class="dashboard-action-icon"><i class="ni ni-image" aria-hidden="true"></i></span>
+            <span><strong>Upload a banner</strong><small>Refresh your homepage</small></span>
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <a class="dashboard-action-link" routerLink="/service/add">
+            <span class="dashboard-action-icon"><i class="ni ni-briefcase-24" aria-hidden="true"></i></span>
+            <span><strong>Add a service</strong><small>Showcase what you offer</small></span>
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+          </a>
+          <a class="dashboard-action-link" routerLink="/blog/add">
+            <span class="dashboard-action-icon"><i class="ni ni-single-copy-04" aria-hidden="true"></i></span>
+            <span><strong>Write a blog post</strong><small>Share your latest update</small></span>
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+          </a>
+        </section>
+
+        <section class="dashboard-tip">
+          <span class="dashboard-tip-icon"><i class="ni ni-bulb-61" aria-hidden="true"></i></span>
+          <div>
+            <h2>Keep your site fresh</h2>
+            <p>Update projects, services, and stories to keep your visitors informed.</p>
+          </div>
+        </section>
+      </aside>
     </div>
-  </div> -->
-</div>
+  </ng-container>
+</main>

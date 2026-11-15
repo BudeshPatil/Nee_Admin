@@ -1,201 +1,259 @@
-<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center">
-	<span class="mask bg-gradient-info opacity-8"></span>
-	<div class="container-fluid d-flex align-items-center">
-		<div class="row">
-			<div class="col-lg-7 col-md-10">
-				<!-- <h1 class="display-2 text-white">Hello {{user.username}}</h1> -->
-			</div>
+<main class="home-about-edit-page">
+	<header class="home-about-edit-header">
+		<div>
+			<p class="home-about-edit-eyebrow">HOMEPAGE CONTENT</p>
+			<h1>{{ isEdit ? 'Edit About section' : 'Add About section' }}</h1>
+			<p class="home-about-edit-intro">
+				Update the heading, story, imagery, and visibility of the homepage About section.
+			</p>
 		</div>
+		<a class="home-about-back-link" routerLink="/homepage/about-view">
+			<i class="ni ni-bold-left" aria-hidden="true"></i>
+			Back to About content
+		</a>
+	</header>
+
+	<div *ngIf="msg_success" class="home-about-edit-alert home-about-edit-alert-success" role="status">
+		<i class="ni ni-check-bold" aria-hidden="true"></i>
+		<span>{{ throw_msg || 'Changes saved successfully.' }}</span>
 	</div>
-</div>
-<div class="container-fluid mt--7">
-	<div class="row">
-		<div class="col-xl-7 order-xl-1 mx-auto">
-			<div class="card bg-secondary shadow">
-				<div class="card-header bg-white border-0">
-					<div class="row align-items-center">
-						<div class="col-8">
-							<h3 class="mb-0" *ngIf="id">Update/Edit HomePage About</h3>
-							<h3 class="mb-0" *ngIf="!id">Add New HomePage About</h3>
+	<div *ngIf="msg_danger" class="home-about-edit-alert home-about-edit-alert-danger" role="alert">
+		<i class="ni ni-fat-remove" aria-hidden="true"></i>
+		<span>{{ throw_msg || 'Something went wrong. Please try again.' }}</span>
+	</div>
+
+	<div *ngIf="isEdit && isLoading" class="home-about-edit-state" role="status">
+		<span class="spinner-border" aria-hidden="true"></span>
+		<strong>Loading About content…</strong>
+		<span>Please wait while the current content is retrieved.</span>
+	</div>
+
+	<div *ngIf="isEdit && loadError && !isLoading" class="home-about-edit-state home-about-edit-state-error" role="alert">
+		<strong>We couldn’t load this About section.</strong>
+		<span>Check your connection and try again.</span>
+		<button type="button" class="home-about-secondary-button" (click)="patchingdata(id)">Try again</button>
+	</div>
+
+	<form
+		*ngIf="!isEdit || (!isLoading && !loadError)"
+		class="home-about-edit-form"
+		[formGroup]="addForm"
+		(ngSubmit)="onSubmit()"
+		novalidate>
+		<div class="home-about-edit-layout">
+			<div class="home-about-edit-main">
+				<section class="home-about-edit-card">
+					<div class="home-about-edit-card-heading">
+						<span class="home-about-edit-step">01</span>
+						<div>
+							<h2>Section content</h2>
+							<p>Shape the title and story visitors will see on the homepage.</p>
 						</div>
 					</div>
-					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
-						{{throw_msg}}
-					</div>
-					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
-						{{throw_msg}}
-					</div>
-				</div>
-				<div class="card-body">
-					<form [formGroup]="addForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-						<div class="box-body">
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Heading <span> * </span></label>
-								<input type="text" name="desc_short" autocomplete="off" formControlName="desc_short"
-									class="form-control" placeholder="Heading">
-								<span *ngIf="submitted && hasError('desc_short','required')" class="alert-danger">
-									Heading is required</span>
+
+					<div class="home-about-edit-fields">
+						<div class="home-about-edit-field">
+							<label for="home-about-heading">Heading <span class="required-mark">*</span></label>
+							<input
+								id="home-about-heading"
+								type="text"
+								formControlName="desc_short"
+								class="form-control"
+								placeholder="Add a clear section heading"
+								autocomplete="off"
+								[attr.aria-invalid]="submitted && hasError('desc_short', 'required')">
+							<small *ngIf="submitted && hasError('desc_short', 'required')" class="home-about-field-error">
+								Heading is required.
+							</small>
+						</div>
+
+						<div class="home-about-edit-field">
+							<label for="home-about-subheading">Sub-heading <span class="required-mark">*</span></label>
+							<input
+								id="home-about-subheading"
+								type="text"
+								formControlName="title_sign"
+								class="form-control"
+								placeholder="Add a supporting line"
+								autocomplete="off"
+								[attr.aria-invalid]="submitted && hasError('title_sign', 'required')">
+							<small *ngIf="submitted && hasError('title_sign', 'required')" class="home-about-field-error">
+								Sub-heading is required.
+							</small>
+						</div>
+
+						<div class="home-about-edit-field">
+							<div class="home-about-label-row">
+								<label for="home-about-description">Description <span class="required-mark">*</span></label>
+								<span class="home-about-field-hint">Aim for 700–750 characters to fit the design.</span>
 							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Sub-Heading <span> * </span></label>
-								<input type="text" name="title_sign" autocomplete="off" formControlName="title_sign"
-									class="form-control" placeholder="Sub-Heading">
-								<span *ngIf="submitted && hasError('title_sign','required')" class="alert-danger">
-									Sub-heading is required
+							<div class="home-about-editor">
+								<angular-editor
+									id="home-about-description"
+									formControlName="desc_long"
+									[config]="editorConfig">
+								</angular-editor>
+							</div>
+							<small *ngIf="submitted && hasError('desc_long', 'required')" class="home-about-field-error">
+								Description is required.
+							</small>
+						</div>
+
+						<div class="home-about-edit-field">
+							<label for="home-about-name">Name / Founder / Company <span class="required-mark">*</span></label>
+							<input
+								id="home-about-name"
+								type="text"
+								formControlName="title_name"
+								class="form-control"
+								placeholder="Name, founder, or company"
+								autocomplete="off"
+								[attr.aria-invalid]="submitted && hasError('title_name', 'required')">
+							<small *ngIf="submitted && hasError('title_name', 'required')" class="home-about-field-error">
+								Name, founder, or company is required.
+							</small>
+						</div>
+					</div>
+				</section>
+
+				<section class="home-about-edit-card">
+					<div class="home-about-edit-card-heading">
+						<span class="home-about-edit-step">02</span>
+						<div>
+							<h2>Section imagery</h2>
+							<p>Use portrait images at the recommended size of 453 × 1069 px.</p>
+						</div>
+					</div>
+
+					<div class="home-about-image-grid">
+						<div class="home-about-image-field">
+							<div class="home-about-image-preview">
+								<img
+									*ngIf="imageDataBanner"
+									[src]="imagePath + 'about/' + imageDataBanner"
+									alt="Homepage About primary image preview">
+								<div *ngIf="!imageDataBanner" class="home-about-image-placeholder">
+									<i class="ni ni-image" aria-hidden="true"></i>
+									<span>No image selected</span>
+								</div>
+							</div>
+							<div class="home-about-image-details">
+								<div>
+									<strong>Primary image</strong>
+									<span>Displayed alongside your story</span>
+								</div>
+								<span *ngIf="uploadingBanner" class="home-about-upload-state" role="status">
+									<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Uploading
 								</span>
 							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Description <span> * </span>
-									<div class="tooltip-wrapper">
-										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show = true"
-											(mouseleave)="show = false" style="transform: none;  color: #525f7f;">
-											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
-													stroke-linecap="round" />
-												<circle cx="12" cy="7" r="1" fill="currentColor" />
-											</svg></button>
-										<div class="tooltip-card" *ngIf="show">
-											<h5 class="tooltip-title">Note</h5>
-											<p class="tooltip-text">
-												To maintain the website design, please keep the content within 700–750 characters.
-											</p>
-											<span class="tooltip-arrow"></span>
-										</div>
-									</div>
-								</label>
-								<angular-editor name="desc_long" formControlName="desc_long" [config]="editorConfig"></angular-editor>
-								<span *ngIf="submitted && hasError('desc_long','required')" class="alert-danger">
-									Description is required
+							<input
+								id="home-about-image-banner"
+								type="file"
+								accept="image/*"
+								ngFileSelect
+								(uploadOutput)="onUploadFile($event)"
+								[uploadInput]="uploadInput"
+								[disabled]="uploadingBanner">
+							<label class="home-about-upload-button" for="home-about-image-banner">
+								<i class="ni ni-cloud-upload-96" aria-hidden="true"></i>
+								{{ imageDataBanner ? 'Replace image' : 'Choose image' }}
+							</label>
+						</div>
+
+						<div class="home-about-image-field">
+							<div class="home-about-image-preview">
+								<img
+									*ngIf="imageDataDesc"
+									[src]="imagePath + 'about/' + imageDataDesc"
+									alt="Homepage About secondary image preview">
+								<div *ngIf="!imageDataDesc" class="home-about-image-placeholder">
+									<i class="ni ni-image" aria-hidden="true"></i>
+									<span>No image selected</span>
+								</div>
+							</div>
+							<div class="home-about-image-details">
+								<div>
+									<strong>Supporting image</strong>
+									<span>Optional additional visual</span>
+								</div>
+								<span *ngIf="uploadingDesc" class="home-about-upload-state" role="status">
+									<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Uploading
 								</span>
 							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Name/Founder/Company <span> * </span></label>
-								<input type="text" name="title_name" autocomplete="off" formControlName="title_name"
-									class="form-control" placeholder="Name/Founder/Company">
-								<span *ngIf="submitted && hasError('title_name','required')" class="alert-danger">Name/Founder/Company
-									is
-									required</span>
-							</div>
-							<!-- <div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Description long</label>
-								<input type="text" name="desc_long" autocomplete="off" formControlName="desc_long" class="form-control"
-									placeholder="Description long">
-								<span *ngIf="submitted && hasError('desc_long','required')" class="alert-danger">Description long is
-									required</span>
-							</div> -->
-
-							<!-- <div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Video URL</label>
-								<input type="text" name="video_url" autocomplete="off" formControlName="video_url" class="form-control"
-									placeholder="Youtube Url">
-								<span *ngIf="submitted && hasError('video_url','required')" class="alert-danger">Video Url is
-									required</span>
-							</div> -->
-
-							<!-- <div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Video Description</label>
-								<input type="text" name="video_desc" autocomplete="off" formControlName="video_desc"
-									class="form-control" placeholder="Video Description">
-								<span *ngIf="submitted && hasError('video_desc','required')" class="alert-danger">Video Description is
-									required</span>
-							</div> -->
-
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1 ">Upload Image 1 <div class="tooltip-wrapper">
-										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show1 = true"
-											(mouseleave)="show1 = false" style="transform: none;  color: #525f7f;">
-											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
-													stroke-linecap="round" />
-												<circle cx="12" cy="7" r="1" fill="currentColor" />
-											</svg></button>
-										<div class="tooltip-card" *ngIf="show1">
-											<h5 class="tooltip-title">Note</h5>
-											<p class="tooltip-text">
-												Upload images in the recommended sizes to avoid layout issues. <br>(Required Width - 453px *
-												Height - 1069px)
-											</p>
-											<span class="tooltip-arrow"></span>
-										</div>
-									</div>
-								</label><br>
-								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadFile($event)"
-									[uploadInput]="uploadInput" class="mb-2" /><br>
-								<img src="{{imagePath}}about/{{imageDataBanner}}" class="img-fluid img-thumbnail"
-									*ngIf="imageDataBanner" width="200" height="350">
-							</div>
-
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1 ">Upload Image 2 <div class="tooltip-wrapper">
-										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show2 = true"
-											(mouseleave)="show2 = false" style="transform: none;  color: #525f7f;">
-											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
-													stroke-linecap="round" />
-												<circle cx="12" cy="7" r="1" fill="currentColor" />
-											</svg></button>
-										<div class="tooltip-card" *ngIf="show2">
-											<h5 class="tooltip-title">Note</h5>
-											<p class="tooltip-text">
-												Upload images in the recommended sizes to avoid layout issues. <br>(Required Width - 453px *
-												Height - 1069px)
-											</p>
-											<span class="tooltip-arrow"></span>
-										</div>
-									</div>
-								</label><br>
-								<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadFile2($event)"
-									[uploadInput]="uploadInput" class="mb-2" /><br>
-								<img src="{{imagePath}}about/{{imageDataDesc}}" class="img-fluid img-thumbnail" *ngIf="imageDataDesc"
-									width="200" height="350">
-							</div>
-
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Page-Section-name <span> * </span>
-									<div class="tooltip-wrapper">
-										<button type="button" class="btn shadow-none p-0 trigger-btn" (mouseenter)="show3 = true"
-											(mouseleave)="show3 = false" style="transform: none;  color: #525f7f;">
-											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-												<line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="1"
-													stroke-linecap="round" />
-												<circle cx="12" cy="7" r="1" fill="currentColor" />
-											</svg></button>
-										<div class="tooltip-card" *ngIf="show3">
-											<h5 class="tooltip-title">Note</h5>
-											<p class="tooltip-text">
-												Enter the name of the page section where this content will appear (e.g., Home, About..etc).
-											</p>
-											<span class="tooltip-arrow"></span>
-										</div>
-									</div>
-								</label>
-								<input type="text" name="page_section" autocomplete="off" formControlName="page_section"
-									class="form-control" placeholder="Page-Section-name" disabled>
-								<span *ngIf="submitted && hasError('page_section','required')" class="alert-danger">Page-Section-name is
-									required</span>
-							</div>
-							<div class="form-group col-lg-12">
-								<label for="exampleInputEmail1">Status</label>
-								<select name="status" formControlName="status" class="form-control">
-									<option value="">Select Status</option>
-									<option value="true">Active</option>
-									<option value="false">InActive</option>
-								</select>
-								<span *ngIf="submitted && hasError('status','required')" class="alert-danger">Please Select
-									Status</span>
-							</div>
+							<input
+								id="home-about-image-desc"
+								type="file"
+								accept="image/*"
+								ngFileSelect
+								(uploadOutput)="onUploadFile2($event)"
+								[uploadInput]="uploadInput"
+								[disabled]="uploadingDesc">
+							<label class="home-about-upload-button" for="home-about-image-desc">
+								<i class="ni ni-cloud-upload-96" aria-hidden="true"></i>
+								{{ imageDataDesc ? 'Replace image' : 'Choose image' }}
+							</label>
 						</div>
-						<div class="box-footer col-lg-12">
-							<button type="submit" class="btn btn-primary">Submit</button>
-							<button type="button" class="btn btn-danger" routerLink="/homepage/about-view">Cancel</button>
-						</div>
-					</form>
-				</div>
+					</div>
+				</section>
 			</div>
+
+			<aside class="home-about-edit-sidebar">
+				<section class="home-about-edit-card home-about-settings-card">
+					<div class="home-about-edit-card-heading">
+						<span class="home-about-edit-step">03</span>
+						<div>
+							<h2>Publishing</h2>
+							<p>Choose where and whether this content is visible.</p>
+						</div>
+					</div>
+
+					<div class="home-about-edit-field">
+						<label for="home-about-page-section">Page section</label>
+						<input
+							id="home-about-page-section"
+							type="text"
+							formControlName="page_section"
+							class="form-control home-about-readonly-field"
+							readonly>
+						<span class="home-about-field-hint">This content belongs to the homepage.</span>
+					</div>
+
+					<div class="home-about-edit-field">
+						<label for="home-about-status">Status <span class="required-mark">*</span></label>
+						<select
+							id="home-about-status"
+							formControlName="status"
+							class="form-control"
+							[attr.aria-invalid]="submitted && hasError('status', 'required')">
+							<option value="true">Active</option>
+							<option value="false">Inactive</option>
+						</select>
+						<small *ngIf="submitted && hasError('status', 'required')" class="home-about-field-error">
+							Please select a status.
+						</small>
+					</div>
+				</section>
+
+				<div class="home-about-edit-tip">
+					<i class="ni ni-bulb-61" aria-hidden="true"></i>
+					<div>
+						<strong>Before you save</strong>
+						<p>Check your text and image previews. Changes will be reflected on the homepage after saving.</p>
+					</div>
+				</div>
+			</aside>
 		</div>
-	</div>
-</div>
+
+		<footer class="home-about-edit-actions">
+			<a class="home-about-secondary-button" routerLink="/homepage/about-view">Cancel</a>
+			<button
+				type="submit"
+				class="home-about-save-button"
+				[disabled]="isSaving || uploadingBanner || uploadingDesc">
+				<span *ngIf="isSaving" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+				<i *ngIf="!isSaving" class="ni ni-check-bold" aria-hidden="true"></i>
+				{{ isSaving ? 'Saving…' : (isEdit ? 'Save changes' : 'Create section') }}
+			</button>
+		</footer>
+	</form>
+</main>

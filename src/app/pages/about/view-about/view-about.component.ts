@@ -1,217 +1,161 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { from } from 'rxjs';
-
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { AboutService } from 'src/app/providers/about/about.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AboutService } from '../../../providers/about/about.service';
 
 @Component({
 	selector: 'app-view-about',
 	templateUrl: './view-about.component.html',
 	styleUrls: ['./view-about.component.scss']
 })
-export class ViewAboutComponent implements OnInit {
-
-  msg_danger: boolean = false;
-	AboutData: any;
-	imagePath: any;
-	token: any;
-
-
-  isactive :any ;
-	// pagination
-	currentPage: number = 1;
-	initialized: boolean = false;
-	currentLimit: number = 10;
-	totalRecord: number = 0;
-	selectedFiles?: FileList;
-  currentFile?: File;
-  progress = 0;
-  message = '';
+export class ViewAboutComponent implements OnInit, OnDestroy {
+	aboutData: any[] = [];
+	imagePath = environment.baseUrl + '/public/about/';
+	currentPage = 1;
+	currentLimit = 10;
+	totalRecord = 0;
 	searchText = '';
-  closeResult = '';
-  modalReference = null;
-  selectedAbout : any;
-	config = {
-    value: true,
-    name: '',
-    disabled: false,
-    height: 25,
-    width: 90,
-    margin: 3,
-    fontSize: 10,
-    speed: 300,
-    color: {
-      checked: '#36aef5',
-      unchecked: '#423f3f',
-    },
-    switchColor: {
-      checked: '#3366FF',
-      unchecked: 'crimson',
-    },
-    labels: {
-      unchecked: 'Deactive',
-      checked: 'Active',
-    },
-    checkedLabel: '',
-    uncheckedLabel: '',
-    fontColor: {
-      checked: '#fafafa',
-      unchecked: '#ffffff',
-    },
-  };
+	isactive: 'all' | boolean = 'all';
+	isLoading = false;
+	loadError = false;
+	isDeleting = false;
+	selectedAbout: any = null;
+	private searchTimer: ReturnType<typeof setTimeout> | null = null;
+	private loadRequestId = 0;
 
 	constructor(
-		private router: Router,
-		// private loginService: LoginService,
-		private toastr: ToastrManager,
-    private aboutservice:AboutService,
-    private modalService: NgbModal,
-    private activeModal: NgbActiveModal
-	) {
-		this.imagePath = environment.baseUrl + '/public/about/';
-		this.token = localStorage.getItem('token');
-	}
+		private aboutService: AboutService,
+		private modalService: NgbModal,
+		private toastr: ToastrManager
+	) { }
 
 	ngOnInit(): void {
 		this.get_AboutData();
-    this.config.switchColor.checked = '#dcdcdc';
-    this.config.color.checked = '#dcdcdc';
-    this.config.labels.checked = 'Change';
-    this.isactive = 'none';
 	}
 
-	get_AboutData() {
-		const obj = {
+	ngOnDestroy(): void {
+		if (this.searchTimer) {
+			clearTimeout(this.searchTimer);
+		}
+	}
+
+	get filteredAbout(): any[] {
+		const query = this.searchText.trim().toLowerCase();
+		return this.aboutData.filter(item => {
+			const searchable = `${item.title_sign || ''} ${item.title_name || ''} ${item.desc_short || ''} ${item.page_section || ''}`.toLowerCase();
+			return (!query || searchable.includes(query)) &&
+				(this.isactive === 'all' || this.isAboutActive(item) === this.isactive);
+		});
+	}
+
+	get hasFilters(): boolean {
+		return !!this.searchText.trim() || this.isactive !== 'all';
+	}
+
+	isAboutActive(item: any): boolean {
+		return item.status === true || item.status === 1 || item.status === 'true' || item.status === '1' || item.status === 'active';
+	}
+
+	get_AboutData(): void {
+		const requestId = ++this.loadRequestId;
+		this.isLoading = true;
+		this.loadError = false;
+		this.aboutService.getaboutDetails({
 			limit: this.currentLimit,
-			page: this.currentPage,
-
-			token: this.token,
-		};
-		this.aboutservice.getaboutDetails(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					if (response.result != null && response.result != '') {
-						this.AboutData = response.result;
-						this.totalRecord = response?.count;
-						// console.log(this.AboutData);
-
-					}
-					else {
-						this.msg_danger = true;
-					}
-
+			page: this.currentPage
+		}).subscribe({
+			next: (response: any) => {
+				if (requestId !== this.loadRequestId) {
+					return;
 				}
+				this.isLoading = false;
+				if (response.code !== 200 || (!Array.isArray(response.result) && response.result != null && response.result !== '')) {
+					this.loadError = true;
+					this.aboutData = [];
+					this.totalRecord = 0;
+					return;
+				}
+				this.aboutData = Array.isArray(response.result) ? response.result : [];
+				this.totalRecord = Number(response.count) || this.aboutData.length;
 			},
-		);
+			error: error => {
+				if (requestId !== this.loadRequestId) {
+					return;
+				}
+				console.error('Error loading About sections:', error);
+				this.isLoading = false;
+				this.loadError = true;
+				this.aboutData = [];
+				this.totalRecord = 0;
+			}
+		});
 	}
 
-	onListChangePage(event: any) {
-		this.currentPage = event;
+	onListChangePage(page: number): void {
+		this.currentPage = page;
 		this.get_AboutData();
 	}
 
-	selectFile(event: any): void {
-    this.selectedFiles = event.target.files;
-  }
+	searchAbout(): void {
+		if (this.searchTimer) {
+			clearTimeout(this.searchTimer);
+		}
+		this.currentPage = 1;
+		this.currentLimit = this.hasFilters ? 1000 : 10;
+		this.searchTimer = setTimeout(() => this.get_AboutData(), 250);
+	}
 
+	clearFilters(): void {
+		this.searchText = '';
+		this.isactive = 'all';
+		this.searchAbout();
+	}
 
-
-	searchAbout(){
-    if(this.searchText){
-      this.currentLimit = 1000;
-      this.currentPage = 1;
-    } else {
-      this.currentLimit = 10;
-    }
-    this.get_AboutData();
-  }
-
-  open(content,data) {
-    this.selectedAbout = data;
-		this.modalReference = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-			(result) => {
-				this.closeResult = `Closed with: ${result}`;
-			},
-			(reason) => {
-				this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-			},
+	openDeleteModal(content: any, item: any): void {
+		this.selectedAbout = item;
+		this.modalService.open(content, {
+			ariaLabelledBy: 'about-delete-title',
+			centered: true,
+			size: 'sm'
+		}).result.then(
+			() => this.selectedAbout = null,
+			() => this.selectedAbout = null
 		);
 	}
 
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
-		} else {
-			return `with: ${reason}`;
+	deleteAbout(): void {
+		if (!this.selectedAbout || this.isDeleting) {
+			return;
 		}
+
+		this.isDeleting = true;
+		this.aboutService.getAboutDelete({ id: this.selectedAbout._id }).subscribe({
+			next: (response: any) => {
+				this.isDeleting = false;
+				if (response.code !== 200) {
+					this.toastr.errorToastr(response.message || 'Unable to delete this section.');
+					return;
+				}
+				this.modalService.dismissAll();
+				this.toastr.successToastr(response.message || 'Section deleted successfully.');
+				this.totalRecord = Math.max(0, this.totalRecord - 1);
+				if (this.currentPage > 1 && (this.currentPage - 1) * this.currentLimit >= this.totalRecord) {
+					this.currentPage--;
+				}
+				this.get_AboutData();
+			},
+			error: error => {
+				this.isDeleting = false;
+				console.error('Error deleting About section:', error);
+				this.toastr.errorToastr(error?.error?.message || 'Unable to delete this section. Please try again.');
+			}
+		});
 	}
 
-  closeModal(){
-    this.activeModal.close();
-  }
-
-
-  deleteAbout() {
-		if (this.selectedAbout) {
-			var mylist = { id: this.selectedAbout._id };
-			this.aboutservice.getAboutDelete(mylist).subscribe(
-				(response) => {
-					if (response.code == 200) {
-
-						this.get_AboutData();
-						this.router.navigate(['/About/view']);
-            window.location.reload();
-						this.toastr.successToastr("About Deleted")
-					}
-				},
-			);
-		}
+	onImageError(event: Event): void {
+		const image = event.target as HTMLImageElement;
+		image.onerror = null;
+		image.src = 'assets/img/placeholder.webp';
 	}
-
-	changeStatus(){
-    if(this.isactive != 'none'){
-      this.config.switchColor.checked = '#ffffff';
-      this.config.color.checked = 'green';
-      this.config.labels.checked = 'Active';
-    } else {
-      if(this.isactive){
-        this.isactive = false;
-        this.config.switchColor.unchecked = 'crimson';
-        this.config.color.unchecked = '#423f3f';
-        this.config.labels.unchecked = 'Deactive';
-      } else {
-        this.isactive = true;
-
-      }
-    }
-	}
-
-  resetFilter(){
-		this.config.switchColor.checked = '#dcdcdc';
-    this.config.color.checked = '#dcdcdc';
-    this.config.labels.checked = 'Change';
-    this.config.switchColor.unchecked = '#dcdcdc';
-    this.config.color.unchecked = '#dcdcdc';
-    this.config.labels.unchecked = 'Change';
-    this.isactive = 'none';
-	}
-
-	// 	deleteMediaData() {
-	// 	if (this.selectedAbout.media_data && this.selectedAbout.media_data.length > 0) {
-	// 		var mylist = { id: this.selectedAbout.media_data[0]._id, file: this.selectedAbout.media_data[0].src };
-	// 		this.bannerservice.deleteMediaData(mylist).subscribe(
-	// 			(response) => {
-	// 				if (response.code == 200) {
-	// 					this.modalService.dismissAll();
-	// 				}
-	// 			},
-	// 		);
-	// 	}
-	// }
-
 }

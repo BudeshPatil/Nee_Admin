@@ -1,176 +1,76 @@
-<div class="header pb-8 pt-5 pt-lg-4 d-flex align-items-center">
-</div>
-<div class="container-fluid mt--7">
-    <div class="row">
-        <div class="col-xl-12 order-xl-1">
-            <div class="card bg-secondary shadow">
-                <div class="card-header bg-white border-0">
-                    <div class="row align-items-center">
-                        <div class="col-8">
-                            <h3 class="mb-0" *ngIf="id">Update/Edit Testimonial</h3>
-                            <h3 class="mb-0" *ngIf="!id">Add New Testimonial</h3>
-                        </div>
-                    </div>
-                    <div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
-                        {{throw_msg}}
-                    </div>
-                    <div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
-                        {{throw_msg}}
-                    </div>
-                </div>
-                <div class="card-body">
-                    <!-- form start -->
-                    <form [formGroup]="addTestimonialForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-                        <div class="box-body">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Name <span> * </span></label>
-                                <input type="text" name="name" autocomplete="off" formControlName="name"
-                                    class="form-control" placeholder="Name">
-                                <span *ngIf="submitted && hasError('name','required')" class="alert-danger">Name is
-                                    required</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Ratings <span> * </span></label>
-                                <select name="ratings" formControlName="ratings" class="form-control">
-                                    <option value="">Select Rating</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select>
-                                <span *ngIf="submitted && hasError('ratings','required')" class="alert-danger">Ratings
-                                    is
-                                    required</span>
-                            </div>
+<div class="container-fluid testimonial-editor">
+  <header class="editor-heading">
+    <a class="back-link" routerLink="/testimonial/view"><i class="fa fa-arrow-left"></i> Back to testimonials</a>
+    <p class="eyebrow">CONTENT MANAGEMENT</p>
+    <h1>{{ isEdit ? 'Edit testimonial' : 'Add testimonial' }}</h1>
+    <p class="heading-copy">Share a customer's experience with your visitors.</p>
+  </header>
 
-                            <!-- <div class="form-group"> 
-                                <label for="exampleInputEmail1">Title</label>
-                                <input type="text" name="name" autocomplete="off" formControlName="title"
-                                    class="form-control" placeholder="Testimonial Title">
-                                <span *ngIf="submitted && hasError('title','required')" class="alert-danger">Testimonial Title is
-                                    required</span>
-                            </div> -->
+  <div *ngIf="loadError" class="editor-alert" role="alert"><i class="fa fa-exclamation-circle"></i>{{ loadError }}</div>
+  <div *ngIf="isLoading" class="loading-panel"><span class="loading-spinner"></span> Loading testimonial…</div>
 
-                            <!-- <div class="form-group"> 
-                                <label for="exampleInputEmail1">Location</label>
-                                <input type="text" name="name" autocomplete="off" formControlName="location"
-                                    class="form-control" placeholder="Location">
-                                <span *ngIf="submitted && hasError('location','required')" class="alert-danger">Location is
-                                    required</span>
-                            </div> -->
-
-                            <!-- <div class="form-group">
-                                <label for="exampleInputEmail1">Featured</label>
-                                <select name="featured" formControlName="featured" class="form-control">
-                                    <option value="">Select Featured</option>
-                                    <option value="true">Active</option>
-                                    <option value="false">InActive</option>
-                                </select>
-                                <span *ngIf="submitted && hasError('featured','required')" class="alert-danger">Featured is
-                                    required</span>
-                            </div> -->
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Description <span> * </span>
-                                    <div class="tooltip-wrapper">
-                                        <button type="button" class="btn shadow-none p-0 trigger-btn"
-                                            (mouseenter)="show = true" (mouseleave)="show = false"
-                                            style="transform: none;  color: #525f7f;">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-                                                <line x1="12" y1="10" x2="12" y2="16" stroke="currentColor"
-                                                    stroke-width="1" stroke-linecap="round" />
-                                                <circle cx="12" cy="7" r="1" fill="currentColor" />
-                                            </svg></button>
-                                        <div class="tooltip-card" *ngIf="show">
-                                            <h5 class="tooltip-title">Note</h5>
-                                            <p class="tooltip-text">
-                                                To maintain the website design, please keep the content within 180–200
-                                                characters.
-                                            </p>
-                                            <span class="tooltip-arrow"></span>
-                                        </div>
-                                    </div>
-                                </label>
-                                <textarea name="text" autocomplete="nope" formControlName="text" class="form-control"
-                                    placeholder="Description"></textarea>
-                                <span *ngIf="submitted && hasError('text','required')" class="alert-danger">Description
-                                    is required</span>
-                            </div>
-                            <!-- <div class="form-group">
-                                <label for="exampleInputEmail1">Designation</label>
-                                <input type="text" name="job" autocomplete="off" formControlName="job"
-                                    class="form-control" placeholder="Designation">
-                                <span *ngIf="submitted && hasError('job','required')" class="alert-danger">Designation
-                                    is
-                                    required</span>
-                            </div> -->
-                            <!-- <div class="form-group">
-                                <label for="exampleInputEmail1">Job</label> 
-                                <ng-select [items]="jobs" bindLabel="name" placeholder="Select Job" appendTo="body"
-                                    [multiple]="true" formControlName="job">
-                                </ng-select>
-                                <span *ngIf="submitted && hasError('job','required')" class="alert-danger">Job is
-                                    required</span>
-                            </div>  -->
-                            <!-- <div class="form-group">
-                                <label for="exampleInputEmail1">Job</label>
-                                <select name="job" formControlName="job" class="form-control">
-                                    <option value="">Select Job</option>
-                                    <option value="Project Manager">Project Manager</option>
-                                    <option value="Operations Manager">Operations Manager</option>
-                                    <option value="Detailing Manager">Detailing Manager</option>
-                                    <option value="Vice President">Vice President</option>
-                                    <option value="Others">Others</option>
-                                </select>
-                            </div> -->
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Testimonial Image <div class="tooltip-wrapper">
-                                        <button type="button" class="btn shadow-none p-0 trigger-btn"
-                                            (mouseenter)="show1 = true" (mouseleave)="show1 = false"
-                                            style="transform: none;  color: #525f7f;">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1" />
-                                                <line x1="12" y1="10" x2="12" y2="16" stroke="currentColor"
-                                                    stroke-width="1" stroke-linecap="round" />
-                                                <circle cx="12" cy="7" r="1" fill="currentColor" />
-                                            </svg></button>
-                                        <div class="tooltip-card" *ngIf="show1">
-                                            <h5 class="tooltip-title">Note</h5>
-                                            <p class="tooltip-text">
-                                                Upload images in the recommended sizes to avoid layout issues.
-                                                <br>(Required Width - 356px * Height - 70px)
-                                            </p>
-                                            <span class="tooltip-arrow"></span>
-                                        </div>
-                                    </div>
-                                </label><br>
-                                <input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
-                                    [uploadInput]="uploadInput" /><br>
-                                <img *ngIf="ImageName" alt="logo" style="height: 100px; width: 100px;"
-                                    src="{{imagePath}}{{ImageName}}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Status</label>
-                                <select name="status" formControlName="status" class="form-control">
-                                    <option value="true">Active</option>
-                                    <option value="false">InActive</option>
-                                </select>
-                            </div>
-
-                        </div>
-                        <div class="box-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
-                        </div>
-                    </form>
-                </div>
+  <form *ngIf="!isLoading" [formGroup]="addTestimonialForm" (ngSubmit)="onSubmit()">
+    <div class="editor-layout">
+      <main class="editor-main">
+        <section class="form-card">
+          <div class="section-heading"><span class="section-icon"><i class="fa fa-commenting"></i></span><div><h2>Customer feedback</h2><p>Enter the review and the person who shared it.</p></div></div>
+          <div class="field-grid">
+            <div class="field-group">
+              <label for="testimonial-name">Customer name <span class="required-mark">*</span></label>
+              <input id="testimonial-name" class="form-control" formControlName="name" placeholder="e.g. Alex Morgan">
+              <small class="field-error" *ngIf="addTestimonialForm.get('name')?.touched && addTestimonialForm.get('name')?.invalid">Enter the customer's name.</small>
             </div>
-        </div>
+            <div class="field-group">
+              <label for="testimonial-title">Title or role <span class="optional-label">Optional</span></label>
+              <input id="testimonial-title" class="form-control" formControlName="title" placeholder="e.g. Homeowner">
+            </div>
+            <div class="field-group">
+              <label for="testimonial-location">Location <span class="optional-label">Optional</span></label>
+              <input id="testimonial-location" class="form-control" formControlName="location" placeholder="City, country">
+            </div>
+            <div class="field-group">
+              <label for="testimonial-rating">Rating <span class="required-mark">*</span></label>
+              <select id="testimonial-rating" class="form-control" formControlName="ratings">
+                <option value="">Select a rating</option>
+                <option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option>
+              </select>
+              <small class="field-error" *ngIf="addTestimonialForm.get('ratings')?.touched && addTestimonialForm.get('ratings')?.invalid">Choose a rating.</small>
+            </div>
+            <div class="field-group field-span-2">
+              <label for="testimonial-text">Testimonial <span class="required-mark">*</span></label>
+              <textarea id="testimonial-text" class="form-control testimonial-text" rows="6" formControlName="text" placeholder="Write the customer's feedback here…"></textarea>
+              <small class="field-error" *ngIf="addTestimonialForm.get('text')?.touched && addTestimonialForm.get('text')?.invalid">Enter the testimonial text.</small>
+              <small class="field-help">Keep the message concise and in the customer's own words.</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-card">
+          <div class="section-heading"><span class="section-icon"><i class="fa fa-picture-o"></i></span><div><h2>Customer image</h2><p>Add an optional photo to accompany this testimonial.</p></div></div>
+          <div class="image-upload-layout">
+            <div class="image-preview" *ngIf="imageUrl"><img [src]="imageUrl" alt="Testimonial image preview" (error)="onImageError()"><button type="button" class="remove-image" (click)="removeImage()" aria-label="Remove image"><i class="fa fa-times"></i></button></div>
+            <label class="upload-zone">
+              <input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput">
+              <i class="fa fa-cloud-upload"></i><strong>{{ imageUrl ? 'Choose a different image' : 'Choose an image' }}</strong><span>PNG, JPG or WebP</span>
+            </label>
+          </div>
+        </section>
+      </main>
+
+      <aside class="editor-sidebar">
+        <section class="form-card publish-card">
+          <div class="section-heading"><span class="section-icon"><i class="fa fa-sliders"></i></span><div><h2>Publishing</h2><p>Choose how this review appears.</p></div></div>
+          <div class="field-group">
+            <label for="testimonial-status">Status</label>
+            <select id="testimonial-status" class="form-control" formControlName="status"><option [ngValue]="true">Active</option><option [ngValue]="false">Inactive</option></select>
+          </div>
+          <label class="featured-control"><input type="checkbox" formControlName="featured"><span class="custom-check"></span><span><strong>Featured testimonial</strong><small>Highlight this review on the website.</small></span></label>
+          <div class="form-actions">
+            <button type="submit" class="save-button" [disabled]="isSaving"><span *ngIf="isSaving" class="button-spinner"></span><i *ngIf="!isSaving" class="fa fa-check"></i>{{ isSaving ? 'Saving…' : (isEdit ? 'Save changes' : 'Add testimonial') }}</button>
+            <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
+          </div>
+        </section>
+      </aside>
     </div>
+  </form>
 </div>

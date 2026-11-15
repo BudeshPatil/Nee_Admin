@@ -1,128 +1,64 @@
-<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
-	<div class="container-fluid">
-		<div class="header-body">
-			<!-- Card stats -->
+<div class="container-fluid about-page">
+  <header class="page-heading">
+    <div><p class="eyebrow">WEBSITE CONTENT</p><h1>About sections</h1><p class="page-description">Manage the story, imagery and information shown across your About page.</p></div>
+    <a class="primary-action" routerLink="/about/add"><i class="fa fa-plus" aria-hidden="true"></i> Add section</a>
+  </header>
 
-		</div>
-	</div>
+  <section class="overview-strip" aria-label="About section overview">
+    <div class="overview-icon"><i class="fa fa-info-circle" aria-hidden="true"></i></div>
+    <div class="overview-copy"><span>About page content</span><strong>{{ totalRecord | number }} <small>total sections</small></strong></div>
+    <div class="overview-divider"></div>
+    <p><i class="fa fa-lightbulb-o" aria-hidden="true"></i> Keep each section focused and visually consistent.</p>
+  </section>
+
+  <section class="catalogue-card">
+    <div class="catalogue-heading"><div><h2>All sections</h2><p>Browse, search and edit your About page content.</p></div><span class="result-count" *ngIf="!isLoading">{{ filteredAbout.length }} shown</span></div>
+    <div class="catalogue-toolbar">
+      <label class="search-control"><i class="fa fa-search" aria-hidden="true"></i><input type="search" [(ngModel)]="searchText" (ngModelChange)="searchAbout()" placeholder="Search title, section or description" aria-label="Search About sections"><button *ngIf="searchText" type="button" class="clear-search" (click)="searchText = ''; searchAbout()" aria-label="Clear search"><i class="fa fa-times" aria-hidden="true"></i></button></label>
+      <div class="toolbar-right">
+        <label class="filter-control"><span>Status</span><select [(ngModel)]="isactive" (ngModelChange)="searchAbout()" aria-label="Filter About sections by status"><option [ngValue]="'all'">All statuses</option><option [ngValue]="true">Active</option><option [ngValue]="false">Inactive</option></select></label>
+        <button *ngIf="hasFilters" type="button" class="reset-button" (click)="clearFilters()">Clear filters</button>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="state-panel"><span class="loading-spinner"></span><strong>Loading About sections…</strong><p>Your page content will be ready in a moment.</p></div>
+    <div *ngIf="!isLoading && loadError" class="state-panel"><span class="state-icon error-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span><strong>About sections couldn't be loaded</strong><p>Check your connection and try again.</p><button class="secondary-action" type="button" (click)="get_AboutData()">Try again</button></div>
+    <div *ngIf="!isLoading && !loadError && filteredAbout.length === 0" class="state-panel"><span class="state-icon"><i class="fa fa-info-circle" aria-hidden="true"></i></span><strong>{{ totalRecord === 0 ? 'No About sections yet' : 'No matching sections' }}</strong><p>{{ totalRecord === 0 ? 'Add your first section to start building the About page.' : 'Try a different search or clear the selected filters.' }}</p><button *ngIf="hasFilters" class="secondary-action" type="button" (click)="clearFilters()">Clear filters</button><a *ngIf="totalRecord === 0" class="secondary-action" routerLink="/about/add">Add section</a></div>
+
+    <div class="section-grid" *ngIf="!isLoading && !loadError && filteredAbout.length > 0">
+      <article class="section-card" *ngFor="let item of filteredAbout">
+        <div class="section-cover">
+          <img [src]="imagePath + item.image_banner" [alt]="item.title_sign || 'About section image'" (error)="onImageError($event)">
+          <span class="status-badge" [class.active]="isAboutActive(item)" [class.inactive]="!isAboutActive(item)"><i></i>{{ isAboutActive(item) ? 'Active' : 'Inactive' }}</span>
+          <span class="page-section-pill">{{ item.page_section || 'About page' }}</span>
+        </div>
+        <div class="section-card-body">
+          <p class="section-kicker">{{ item.title_name || 'About section' }}</p>
+          <h3>{{ item.title_sign || 'Untitled section' }}</h3>
+          <p class="section-description">{{ item.desc_short || 'No section summary has been added yet.' }}</p>
+        </div>
+        <footer class="section-card-footer">
+          <span><i class="fa fa-calendar-o" aria-hidden="true"></i>{{ item.updated_at ? (item.updated_at | date: 'dd MMM yyyy') : (item.created_at | date: 'dd MMM yyyy') }}</span>
+          <div class="card-actions">
+            <a class="icon-action" [routerLink]="['/about/edit', item._id]" [attr.aria-label]="'Edit ' + item.title_sign" title="Edit section"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            <button type="button" class="icon-action danger-action" (click)="openDeleteModal(deleteModal, item)" [attr.aria-label]="'Delete ' + item.title_sign" title="Delete section"><i class="fa fa-trash" aria-hidden="true"></i></button>
+          </div>
+        </footer>
+      </article>
+    </div>
+
+    <div class="catalogue-pagination" *ngIf="totalRecord > 0 && !hasFilters"><app-pagination [initialPage]="currentPage" [count]="totalRecord" [perPage]="currentLimit" (changePage)="onListChangePage($event)"></app-pagination></div>
+  </section>
 </div>
-<!-- Page content -->
-<div class="container-fluid mt--7">
-	<!-- Table -->
-	<div class="row">
-		<div class="col">
-			<div class="card shadow">
-				<div class="card-header border-0">
-					<h3 class="mb-0">Section List</h3>
-				</div>
-				<div class="col-md-12 mb-4">
-					<div class="row">
-						<div class="col-md-6">
-							<!-- <button class="btn btn-primary" routerLink="/about-category/view">Add About Category</button> -->
-							<input class="form-control" type="text" (keyup)="searchAbout()" name="search"
-								[(ngModel)]="searchText" autocomplete="off"
-								placeholder="&#61442;  Start searching a About by name">
-						</div>
-						<div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
-								routerLink="/about/add">Add Section</button></div>
-					</div>
-				</div>
-				<div class="col-md-12">
-				</div>
-				<div class="table-responsive">
-					<table class="table align-items-center table-flush">
-						<thead>
-							<tr>
-								<th>SL No</th>
-								<th>Title Name</th>
-								<!-- <th>Format</th> -->
-								<th>About Image</th>
-								<!-- <th>About Image 2</th> -->
-								<!-- <th>Category</th> -->
-								<!-- <th>Approved</th> -->
-								<th>Created Date</th>
-								<th>Updated Date</th>
-								<th>Status <ui-switch
-  [(ngModel)]="isactive"
-  [disabled]="config.disabled"
-  
-  (change)="changeStatus()">
-</ui-switch> <a (click)="resetFilter()"
-										class="btn btn-sm btn-info mr-4">Reset</a></th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<td colspan="6" *ngIf="msg_danger">
-								<div class="alert alert-dismissable" style="text-align: center;">
-									About List is Empty
-								</div>
-							</td>
-							<tr
-								*ngFor="let listAboutData of AboutData | filter:searchText | activefilter:isactive; let i = index">
-								<td *ngIf="currentPage == 1">{{i+1}}</td>
-								<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-								<td>{{listAboutData.title_sign}}</td>
-								<!-- <td *ngIf="listAboutData.media_data">{{listAboutData.media_data[0].file_type}}</td> -->
-								<!-- <td *ngIf="listAboutData.media_data">
-									<img *ngIf="listAboutData.media_data && listAboutData.media_data[0].file_type =='image'"
-										src="{{imagePath}}/about/{{listAboutData.media_data[0].src}}" alt="logo"
-										style="height: 100px;width: 100px;">
-									<video *ngIf="listAboutData.media_data && listAboutData.media_data[0].file_type =='video'" width="100"
-										height="100" controls>
-										<source src="{{imagePath}}/about/{{listAboutData.media_data[0].src}}" type="video/mp4">
-									</video>
-								</td> -->
-								<td><img src="{{imagePath}}{{listAboutData.image_banner}}" alt="logo" style="height: 100px;width: 100px;">
-								</td>
-								<!-- <td><img src="{{imagePath}}{{listAboutData.image_desc}}" alt="logo" style="height: 100px;width: 100px;">
-								</td> -->
-								<!-- <td>{{listAboutData.category_name}}</td> -->
 
-
-								<!-- <td>{{listAboutData.isApproved == true ? 'Yes':'No'}}</td> -->
-								<td>{{listAboutData.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-								<td>{{listAboutData.updated_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-								<td>{{listAboutData.status == true ? 'Active':'InActive'}}</td>
-								<td>
-									<a routerLink="/about/edit/{{listAboutData._id}}" style="cursor:pointer"><i
-											class="fa fa-pencil-square-o" aria-hidden="true"></i>
-									</a>
-									<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listAboutData)"><i
-											class="fa fa-trash-o" aria-hidden="true"></i></a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
-						<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
-							(changePage)="onListChangePage($event)"></app-pagination>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- About Delete Popup -->
-	<ng-template #content let-modal style="z-index: 0;">
-		<div class="modal-header">
-			<h4 class="modal-title" id="modal-title">About Image deletion</h4>
-			<button type="button" class="btn btn-danger" aria-describedby="modal-title"
-				(click)="modal.dismiss('Cross click')">close</button>
-		</div>
-		<div class="modal-body">
-			<p *ngIf="selectedAbout">
-				<strong>Are you sure you want to delete <span class="text-primary">"{{selectedAbout.name}}"</span>
-					About
-					Details?</strong>
-			</p>
-			<!-- <p>
-				All information associated to this About Image will be permanently deleted.
-				<span class="text-danger">This operation can not be undone.</span>
-			</p> -->
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-danger" (click)="modal.dismiss('cancel click')">Cancel</button>
-			<button type="button" class="btn btn-primary" (click)="deleteAbout()">Ok</button>
-		</div>
-	</ng-template>
+<ng-template #deleteModal let-modal>
+  <div class="delete-modal">
+    <div class="modal-icon"><i class="fa fa-trash" aria-hidden="true"></i></div>
+    <h2 id="about-delete-title">Delete this section?</h2>
+    <p><strong>{{ selectedAbout?.title_sign || selectedAbout?.page_section }}</strong> will be permanently removed. This action can't be undone.</p>
+    <div class="modal-actions">
+      <button type="button" class="secondary-action" (click)="modal.dismiss()" [disabled]="isDeleting">Cancel</button>
+      <button type="button" class="danger-button" (click)="deleteAbout()" [disabled]="isDeleting"><span *ngIf="isDeleting" class="button-spinner"></span>{{ isDeleting ? 'Deleting…' : 'Delete section' }}</button>
+    </div>
+  </div>
+</ng-template>

@@ -1,93 +1,53 @@
-<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
-    <div class="container-fluid">
-        <div class="header-body">
-            <!-- Card stats -->
+<div class="container-fluid testimonial-page">
+  <header class="page-heading">
+    <div><p class="eyebrow">WEBSITE CONTENT</p><h1>Testimonials</h1><p class="page-description">Showcase the experiences customers share about your work.</p></div>
+    <a class="primary-action" routerLink="/testimonial/add"><i class="fa fa-plus" aria-hidden="true"></i> Add testimonial</a>
+  </header>
 
-        </div>
+  <section class="overview-strip" aria-label="Testimonial overview">
+    <div class="overview-icon"><i class="fa fa-comments" aria-hidden="true"></i></div>
+    <div class="overview-copy"><span>Customer stories</span><strong>{{ totalRecord | number }} <small>total testimonials</small></strong></div>
+    <div class="overview-divider"></div>
+    <p><i class="fa fa-info-circle" aria-hidden="true"></i> Feature the reviews that best reflect your customer experience.</p>
+  </section>
+
+  <section class="catalogue-card">
+    <div class="catalogue-heading"><div><h2>Customer stories</h2><p>Browse, search and manage published testimonials.</p></div><span class="result-count" *ngIf="!isLoading">{{ filteredTestimonials.length }} shown</span></div>
+    <div class="catalogue-toolbar">
+      <label class="search-control"><i class="fa fa-search" aria-hidden="true"></i><input type="search" [(ngModel)]="searchText" (ngModelChange)="searchProduct()" placeholder="Search name, role or feedback" aria-label="Search testimonials"><button *ngIf="searchText" type="button" class="clear-search" (click)="searchText = ''; searchProduct()" aria-label="Clear search"><i class="fa fa-times" aria-hidden="true"></i></button></label>
+      <div class="toolbar-right">
+        <label class="filter-control"><span>Status</span><select [(ngModel)]="isactive" (ngModelChange)="searchProduct()" aria-label="Filter testimonials by status"><option [ngValue]="'all'">All statuses</option><option [ngValue]="true">Active</option><option [ngValue]="false">Inactive</option></select></label>
+        <button *ngIf="hasFilters" type="button" class="reset-button" (click)="clearFilters()">Clear filters</button>
+      </div>
     </div>
+
+    <div *ngIf="isLoading" class="state-panel"><span class="loading-spinner"></span><strong>Loading testimonials…</strong><p>Customer stories will be ready in a moment.</p></div>
+    <div *ngIf="!isLoading && loadError" class="state-panel"><span class="state-icon error-icon"><i class="fa fa-exclamation-circle"></i></span><strong>Testimonials couldn't be loaded</strong><p>Check your connection and try again.</p><button class="secondary-action" type="button" (click)="get_testimonialData()">Try again</button></div>
+    <div *ngIf="!isLoading && !loadError && filteredTestimonials.length === 0" class="state-panel"><span class="state-icon"><i class="fa fa-comments"></i></span><strong>{{ totalRecord === 0 ? 'No testimonials yet' : 'No matching testimonials' }}</strong><p>{{ totalRecord === 0 ? 'Add your first customer story to get started.' : 'Try a different search or clear the selected filters.' }}</p><button *ngIf="hasFilters" class="secondary-action" type="button" (click)="clearFilters()">Clear filters</button><a *ngIf="totalRecord === 0" class="secondary-action" routerLink="/testimonial/add">Add testimonial</a></div>
+
+    <div class="testimonial-grid" *ngIf="!isLoading && !loadError && filteredTestimonials.length > 0">
+      <article class="testimonial-card" *ngFor="let item of filteredTestimonials">
+        <div class="testimonial-card-top">
+          <span class="status-badge" [class.active]="item.status === true || item.status === 'true'" [class.inactive]="item.status !== true && item.status !== 'true'"><i></i>{{ item.status === true || item.status === 'true' ? 'Active' : 'Inactive' }}</span>
+          <span class="featured-badge" *ngIf="item.featured"><i class="fa fa-star" aria-hidden="true"></i> Featured</span>
+          <div class="card-actions">
+            <a class="icon-action" [routerLink]="['/testimonial/edit', item._id]" [attr.aria-label]="'Edit testimonial from ' + item.name" title="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            <button type="button" class="icon-action danger-action" (click)="deleteTestimonial(item._id)" [attr.aria-label]="'Delete testimonial from ' + item.name" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <div class="rating-row" [attr.aria-label]="item.ratings + ' out of 5 stars'">
+          <span class="rating-stars"><i *ngFor="let star of [1, 2, 3, 4, 5]" class="fa fa-star" [class.filled]="star <= item.ratings"></i></span>
+          <strong>{{ item.ratings || '—' }}<small>/5</small></strong>
+        </div>
+        <blockquote class="testimonial-quote">{{ item.text || 'No testimonial text has been added yet.' }}</blockquote>
+        <footer class="customer-footer">
+          <img [src]="imagePath + item.image" [alt]="item.name || 'Customer image'" (error)="onImageError($event)">
+          <div class="customer-details"><strong>{{ item.name || 'Unnamed customer' }}</strong><span>{{ item.title || item.job || item.location || 'Customer' }}</span></div>
+          <span class="testimonial-date">{{ item.created_at | date: 'dd MMM yyyy' }}</span>
+        </footer>
+      </article>
+    </div>
+
+    <div class="catalogue-pagination" *ngIf="totalRecord > 0 && !hasFilters"><app-pagination [initialPage]="currentPage" [count]="totalRecord" [perPage]="currentLimit" (changePage)="onListChangePage($event)"></app-pagination></div>
+  </section>
 </div>
-<!-- Page content -->
-<div class="container-fluid mt--7">
-    <!-- Table -->
-    <div class="row">
-
-        <div class="col">
-            <div class="card shadow">
-                <div class="card-header border-0">
-                    <h3 class="mb-0">Testimonial List</h3>
-                </div>
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <!-- <h4 class="title">search</h4> -->
-                            <!-- <div class="search-hero">
-                                <input class="form-control" type="text" (keyup)="searchProduct()" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="&#61442;  Start searching for a Testimonial">
-                              </div> -->
-                              <input class="form-control mt-4" type="text" (keyup)="searchProduct()" name="search" [(ngModel)]="searchText"
-                                          autocomplete="off" placeholder="&#61442;  Start searching for a Testimonial">
-                        </div>
-                        <div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
-                                routerLink="/testimonial/add">Add Testimonial</button></div>
-                    </div>
-                    <div class="col-md-6">
-                        <h4 class="title"></h4>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                        <thead>
-                            <tr>
-                                <th>SL No</th>
-                                <th>Name</th>
-                                <th>Image</th>
-                                <!-- <th>location</th>
-                                <th>Title</th> -->
-                                <th>Ratings</th>
-                                <th>Status <ui-switch
-  [(ngModel)]="isactive"
-  [disabled]="config.disabled"
-  
-  (change)="changeStatus()">
-</ui-switch> <a (click)="resetFilter()" class="btn btn-sm btn-info mr-4">Reset</a></th>
-                                <th>Created At</th>
-                                <th>Updated At</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <td colspan="5" *ngIf="msg_danger">
-                                <div class="alert alert-dismissable" style="text-align: center;">
-                                    Testimonial List is Empty
-                                </div>
-                            </td>
-                            <tr *ngFor="let listTestimonial of testimonialData | filter:searchText | activefilter:isactive; let i = index">
-                                <td *ngIf="currentPage == 1">{{i+1}}</td>
-                                <td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-                                <td>{{listTestimonial.name}}</td>
-                                <td><img src="{{imagePath}}{{listTestimonial.image}}" alt="logo"
-                                        style="height: 100px;width: 100px;"></td>
-                                <!-- <td>{{listTestimonial.location}}</td> -->
-                                <!-- <td>{{listTestimonial.title}}</td> -->
-                                <td>{{ listTestimonial.ratings}}</td>
-                                <td>{{listTestimonial.status == true ? 'Active':'InActive'}}</td>
-                                <td>{{listTestimonial.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-                                <td>{{listTestimonial.updated_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-                                <td>
-                                    <a routerLink="/testimonial/edit/{{listTestimonial._id}}" style="cursor:pointer"><i
-                                            class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    </a>
-                                    <a style="cursor:pointer;padding-left: 15px;"
-                                        (click)="deleteTestimonial(listTestimonial._id)"><i class="fa fa-trash-o"
-                                            aria-hidden="true"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="neelgund-pagination" *ngIf="totalRecord > 0 ">
-                        <app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
-                            (changePage)="onListChangePage($event)"></app-pagination>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>

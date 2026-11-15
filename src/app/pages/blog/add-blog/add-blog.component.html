@@ -1,209 +1,120 @@
-<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center">
-	<!-- Mask -->
-	<!-- <span class="mask bg-gradient-info opacity-8"></span> -->
-	<!-- Header container -->
-	<!-- <div class="container-fluid d-flex align-items-center">
-		<div class="row">
-			<div class="col-lg-7 col-md-10">
-				<h1 class="display-2 text-white">Single Blog </h1>
-				<p class="text-white mt-0 mb-5">This is your Blog page. You can select author, tags and add/edit Blog content
-					you've and manage your Blog</p>
-			</div>
-		</div>
-	</div> -->
-</div>
-<div class="container-fluid mt--7">
-	<div class="row">
-		<div class="col-xl-7 order-xl-1 mx-auto">
-			<div class="card bg-secondary shadow">
-				<div class="card-header bg-white border-0">
-					<div class="row align-items-center">
-						<div class="col-8">
-							<h3 class="mb-0" *ngIf="id">Edit Blog</h3>
-							<h3 class="mb-0" *ngIf="!id">Add Blog</h3>
-						</div>
-					</div>
-					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
-						{{throw_msg}}
-					</div>
-					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
-						{{throw_msg}}
-					</div>
-				</div>
-				<div class="card-body">
-					<!-- form start -->
-					<form [formGroup]="addBlogForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-						<div class="box-body">
+<div class="container-fluid blog-editor">
+  <header class="editor-heading">
+    <a class="back-link" routerLink="/blog/view"><i class="fa fa-arrow-left"></i> Back to blog posts</a>
+    <p class="eyebrow">CONTENT MANAGEMENT</p>
+    <h1>{{ isEdit ? 'Edit blog post' : 'Create blog post' }}</h1>
+    <p class="heading-copy">Write your article, add media and configure search details.</p>
+  </header>
 
-							<div class="form-group">
-								<label for="exampleInputEmail1">Status</label>
-								<select name="status" formControlName="status" class="form-control">
-									<option value="true">Active</option>
-									<option value="false">Deactive</option>
-								</select>
-							</div>
+  <div *ngIf="loadError" class="editor-alert" role="alert"><i class="fa fa-exclamation-circle"></i>{{ loadError }}</div>
+  <div *ngIf="lookupError" class="editor-alert lookup-alert" role="status"><i class="fa fa-info-circle"></i>{{ lookupError }}</div>
+  <div *ngIf="isLoading" class="loading-panel"><span class="loading-spinner"></span> Loading blog post…</div>
 
-							<div class="form-group">
-								<label for="exampleInputEmail1">Date</label>
-								<input type="date" name="date" autocomplete="off" formControlName="date" class="form-control"
-									placeholder="Date" [max]="currentDate">
-								<span *ngIf="submitted && hasError('date','required')" class="alert-danger">Date is
-									required</span>
-							</div>
+  <form *ngIf="!isLoading" [formGroup]="addBlogForm" (ngSubmit)="onSubmit()">
+    <div class="editor-layout">
+      <main class="editor-main">
+        <section class="form-card">
+          <div class="section-heading"><span class="section-icon"><i class="fa fa-file-text-o"></i></span><div><h2>Article content</h2><p>Set the title and write the content readers will see.</p></div></div>
+          <div class="field-grid">
+            <div class="field-group">
+              <label for="blog-name">Blog title <span class="required-mark">*</span></label>
+              <input id="blog-name" class="form-control" formControlName="name" placeholder="Enter a clear article title">
+              <small class="field-error" *ngIf="addBlogForm.get('name')?.touched && addBlogForm.get('name')?.invalid">Enter a blog title.</small>
+            </div>
+            <div class="field-group">
+              <label for="blog-date">Publish date <span class="required-mark">*</span></label>
+              <input id="blog-date" class="form-control" type="date" formControlName="date" [max]="currentDate">
+              <small class="field-error" *ngIf="addBlogForm.get('date')?.touched && addBlogForm.get('date')?.invalid">Choose a publish date.</small>
+            </div>
+            <div class="field-group">
+              <label for="blog-category">Category <span class="optional-label">Optional</span></label>
+              <select id="blog-category" class="form-control" formControlName="blog_category">
+                <option value="">Select a category</option>
+                <option *ngFor="let category of categoryData" [value]="category._id">{{ category.name }}</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="blog-tag">Tag <span class="optional-label">Optional</span></label>
+              <select id="blog-tag" class="form-control" formControlName="tag">
+                <option value="">Select a tag</option>
+                <option *ngFor="let tag of tagData" [value]="tag._id">{{ tag.name }}</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="blog-author">Author <span class="optional-label">Optional</span></label>
+              <select id="blog-author" class="form-control" formControlName="author">
+                <option value="">Select an author</option>
+                <option *ngFor="let author of authorData" [value]="author._id">{{ author.name }}</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="blog-source">Article link <span class="optional-label">Optional</span></label>
+              <input id="blog-source" class="form-control" formControlName="source_link" placeholder="https://example.com/article">
+            </div>
+            <div class="field-group field-span-2">
+              <label>Article body <span class="required-mark">*</span></label>
+              <angular-editor formControlName="content_html" [config]="editorConfig"></angular-editor>
+              <small class="field-error" *ngIf="addBlogForm.get('content_html')?.touched && addBlogForm.get('content_html')?.invalid">Add the article content.</small>
+            </div>
+          </div>
+        </section>
 
-							<div class="form-group">
-								<label for="exampleInputEmail1">Select Blog Category</label>
-								<select name="blog_category" formControlName="blog_category" class="form-control">
-									<option value="">Select Blog Category</option>
-									<option value="{{cat._id}}" *ngFor="let cat of categoryData; let j = index">{{cat.name}}</option>
-								</select>
-								<span *ngIf="submitted && hasError('blog_category','required')" class="alert-danger">Please
-									Select Category</span>
-							</div>
+        <section class="form-card">
+          <div class="section-heading"><span class="section-icon"><i class="fa fa-picture-o"></i></span><div><h2>Article media</h2><p>Upload an image or add a video URL to accompany this post.</p></div></div>
+          <div class="field-grid media-fields">
+            <div class="field-group">
+              <label>Cover image <span class="optional-label">Optional</span></label>
+              <div class="image-preview" *ngIf="imageUrl"><img [src]="imageUrl" alt="Blog cover preview" (error)="onImageError()"><button type="button" class="remove-image" (click)="removeImage()" aria-label="Remove cover image"><i class="fa fa-times"></i></button></div>
+              <label class="upload-zone">
+                <input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput">
+                <i class="fa fa-cloud-upload"></i><strong>{{ imageUrl ? 'Choose a different image' : 'Choose cover image' }}</strong><span>PNG, JPG or WebP</span>
+              </label>
+            </div>
+            <div class="field-group video-field">
+              <label for="blog-video">YouTube video URL or key <span class="optional-label">Optional</span></label>
+              <input id="blog-video" class="form-control" formControlName="video_link" placeholder="e.g. https://youtube.com/watch?v=…">
+              <small class="field-help">Add a video URL or key if this post includes a video.</small>
+              <label class="featured-control"><input type="checkbox" formControlName="featured"><span class="custom-check"></span><span><strong>Featured post</strong><small>Highlight this post on the website.</small></span></label>
+            </div>
+          </div>
+        </section>
 
+        <section class="form-card">
+          <div class="section-heading"><span class="section-icon"><i class="fa fa-search"></i></span><div><h2>Search engine details</h2><p>Help search engines understand and display this article.</p></div></div>
+          <div class="field-grid">
+            <div class="field-group field-span-2">
+              <label for="meta-title">Meta title <span class="required-mark">*</span></label>
+              <input id="meta-title" class="form-control" formControlName="meta_title" placeholder="Search result title">
+              <small class="field-error" *ngIf="addBlogForm.get('meta_title')?.touched && addBlogForm.get('meta_title')?.invalid">Enter a meta title.</small>
+            </div>
+            <div class="field-group field-span-2">
+              <label for="meta-keywords">Meta keywords <span class="required-mark">*</span></label>
+              <input id="meta-keywords" class="form-control" formControlName="meta_keywords" placeholder="Separate keywords with commas">
+              <small class="field-error" *ngIf="addBlogForm.get('meta_keywords')?.touched && addBlogForm.get('meta_keywords')?.invalid">Enter meta keywords.</small>
+            </div>
+            <div class="field-group field-span-2">
+              <label for="meta-description">Meta description <span class="required-mark">*</span></label>
+              <textarea id="meta-description" class="form-control meta-description" rows="4" formControlName="meta_description" placeholder="Briefly describe this article for search results"></textarea>
+              <small class="field-error" *ngIf="addBlogForm.get('meta_description')?.touched && addBlogForm.get('meta_description')?.invalid">Enter a meta description.</small>
+            </div>
+          </div>
+        </section>
+      </main>
 
-							<div class="form-group">
-								<label for="exampleInputEmail1">Name</label>
-								<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
-									placeholder="Blog Name">
-								<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Blog Name is
-									required</span>
-							</div>
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Description</label>
-								<textarea name="content_html" formControlName="content_html" class="form-control"
-									placeholder="Description"></textarea>
-								<span *ngIf="submitted && hasError('content_html','required')" class="alert-danger">Description is
-									required</span>
-							</div>
-
-
-
-							<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Select Tag</label>
-								<select name="Tag" formControlName="tag" multiple class="form-control">
-									<option value="">Select Tag</option>
-									<option value="{{listTag._id}}" *ngFor="let listTag of tagData; let j = index">{{listTag.name}}
-									</option>
-								</select>
-								<span *ngIf="submitted && hasError('tag','required')" class="alert-danger">Tag is
-									required</span>
-							</div>
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Select Author</label>
-								<select name="author" formControlName="author" class="form-control">
-									<option value="">Select Author</option>
-									<option value="{{listAuthor._id}}" *ngFor="let listAuthor of authorData; let j = index">
-										{{listAuthor.name}}</option>
-								</select>
-								<span *ngIf="submitted && hasError('author','required')" class="alert-danger">Author is
-									required</span>
-							</div>
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Featured</label>
-								<select name="featured" formControlName="featured" class="form-control">
-									<option value="">Select Featured</option>
-									<option value="true">Active</option>
-									<option value="false">InActive</option>
-								</select>
-								<span *ngIf="submitted && hasError('featured','required')" class="alert-danger">Featured is
-									required</span>
-							</div> -->
-
-							<div class="innoventies-ordiv">
-								<!-- <div class="alert alert-danger" style="margin-left: 0;" *ngIf="videomsg">
-									Please Select Video And Image Both for Video Infographics Category
-								</div>
-								<div class="form-group">
-									<label for="exampleInputEmail1">Video Link</label>
-									<input type="text" name="video_link" autocomplete="off" formControlName="video_link"
-										class="form-control" placeholder="Video Link">
-								</div> -->
-
-								<div class="form-group">
-									<div class="form-group">
-										<label for="exampleInputEmail1">Article link</label>
-										<input type="text" name="source_link" autocomplete="off" formControlName="source_link"
-											class="form-control" placeholder="Article link">
-									</div>
-								</div>
-
-								<div class="gslor"> OR</div>
-								<br>
-								<div class="form-group">
-									<label for="exampleInputEmail1">Upload Image</label><br>
-									<input type="file" #uploader ngFileSelect (uploadOutput)="onUploadOutput($event)"
-										[uploadInput]="uploadInput" accept="image/*" />
-									<label for="exampleInputEmail1" style="display: block;">(Required Size 514 * 554)</label>
-									<img *ngIf="blogImage" alt="logo" style="height: 100px; width: 100px;"
-										src="{{imagePath}}{{blogImage}}">
-								</div>
-
-								<div class="gslor"> OR</div>
-								<br>
-								<div class="form-group">
-									<label for="exampleInputEmail1">Youtube Video URL Key</label>
-									<p>Ex: https://www.youtube.com/watch?v=wiur_AGatGU</p>
-									<input type="text" name="video_link" formControlName="video_link" class="form-control"
-										placeholder="wiur_AGatGU">
-									<span *ngIf="submitted && hasError('video_link','required')" class="alert-danger">Video URL is
-										required</span>
-								</div>
-
-							</div>
-
-
-
-
-
-							<!-- <div class="form-group">
-								<label for="exampleInputEmail1">Content Html</label>
-								<angular-editor name="content_html" formControlName="content_html"
-									[config]="editorConfig"></angular-editor>
-								<span *ngIf="submitted && hasError('content_html','required')" class="alert-danger">Content Html is
-									required</span>
-							</div> -->
-
-
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Meta Title</label>
-								<input type="text" name="meta_title" autocomplete="off" formControlName="meta_title"
-									class="form-control" placeholder="Meta Title">
-								<span *ngIf="submitted && hasError('meta_title','required')" class="alert-danger">Meta Title is
-									required</span>
-							</div>
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Meta Keywords</label>
-								<input type="text" name="meta_keywords" autocomplete="off" formControlName="meta_keywords"
-									class="form-control" placeholder="Meta Keywords">
-								<span *ngIf="submitted && hasError('meta_keywords','required')" class="alert-danger">Meta Keywords is
-									required</span>
-							</div>
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Meta Description</label>
-								<textarea name="meta_description" autocomplete="off" formControlName="meta_description"
-									class="form-control" placeholder="Meta Description"></textarea>
-								<span *ngIf="submitted && hasError('meta_description','required')" class="alert-danger">Meta Description
-									is
-									required</span>
-							</div>
-
-
-
-						</div>
-						<div class="box-footer">
-							<button type="submit" class="btn btn-primary">Submit</button>
-							<button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+      <aside class="editor-sidebar">
+        <section class="form-card publish-card">
+          <div class="section-heading"><span class="section-icon"><i class="fa fa-sliders"></i></span><div><h2>Publishing</h2><p>Set the post's visibility.</p></div></div>
+          <div class="field-group">
+            <label for="blog-status">Status</label>
+            <select id="blog-status" class="form-control" formControlName="status"><option [ngValue]="true">Active</option><option [ngValue]="false">Inactive</option></select>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="save-button" [disabled]="isSaving"><span *ngIf="isSaving" class="button-spinner"></span><i *ngIf="!isSaving" class="fa fa-check"></i>{{ isSaving ? 'Saving…' : (isEdit ? 'Save changes' : 'Publish blog post') }}</button>
+            <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
+          </div>
+          <p class="required-note"><span class="required-mark">*</span> Required fields</p>
+        </section>
+      </aside>
+    </div>
+  </form>
 </div>

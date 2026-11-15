@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { UploadInput, UploadOutput } from 'ngx-uploader';
-import { AboutService } from 'src/app/providers/about/about.service';
-import { environment } from 'src/environments/environment';
+import { AboutService } from '../../../providers/about/about.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-edit-about',
@@ -13,59 +13,37 @@ import { environment } from 'src/environments/environment';
 	styleUrls: ['./edit-about.component.scss']
 })
 export class EditAboutComponent implements OnInit {
-
-	// form variables
+	readonly uploadInput = new EventEmitter<UploadInput>();
 	addForm: FormGroup;
-	throw_msg: any;
-	submitted: boolean = false;
-	msg_success: boolean = false;
-	msg_danger: boolean = false;
-	token: any;
+	id: string | null = null;
+	isEdit = false;
+	isLoading = false;
+	isSaving = false;
+	loadingError = '';
+	saveError = '';
+	imageDataBanner = '';
+	imageDataDesc = '';
+	imagePath = environment.baseUrl + '/public/';
+	token = localStorage.getItem('neelgund-admin-token') || '';
 
-	// Image Variables
-	uploadInput: EventEmitter<UploadInput>;
-	selectedFile: any;
-	imageDataBanner: any;
-	imageDataDesc: any;
-	imagePath: any;
-
-	// Edit Action Here
-	applyAction: any;
-	id: any;
-	show = false; // for tooltip
-	show1 = false; // for tooltip
-	show2 = false; // for tooltip
-	show3 = false; // for tooltip
-	AboutData: any;
-	isEdit = this.route.snapshot.data.title === 'edit' ? true : false;
-
-	// pagination
-	currentPage: number = 1;
-	initialized: boolean = false;
-	currentLimit: number = 10;
-	totalRecord: number = 0;
-
-	//Angular Editor Config
 	editorConfig: AngularEditorConfig = {
 		editable: true,
 		spellcheck: true,
 		height: 'auto',
-		minHeight: '200px',
+		minHeight: '240px',
 		maxHeight: 'auto',
 		width: 'auto',
 		minWidth: '0',
 		translate: 'yes',
 		enableToolbar: true,
 		showToolbar: true,
-		placeholder: 'Enter text here...',
+		placeholder: 'Tell visitors about this section...',
 		defaultParagraphSeparator: '',
 		defaultFontName: '',
 		defaultFontSize: '',
-		fonts: [
-			{ class: 'career_box', name: 'Rajdhani sans-serif' },
-		],
-	}
-	//
+		fonts: [{ class: 'career_box', name: 'Rajdhani sans-serif' }]
+	};
+
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -73,6 +51,7 @@ export class EditAboutComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private toastr: ToastrManager
 	) {
+		this.isEdit = this.route.snapshot.data.title === 'edit';
 		this.addForm = this.formBuilder.group({
 			title_sign: ['', Validators.required],
 			title_name: ['', Validators.required],
@@ -83,192 +62,156 @@ export class EditAboutComponent implements OnInit {
 			video_desc: [''],
 			image_banner: [''],
 			image_desc: [''],
-			status: [true, Validators.required],
+			status: [true, Validators.required]
 		});
-		this.uploadInput = new EventEmitter<UploadInput>();
-		this.token = localStorage.getItem('neelgund-admin-token');
-		this.imagePath = environment.baseUrl + '/public/';
 	}
 
 	ngOnInit(): void {
 		this.id = this.route.snapshot.paramMap.get('id');
-		if (this.isEdit) {
-			this.patchingdata(this.id);
-			this.applyAction = 'Update';
+		if (this.isEdit && this.id) {
+			this.loadAbout(this.id);
 		}
-		else {
-			this.applyAction = 'Add';
-		}
-
 	}
 
-	patchingdata(id: any) {
-		let obj = { id: id };
-		this.aboutService.getAboutWithId(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					let data = response?.result;
-					// this.addForm = response.result;
-					this.imageDataBanner = data?.image_banner;
-					this.imageDataDesc = data?.image_desc;
-					this.addForm.patchValue({
-						title_sign: data?.title_sign,
-						title_name: data?.title_name,
-						desc_short: data?.desc_short,
-						desc_long: data?.desc_long,
-						video_url: data?.video_url,
-						video_desc: data?.video_desc,
-						page_section: data?.page_section,
-						status: data?.status,
-					});
-					window.scroll(0, 0);
-				} else {
-					this.msg_danger = true;
+	loadAbout(id: string): void {
+		this.isLoading = true;
+		this.aboutService.getAboutWithId({ id }).subscribe({
+			next: (response: any) => {
+				this.isLoading = false;
+				if (response.code !== 200 || !response.result) {
+					this.loadingError = response.message || 'Unable to load this About section.';
+					return;
 				}
+				const data = response.result;
+				this.imageDataBanner = data.image_banner || '';
+				this.imageDataDesc = data.image_desc || '';
+				this.addForm.patchValue({
+					title_sign: data.title_sign,
+					title_name: data.title_name,
+					desc_short: data.desc_short,
+					desc_long: data.desc_long,
+					video_url: data.video_url,
+					video_desc: data.video_desc,
+					page_section: data.page_section,
+					status: data.status === true || data.status === 'true' || data.status === 'active',
+					image_banner: this.imageDataBanner,
+					image_desc: this.imageDataDesc
+				});
 			},
-		);
+			error: (error: any) => {
+				this.isLoading = false;
+				this.loadingError = error?.error?.message || 'Unable to load this About section. Please try again.';
+			}
+		});
 	}
 
+	retryLoad(): void {
+		if (this.id) {
+			this.loadAbout(this.id);
+		}
+	}
 
 	onSubmit(): void {
-		this.submitted = true;
+		this.saveError = '';
+		if (this.isSaving) {
+			return;
+		}
+		if (this.addForm.invalid) {
+			this.addForm.markAllAsTouched();
+			return;
+		}
 
-		if (this.addForm.invalid) return;
-
-		const obj = {
+		const payload = {
 			...this.addForm.value,
 			token: this.token,
 			image_banner: this.imageDataBanner,
-			image_desc: this.imageDataDesc,
+			image_desc: this.imageDataDesc
 		};
+		this.isSaving = true;
+		const request = this.isEdit && this.id
+			? this.aboutService.editaboutdata(payload, this.id)
+			: this.aboutService.addAboutData(payload);
 
-		if (!this.isEdit) {
-			this.aboutService.addAboutData(obj).subscribe({
-				next: (response) => {
-					if (response.code === 200) {
-						this.throw_msg = response.message;
-						this.msg_success = true;
-						this.toastr.successToastr('Created Successfully', 'Success');
-						setTimeout(() => this.router.navigate(['/about/view']), 2000);
-					} else {
-						this.handleError(response);
-					}
-				},
-				error: (err) => {
-					const serverError = err?.error?.error || '';
-					const message = err?.error?.message || 'Server error occurred.';
-
-					if (serverError.includes('duplicate key')) {
-						this.toastr.warningToastr('Duplicate section exists. Try a different one.', 'Duplicate Entry');
-					} else {
-						this.toastr.errorToastr(`${message}: ${serverError}`, 'Error');
-					}
-
-					this.throw_msg = message;
-					this.msg_danger = true;
-
-					console.error('Add about failed:', err);
+		request.subscribe({
+			next: (response: any) => {
+				this.isSaving = false;
+				if (response.code === 200) {
+					this.toastr.successToastr(response.message || (this.isEdit ? 'Section updated successfully.' : 'Section created successfully.'));
+					this.router.navigate(['/about/view']);
+				} else {
+					this.handleSaveError(response.message || 'Unable to save this section.', response.error || '');
 				}
-
-			});
-		} else {
-			const id = this.id;
-			this.aboutService.editaboutdata(obj, id).subscribe({
-				next: (response) => {
-					if (response.code === 200) {
-						this.toastr.successToastr('Updated Successfully', 'Success');
-						setTimeout(() => this.router.navigate(['/about/view']), 2000);
-					} else {
-						this.handleError(response);
-					}
-				},
-				error: (err) => {
-					const serverError = err?.error?.error || '';
-					const message = err?.error?.message || 'Server error occurred.';
-
-					if (serverError.includes('duplicate key')) {
-						this.toastr.warningToastr('Duplicate section exists. Try a different one.', 'Duplicate Entry');
-					} else {
-						this.toastr.errorToastr(`${message}: ${serverError}`, 'Error');
-					}
-
-					this.throw_msg = message;
-					this.msg_danger = true;
-
-					console.error('Add about failed:', err);
-				}
-
-			});
-		}
-	}
-
-	private handleError(response: any): void {
-		const errorMessage = response.message || 'Request failed';
-		const serverError = response.error || '';
-		this.throw_msg = errorMessage;
-		this.msg_danger = true;
-
-		if (serverError.includes('duplicate key')) {
-			this.toastr.warningToastr('Duplicate section exists (e.g. "home"). Try a different one.', 'Duplicate Entry');
-		} else {
-			this.toastr.errorToastr(`${errorMessage}: ${serverError}`, 'Error');
-		}
-	}
-
-	onUploadFile(output: UploadOutput): void {
-		this.selectedFile = output;
-		if (output.type === 'allAddedToQueue') {
-			const event: UploadInput = {
-				type: 'uploadAll',
-				url: environment.baseUrl + '/api/about/addimage',
-				method: 'POST',
-				data: {},
-			};
-			this.uploadInput.emit(event);
-		}
-		else if (output.type === 'done' && typeof output.file !== 'undefined') {
-			this.imageDataBanner = output.file.response.result;
-			this.throw_msg = output.file.response.message;
-			this.msg_success = true;
-		}
-	}
-
-	onUploadFile2(output: UploadOutput): void {
-		this.selectedFile = output;
-
-		// If all files are added to the queue
-		if (output.type === 'allAddedToQueue') {
-			const event: UploadInput = {
-				type: 'uploadAll',
-				url: environment.baseUrl + '/api/about/addimage',
-				method: 'POST',
-				data: {}, // You can pass any additional data here if needed
-			};
-			this.uploadInput.emit(event);
-		}
-
-		// If a file upload is done
-		else if (output.type === 'done' && typeof output.file !== 'undefined') {
-			if (output.file.name.includes('image_banner')) {
-				// Handle banner image
-				this.imageDataBanner = output.file.response.result;
-			} else {
-				// Handle description image
-				this.imageDataDesc = output.file.response.result;
+			},
+			error: (error: any) => {
+				this.isSaving = false;
+				const serverError = error?.error?.error || '';
+				const message = error?.error?.message || 'Unable to save this section. Please try again.';
+				this.handleSaveError(message, serverError);
+				console.error('Saving About section failed:', error);
 			}
+		});
+	}
 
-			// Set messages for both image types
-			this.throw_msg = output.file.response.message;
-			this.msg_success = true;
+	private handleSaveError(message: string, detail: string): void {
+		this.saveError = message;
+		if (detail.toLowerCase().includes('duplicate key')) {
+			this.toastr.warningToastr('A section with that key already exists. Choose a different page section.', 'Duplicate section');
+		} else {
+			this.toastr.errorToastr(detail ? `${message} ${detail}` : message, 'Unable to save');
 		}
 	}
 
+	onUploadOutput(output: UploadOutput, type: 'banner' | 'description'): void {
+		if (output.type === 'allAddedToQueue') {
+			this.uploadInput.emit({
+				type: 'uploadAll',
+				url: environment.baseUrl + '/api/about/addimage',
+				method: 'POST',
+				data: {}
+			});
+			return;
+		}
 
-	public hasError = (controlName: string, errorName: string) => {
-		return this.addForm.controls[controlName].hasError(errorName);
-	};
+		if (output.type === 'done' && output.file) {
+			const imageName = output.file.response?.result;
+			if (!imageName) {
+				this.toastr.errorToastr('The image upload did not return a file name.');
+				return;
+			}
+			if (type === 'banner') {
+				this.imageDataBanner = imageName;
+				this.addForm.patchValue({ image_banner: imageName });
+			} else {
+				this.imageDataDesc = imageName;
+				this.addForm.patchValue({ image_desc: imageName });
+			}
+			this.toastr.successToastr('Image uploaded successfully.');
+		} else if (output.type === 'rejected') {
+			this.toastr.errorToastr('The selected image could not be uploaded.');
+		}
+	}
 
-	onCancel() {
-		this.router.navigate(['/about']);
+	removeImage(type: 'banner' | 'description'): void {
+		if (type === 'banner') {
+			this.imageDataBanner = '';
+			this.addForm.patchValue({ image_banner: '' });
+		} else {
+			this.imageDataDesc = '';
+			this.addForm.patchValue({ image_desc: '' });
+		}
+	}
+
+	imageUrl(fileName: string): string {
+		return fileName ? `${this.imagePath}about/${fileName}` : '';
+	}
+
+	onImageError(event: Event): void {
+		const image = event.target as HTMLImageElement;
+		image.onerror = null;
+		image.src = 'assets/img/placeholder.webp';
+	}
+
+	onCancel(): void {
+		this.router.navigate(['/about/view']);
 	}
 }

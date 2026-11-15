@@ -1,74 +1,80 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl, AbstractControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../../providers/auth/login.service';
-import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+	selector: 'app-login',
+	templateUrl: './login.component.html',
+	styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
-  showmsg: any;
-  loginErrorMsg: string;
-  loginError2 = false;
-  baseUrl:any;
-  error: { errorTitle: '', errorDesc: '' };
-  constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private route: ActivatedRoute,
-    public loginService: LoginService,
-  ) {
-    this.loginForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required],
-    });
-    this.baseUrl = environment.Url
-  }
+export class LoginComponent {
+	loginForm: FormGroup;
+	loginErrorMsg = '';
+	loginError2 = false;
+	isSubmitting = false;
+	showPassword = false;
 
-  ngOnInit(): void {
-    setTimeout(() => {
-      this.loginForm = this.formBuilder.group({
-        email: ['', Validators.required],
-        password: ['', Validators.required],
-      });
-    }, 1000);
-  }
+	constructor(
+		private formBuilder: FormBuilder,
+		private router: Router,
+		private route: ActivatedRoute,
+		public loginService: LoginService
+	) {
+		this.loginForm = this.formBuilder.group({
+			email: ['', [Validators.required, Validators.email]],
+			password: ['', Validators.required]
+		});
+	}
 
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      this.loginError2 = true;
-      this.loginErrorMsg = 'Please Enter Valid Credentials';
-      setTimeout(() => {
-        this.loginError2 = false;
-      }, 2000)
-      return;
-    }
+	onSubmit(): void {
+		this.loginError2 = false;
+		if (this.loginForm.invalid || this.isSubmitting) {
+			this.loginForm.markAllAsTouched();
+			this.loginError2 = true;
+			this.loginErrorMsg = 'Enter a valid email address and password to continue.';
+			return;
+		}
 
-    this.loginService.validateLogin(this.loginForm.value).subscribe(
-      (response) => {
-        if (response.body.code == 200) {
-          localStorage.setItem('neelgund-admin-token', response.body.token);
-          localStorage.setItem('user', JSON.stringify(response.body));
-          // this.router.navigate(['/']);
-          this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
-            window.location.reload();
-          });
-        }
-        else if (response.body.code == 400) {
-          this.loginError2 = true;
-          this.loginErrorMsg = 'Wrong Authentication';
-          setTimeout(() => {
-            this.loginError2 = false;
-          }, 2000)
-        }
-      },
-    );
+		this.isSubmitting = true;
+		this.loginService.validateLogin(this.loginForm.value).subscribe({
+			next: (response: any) => {
+				const result = response && response.body;
+				if (result && result.code == 200 && result.token) {
+					localStorage.setItem('neelgund-admin-token', result.token);
+					localStorage.setItem('user', JSON.stringify(result));
+					const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+					const destination = returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//')
+						? returnUrl
+						: '/dashboard';
+					this.router.navigateByUrl(destination, { skipLocationChange: false }).then(navigated => {
+						if (navigated) {
+							window.location.reload();
+						} else {
+							this.isSubmitting = false;
+							this.showLoginError('Unable to open the requested page. Please try again.');
+						}
+					});
+					return;
+				}
 
-  }
+				this.isSubmitting = false;
+				this.showLoginError(result && result.message ? result.message : 'The email or password is incorrect.');
+			},
+			error: error => {
+				console.error('Login request failed:', error);
+				this.isSubmitting = false;
+				this.showLoginError('Unable to sign in right now. Check your connection and try again.');
+			}
+		});
+	}
 
+	clearLoginError(): void {
+		this.loginError2 = false;
+	}
 
+	private showLoginError(message: string): void {
+		this.loginErrorMsg = message;
+		this.loginError2 = true;
+	}
 }

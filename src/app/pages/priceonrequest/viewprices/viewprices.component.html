@@ -1,108 +1,51 @@
-<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
-	<div class="container-fluid">
-		<div class="header-body">
-			<!-- Card stats -->
+<div class="container-fluid records-page">
+  <header class="page-heading">
+    <div><p class="eyebrow">CUSTOMER ENQUIRIES</p><h1>Price requests</h1><p class="page-description">Review and respond to customers requesting pricing information.</p></div>
+  </header>
 
-		</div>
-	</div>
+  <section class="summary-card">
+    <span class="summary-icon"><i class="fa fa-tag"></i></span>
+    <div><span>Total price requests</span><strong>{{ totalRecord | number }}</strong></div>
+  </section>
+
+  <section class="records-card">
+    <div class="card-heading"><div><h2>Request inbox</h2><p>Customer details and submitted product enquiries.</p></div><span class="result-count" *ngIf="!isLoading">{{ filteredContacts.length }} requests</span></div>
+    <div class="list-toolbar">
+      <label class="search-control"><i class="fa fa-search"></i><input type="search" [(ngModel)]="searchText" (ngModelChange)="searchContact()" placeholder="Search name, email, phone or product" aria-label="Search price requests"><button *ngIf="searchText" type="button" class="clear-search" (click)="searchText = ''; searchContact()" aria-label="Clear search"><i class="fa fa-times"></i></button></label>
+    </div>
+    <div class="table-responsive">
+      <table class="table records-table">
+        <thead><tr><th>#</th><th>Customer</th><th>Contact</th><th>Product</th><th>Received</th><th class="actions-heading">Actions</th></tr></thead>
+        <tbody>
+          <tr *ngIf="isLoading"><td colspan="6" class="state-cell"><span class="loading-spinner"></span>Loading price requests…</td></tr>
+          <tr *ngIf="!isLoading && loadError"><td colspan="6" class="state-cell"><div class="empty-state"><i class="fa fa-exclamation-circle"></i><strong>Price requests couldn't be loaded</strong><p>Please try again.</p><button class="secondary-action" (click)="get_contactData()">Retry</button></div></td></tr>
+          <tr *ngIf="!isLoading && !loadError && displayedContacts.length === 0"><td colspan="6" class="state-cell"><div class="empty-state"><i class="fa fa-inbox"></i><strong>{{ totalRecord === 0 ? 'No price requests yet' : 'No matching requests' }}</strong><p>{{ totalRecord === 0 ? 'New customer requests will appear here.' : 'Try a different search term.' }}</p></div></td></tr>
+          <tr *ngFor="let contact of displayedContacts; let i = index">
+            <td class="number-cell">{{ i + 1 + ((currentPage - 1) * currentLimit) }}</td>
+            <td><div class="customer-name"><strong>{{ contact.firstname || 'Customer' }} {{ contact.lastname || '' }}</strong><span>{{ contact.product || 'Pricing enquiry' }}</span></div></td>
+            <td><div class="contact-details"><a *ngIf="contact.email" [href]="'mailto:' + contact.email">{{ contact.email }}</a><a *ngIf="contact.phone" [href]="'tel:' + contact.phone">{{ contact.phone }}</a><span *ngIf="!contact.email && !contact.phone">No contact details</span></div></td>
+            <td>{{ contact.product || '—' }}</td>
+            <td class="date-cell">{{ contact.created_at | date: 'dd MMM yyyy, h:mm a' }}</td>
+            <td><div class="action-group"><button type="button" class="icon-action" (click)="openMessage(contact)" aria-label="View request details" title="View details"><i class="fa fa-eye"></i></button><button type="button" class="icon-action danger-action" (click)="deletecontact(contact._id)" aria-label="Delete price request" title="Delete"><i class="fa fa-trash"></i></button></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="records-pagination" *ngIf="totalRecord > currentLimit"><app-pagination [initialPage]="currentPage" [count]="totalRecord" [perPage]="currentLimit" (changePage)="onListChangePage($event)"></app-pagination></div>
+  </section>
+
+  <div class="modal-backdrop-custom" *ngIf="isMessageOpen" (click)="closeMessage()"></div>
+  <section class="modal-custom" *ngIf="isMessageOpen" role="dialog" aria-modal="true" aria-labelledby="request-title" (click)="closeMessage()">
+    <div class="modal-content-custom" (click)="$event.stopPropagation()">
+      <header class="modal-header-custom"><div><p class="eyebrow">PRICE ENQUIRY</p><h2 id="request-title">Request details</h2></div><button type="button" class="modal-close-btn" (click)="closeMessage()" aria-label="Close dialog"><i class="fa fa-times"></i></button></header>
+      <div class="modal-contact-grid">
+        <div><span>Customer</span><strong>{{ selectedContact?.firstname }} {{ selectedContact?.lastname }}</strong></div>
+        <div><span>Product</span><strong>{{ selectedContact?.product || '—' }}</strong></div>
+        <div><span>Email</span><a *ngIf="selectedContact?.email" [href]="'mailto:' + selectedContact?.email">{{ selectedContact?.email }}</a><strong *ngIf="!selectedContact?.email">—</strong></div>
+        <div><span>Phone</span><a *ngIf="selectedContact?.phone" [href]="'tel:' + selectedContact?.phone">{{ selectedContact?.phone }}</a><strong *ngIf="!selectedContact?.phone">—</strong></div>
+      </div>
+      <div class="message-section"><span>Message</span><p>{{ selectedContact?.message || 'No message provided.' }}</p></div>
+      <footer class="modal-footer-custom"><button type="button" class="secondary-action" (click)="closeMessage()">Close</button></footer>
+    </div>
+  </section>
 </div>
-<!-- Page content -->
-<div class="container-fluid mt--7">
-	<!-- Table -->
-	<div class="row">
-		<div class="col">
-			<div class="card shadow">
-				<div class="card-header border-0">
-					<h3 class="mb-0">Price on Request List</h3>
-				</div>
-				<div class="col-md-12">
-					<div class="row">
-						<div class="col-md-6">
-							<input class="form-control mt-4" type="text" (keyup)="searchContact()" name="search"
-								[(ngModel)]="searchText" autocomplete="off" placeholder="&#61442;  Start searching here">
-						</div>
-					</div>
-					<div class="col-md-6">
-						<h4 class="title"></h4>
-					</div>
-				</div>
-				<div class="table-responsive">
-					<table class="table align-items-center table-flush">
-						<thead>
-							<tr>
-								<th>Sl No</th>
-								<th>First Name</th>
-								<!-- <th>Last Name</th> -->
-								<th>Email</th>
-								<th>Phone</th>
-								<!-- <th>Subject</th> -->
-								<!-- <th>Message</th> -->
-								<th>Created At</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<td colspan="4" *ngIf="msg_danger">
-								<div class="alert alert-dismissable" style="text-align: center;">
-									Price on Request List is Empty
-								</div>
-							</td>
-							<tr *ngFor="let listContact of contactData | filter:searchText; let i = index">
-								<td *ngIf="currentPage == 1">{{i+1}}</td>
-								<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-								<td>{{listContact.firstname}}</td>
-								<!-- <td>{{listContact.lastname}}</td> -->
-								<td>{{listContact.email}}</td>
-								<td>{{listContact.phone}}</td>
-								<!-- <td><p *ngFor="let sub of listContact.subject">{{sub.name}}</p></td> -->
-								<!-- <td>{{listContact.message}}</td> -->
-								<td>{{listContact.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-								<td>
-									<a style="cursor:pointer;padding-left:10px" (click)="openMessage(listContact)">
-										<i class="fa fa-eye"></i>
-									</a>
-									<a style="cursor:pointer;padding-left:15px" (click)="deletecontact(listContact._id)">
-										<i class="fa fa-trash-o"></i>
-									</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
-						<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
-							(changePage)="onListChangePage($event)"></app-pagination>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Backdrop -->
-	<div class="modal-backdrop-custom" *ngIf="isMessageOpen"></div>
-
-	<!-- Modal -->
-	<div class="modal-custom" *ngIf="isMessageOpen">
-		<div class="modal-content-custom">
-
-			<!-- Header -->
-			<div class="modal-header-custom d-flex justify-content-between align-items-center ">
-				<h4>Price on Request Message</h4>
-				<button class="modal-close-btn" (click)="closeMessage()">
-					&times;
-				</button>
-			</div>
-			<!-- <h4>Contact Message</h4> -->
-
-			<p><strong>Name:</strong> {{ selectedContact?.firstname }}</p>
-			<p><strong>Email:</strong> {{ selectedContact?.email }}</p>
-			<p><strong>Phone:</strong> {{ selectedContact?.phone }}</p>
-			<p><strong>Product:</strong> {{ selectedContact?.product }}</p> 
-			<hr>
-
-			<p>{{ selectedContact?.message }}</p>
-
-			<!-- <div class="modal-actions">
-				<button class="btn btn-secondary" (click)="closeMessage()">Close</button>
-			</div> -->
-		</div>
-	</div>

@@ -1,121 +1,116 @@
-<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
-	<div class="container-fluid">
-		<div class="header-body">
-			<!-- Card stats -->
+<main class="home-about-page">
+	<header class="home-about-page-header">
+		<div>
+			<p class="home-about-eyebrow">HOMEPAGE CONTENT</p>
+			<h1>About section</h1>
+			<p class="home-about-description">Manage the story and imagery visitors see on your homepage.</p>
+		</div>
+		<a *ngIf="!isLoading && !loadError && AboutData.length > 0"
+			class="home-about-primary-button" [routerLink]="['/homepage/about-edit', AboutData[0]._id]">
+			<i class="fa fa-pencil" aria-hidden="true"></i>
+			Edit homepage section
+		</a>
+		<a *ngIf="!isLoading && !loadError && AboutData.length === 0 && !searchText"
+			class="home-about-primary-button" routerLink="/homepage/about-add">
+			<i class="ni ni-fat-add" aria-hidden="true"></i>
+			Add homepage section
+		</a>
+	</header>
 
+	<section class="home-about-list-card" aria-label="Homepage About content">
+		<div class="home-about-toolbar">
+			<label class="home-about-search">
+				<i class="fa fa-search" aria-hidden="true"></i>
+				<input class="form-control" type="search" name="search" [(ngModel)]="searchText"
+					(ngModelChange)="searchAbout()" autocomplete="off" placeholder="Search homepage content"
+					aria-label="Search homepage content">
+			</label>
+			<span class="home-about-result-count">
+				{{filteredAboutData.length}} result{{filteredAboutData.length === 1 ? '' : 's'}}
+			</span>
 		</div>
-	</div>
-</div>
-<!-- Page content -->
-<div class="container-fluid mt--7">
-	<!-- Table -->
-	<div class="row">
-		<div class="col">
-			<div class="card shadow">
-				<div class="card-header border-0">
-					<h3 class="mb-0">HomePage About</h3>
-				</div>
-				<!--<div class="col-md-12 mb-4">
-					<div class="row">
-						 <div class="col-md-6">
-							<input class="form-control" type="text" (keyup)="searchAbout()" name="search"
-								[(ngModel)]="searchText" autocomplete="off"
-								placeholder="&#61442;  Start searching a About by name">
-						</div>
-						<div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
-								routerLink="/about/add">Add Section</button></div>
-					</div>
-				</div>-->
-				<div class="col-md-12">
-				</div>
-				<div class="table-responsive">
-					<table class="table align-items-center table-flush">
-						<thead>
-							<tr>
-								<th>SL No</th>
-								<th>Section Name</th>
-								<!-- <th>Format</th> -->
-								<th>About Image</th>
-								<!-- <th>About Image 2</th> -->
-								<!-- <th>Category</th> -->
-								<!-- <th>Approved</th> -->
-								<!-- <th>Created Date</th> -->
-								<th>Updated Date</th>
-								<th>Status </th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<td colspan="6" *ngIf="msg_danger">
-								<div class="alert alert-dismissable" style="text-align: center;">
-									About List is Empty
-								</div>
-							</td>
-							<tr
-								*ngFor="let listAboutData of AboutData | filter:searchText | activefilter:isactive; let i = index">
-								<td *ngIf="currentPage == 1">{{i+1}}</td>
-								<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-								<td>{{listAboutData.page_section}}</td>
-								<!-- <td *ngIf="listAboutData.media_data">{{listAboutData.media_data[0].file_type}}</td> -->
-								<!-- <td *ngIf="listAboutData.media_data">
-									<img *ngIf="listAboutData.media_data && listAboutData.media_data[0].file_type =='image'"
-										src="{{imagePath}}/about/{{listAboutData.media_data[0].src}}" alt="logo"
-										style="height: 100px;width: 100px;">
-									<video *ngIf="listAboutData.media_data && listAboutData.media_data[0].file_type =='video'" width="100"
-										height="100" controls>
-										<source src="{{imagePath}}/about/{{listAboutData.media_data[0].src}}" type="video/mp4">
-									</video>
-								</td> -->
-								<td><img src="{{imagePath}}{{listAboutData.image_banner}}" alt="logo" style="height: 100px;width: 100px;">
-								</td>
-								<!-- <td><img src="{{imagePath}}{{listAboutData.image_desc}}" alt="logo" style="height: 100px;width: 100px;">
-								</td> -->
-								<!-- <td>{{listAboutData.category_name}}</td> -->
 
+		<div class="home-about-table-wrap">
+			<table class="table home-about-table">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Homepage content</th>
+						<th scope="col">Image</th>
+						<th scope="col">Last updated</th>
+						<th scope="col">Status</th>
+						<th scope="col" class="home-about-actions-heading">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngIf="isLoading">
+						<td colspan="6">
+							<div class="home-about-empty-state" role="status">
+								<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+								Loading homepage content…
+							</div>
+						</td>
+					</tr>
+					<tr *ngIf="!isLoading && loadError">
+						<td colspan="6">
+							<div class="home-about-empty-state" role="alert">
+								<strong>Couldn’t load homepage content</strong>
+								<span>Please try again.</span>
+								<button class="home-about-retry-button" type="button" (click)="get_AboutData()">Retry</button>
+							</div>
+						</td>
+					</tr>
+					<tr *ngIf="!isLoading && !loadError && filteredAboutData.length === 0">
+						<td colspan="6">
+							<div class="home-about-empty-state">
+								<span class="home-about-empty-icon"><i class="ni ni-single-copy-04" aria-hidden="true"></i></span>
+								<strong>{{searchText ? 'No content matches your search' : 'No homepage About section yet'}}</strong>
+								<span>{{searchText ? 'Try another search term.' : 'Add a section to get started.'}}</span>
+							</div>
+						</td>
+					</tr>
+					<tr *ngFor="let listAboutData of filteredAboutData; let i = index">
+						<td class="home-about-row-number">
+							{{i + 1 + ((currentPage - 1) * currentLimit)}}
+						</td>
+						<td>
+							<div class="home-about-content-name">
+								<strong>{{listAboutData.title_name || listAboutData.desc_short || listAboutData.page_section}}</strong>
+								<span>Homepage · {{listAboutData.page_section}}</span>
+							</div>
+						</td>
+						<td>
+							<div class="home-about-image">
+								<img *ngIf="listAboutData.image_banner" [src]="imagePath + listAboutData.image_banner"
+									[alt]="'About section image for ' + (listAboutData.title_name || 'homepage')" loading="lazy">
+								<span *ngIf="!listAboutData.image_banner" class="home-about-no-image">
+									<i class="ni ni-image" aria-hidden="true"></i>
+									No image
+								</span>
+							</div>
+						</td>
+						<td class="home-about-date">{{listAboutData.updated_at | date: 'dd MMM yyyy, hh:mm a'}}</td>
+						<td>
+							<span class="home-about-status" [class.home-about-status-active]="listAboutData.status == true">
+								{{listAboutData.status == true ? 'Active' : 'Inactive'}}
+							</span>
+						</td>
+						<td class="home-about-row-action">
+							<a class="home-about-edit-button" [routerLink]="['/homepage/about-edit', listAboutData._id]"
+								[attr.aria-label]="'Edit homepage About section ' + (listAboutData.page_section || '')"
+								title="Edit homepage About section">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								Edit
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-								<!-- <td>{{listAboutData.isApproved == true ? 'Yes':'No'}}</td> -->
-								<!-- <td>{{listAboutData.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td> -->
-								<td>{{listAboutData.updated_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-								<td>{{listAboutData.status == true ? 'Active':'InActive'}}</td>
-								<td>
-									<a routerLink="/homepage/about-edit/{{listAboutData._id}}" style="cursor:pointer"><i
-											class="fa fa-pencil-square-o" aria-hidden="true"></i>
-									</a>
-									<!-- <a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listAboutData)"><i
-											class="fa fa-trash-o" aria-hidden="true"></i></a> -->
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
-						<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
-							(changePage)="onListChangePage($event)"></app-pagination>
-					</div>
-				</div>
-			</div>
+		<div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
+			<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+				(changePage)="onListChangePage($event)"></app-pagination>
 		</div>
-	</div>
-
-	<!-- About Delete Popup -->
-	<ng-template #content let-modal style="z-index: 0;">
-		<div class="modal-header">
-			<h4 class="modal-title" id="modal-title">About Image deletion</h4>
-			<button type="button" class="btn btn-danger" aria-describedby="modal-title"
-				(click)="modal.dismiss('Cross click')">close</button>
-		</div>
-		<div class="modal-body">
-			<p *ngIf="selectedAbout">
-				<strong>Are you sure you want to delete <span class="text-primary">"{{selectedAbout.name}}"</span>
-					About
-					Details?</strong>
-			</p>
-			<!-- <p>
-				All information associated to this About Image will be permanently deleted.
-				<span class="text-danger">This operation can not be undone.</span>
-			</p> -->
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-danger" (click)="modal.dismiss('cancel click')">Cancel</button>
-			<button type="button" class="btn btn-primary" (click)="deleteAbout()">Ok</button>
-		</div>
-	</ng-template>
+	</section>
+</main>

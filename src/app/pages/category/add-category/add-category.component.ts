@@ -35,6 +35,9 @@ export class AddCategoryComponent implements OnInit {
 	submitted: boolean = false;
 	msg_success: boolean = false;
 	msg_danger: boolean = false;
+	isLoading = false;
+	loadError = false;
+	isSaving = false;
 	token: any;
 	// Edit Action Here
 	applyAction: any;
@@ -179,80 +182,73 @@ export class AddCategoryComponent implements OnInit {
 	}
 
 	patchingdata(id: any) {
-		let obj = { id: id };
-		this.categoryService.getCategoryWithId(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					let data = response?.result;
+		this.isLoading = true;
+		this.loadError = false;
+		this.categoryService.getCategoryWithId({ id: id }).subscribe({
+			next: (response) => {
+				this.isLoading = false;
+				if (response.code == 200 && response.result) {
+					const data = response.result;
 					this.categoryData = data;
 					this.categoryImage = data?.image;
-					this.mediaData = data?.media_data[0];
-					if (data?.galleyimagedata) {
-						this.galleryData = data?.galleyimagedata;
-						this.temp_sequence_number = data?.galleyimagedata.length;
+					this.mediaData = data?.media_data?.[0];
+					if (Array.isArray(data?.galleyimagedata)) {
+						this.galleryData = data.galleyimagedata;
+						this.temp_sequence_number = data.galleyimagedata.length;
 					} else {
 						this.galleryData = [];
 					}
-					if (data?.gallery_image) {
-						this.gallery_images = data?.gallery_image;
-					} else {
-						this.gallery_images = [];
-					}
-					let tempsubcategoryData = [];
-					if (data?.sub_categories) {
-						data.sub_categories.forEach((item, index) => {
-							tempsubcategoryData.push({ _id: item.sub_category_id, name: item.sub_category_name });
-						});
-					}
+					this.gallery_images = Array.isArray(data?.gallery_image) ? data.gallery_image : [];
 					this.addcategoryForm.patchValue({
 						name: data?.name,
-						status: data?.status,
+						status: data?.status == null ? '' : String(data.status),
 						short_desc: data?.short_desc,
-						// description: data?.description,
 						url_key: data?.url_key,
-						// collection_title: data?.collection_title,
-						// collection_description: data?.collection_description,
-						// sub_categories: tempsubcategoryData,
 						sequence_number: data?.sequence_number,
 						collection_id: data?.collection_id
 					});
-				} else {
-
+					return;
 				}
+
+				this.loadError = true;
+				this.throw_msg = response.message || 'The project status could not be loaded.';
+				this.msg_danger = true;
+				this.toastr.errorToastr(this.throw_msg, 'Unable to load project status');
 			},
-		);
+			error: () => {
+				this.isLoading = false;
+				this.loadError = true;
+				this.throw_msg = 'The project status could not be loaded. Check your connection and try again.';
+				this.msg_danger = true;
+				this.toastr.errorToastr(this.throw_msg, 'Unable to load project status');
+			}
+		});
 	}
 
 	onSubmit() {
 		this.submitted = true;
-		let obj = this.addcategoryForm.value;
-		let id = this.id;
-		obj['token'] = this.token;
-		if (this.mediaData) {
-			obj['image'] = this.mediaData._id;
-		}
-		obj['gallery_image'] = this.gallery_images;
-		// let subcategory_Data: any = [];
-		// if (this.addcategoryForm.value.sub_categories && this.addcategoryForm.value.sub_categories.length > 0) {
-		// 	this.addcategoryForm.value.sub_categories.forEach((subcategory) => {
-		// 		let obj = {
-		// 			sub_category_id: subcategory._id,
-		// 			sub_category_name: subcategory.name
-		// 		};
-		// 		subcategory_Data.push(obj);
-		// 	})
-		// }
 		if (this.addcategoryForm.invalid) {
 			return;
 		}
-		// obj['sub_categories'] = subcategory_Data;
+
+		this.isSaving = true;
+		this.msg_success = false;
+		this.msg_danger = false;
+		const obj = {
+			...this.addcategoryForm.value,
+			token: this.token,
+			image: this.mediaData?._id,
+			gallery_image: this.gallery_images
+		};
+		const id = this.id;
 		if (!this.isEdit) {
-			this.categoryService.addCategory(obj).subscribe(
-				(response) => {
+			this.categoryService.addCategory(obj).subscribe({
+				next: (response) => {
 					if (response.code == 200) {
 						this.toastr.successToastr(response.message);
 						this.throw_msg = response.message
 						this.msg_success = true;
+						this.msg_danger = false;
 						this.isUploaded = true;
 						if (this.isMediaDeleted) {
 							this.deleteMediaData();
@@ -265,20 +261,28 @@ export class AddCategoryComponent implements OnInit {
 						}, 2000);
 					}
 					else {
+						this.isSaving = false;
 						this.throw_msg = response.message
 						this.msg_danger = true;
 						this.toastr.errorToastr(response.message);
 						this.CreateErrorResponse(response);
 					}
 				},
-			);
+				error: () => {
+					this.isSaving = false;
+					this.throw_msg = 'The project status could not be added. Check your connection and try again.';
+					this.msg_danger = true;
+					this.toastr.errorToastr(this.throw_msg, 'Unable to save project status');
+				}
+			});
 		}
 		else {
-			this.categoryService.editCategorydata(obj, id).subscribe(
-				(response) => {
+			this.categoryService.editCategorydata(obj, id).subscribe({
+				next: (response) => {
 					if (response.code == 200) {
 						this.throw_msg = response.message
 						this.msg_success = true;
+						this.msg_danger = false;
 						this.isUploaded = true;
 						if (this.isMediaDeleted) {
 							this.deleteMediaData();
@@ -291,13 +295,20 @@ export class AddCategoryComponent implements OnInit {
 							this.router.navigate(['/category/view']);
 						}, 2000);
 					} else {
+						this.isSaving = false;
 						this.throw_msg = response.message
 						this.msg_danger = true;
 						this.toastr.errorToastr(response.message);
 						this.CreateErrorResponse(response);
 					}
 				},
-			);
+				error: () => {
+					this.isSaving = false;
+					this.throw_msg = 'The project status could not be updated. Check your connection and try again.';
+					this.msg_danger = true;
+					this.toastr.errorToastr(this.throw_msg, 'Unable to save project status');
+				}
+			});
 		}
 	}
 

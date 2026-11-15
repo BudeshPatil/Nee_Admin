@@ -1,186 +1,190 @@
-import { Component, OnInit, ViewEncapsulation, EventEmitter, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl,AbstractControl} from '@angular/forms';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
-
 import { environment } from '../../../../environments/environment';
-import {CareerService } from '../../../providers/career/career.service';
-import { from } from 'rxjs';
+import { CareerService } from '../../../providers/career/career.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
+import { UploadInput, UploadOutput } from 'ngx-uploader';
 
 @Component({
-  selector: 'app-add-career',
-  templateUrl: './add-career.component.html',
-  styleUrls: ['./add-career.component.css']
+	selector: 'app-add-career',
+	templateUrl: './add-career.component.html',
+	styleUrls: ['./add-career.component.css']
 })
 export class AddCareerComponent implements OnInit {
- 
-  addCareerForm:FormGroup;
-  throw_msg:any; 
-  submitted: boolean = false;
-  msg_success: boolean = false;
-  msg_danger: boolean = false;
+	addCareerForm: FormGroup;
+	submitted = false;
+	isEdit: boolean;
+	isLoading = false;
+	isSaving = false;
+	isUploading = false;
+	loadError = false;
+	uploadError = '';
+	id: string | null = null;
+	document: string | null = null;
+	imagePath = environment.baseUrl + '/public/';
+	uploadInput = new EventEmitter<UploadInput>();
 
-  applyAction: any;
-  id:any;
-  isEdit = this.route.snapshot.data.title === 'edit' ? true : false;
-  editorConfig: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    height: 'auto',
-    minHeight: '200px',
-    maxHeight: 'auto',
-    width: 'auto',
-    minWidth: '0',
-    translate: 'yes',
-    enableToolbar: true,
-    showToolbar: true,
-    placeholder: 'Enter text here...',
-    defaultParagraphSeparator: '',
-    defaultFontName: '',
-    defaultFontSize: '',
-    fonts: [
-      {class: 'career_box', name: 'Rajdhani sans-serif'},
-    ],
-  } 
-  // File Upload
-	options: UploaderOptions;
-	uploadInput: EventEmitter<UploadInput>;
-  selectedFile:any;
-	document:any;
-  imagePath:any;
-  constructor(
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private route: ActivatedRoute,
-    private careerservice:CareerService,
-    private toastr: ToastrManager
-  )
-  { 
-    this.addCareerForm = this.formBuilder.group({
-      firstname: ['',Validators.required],
-      lastname: ['',Validators.required],
-      email: ['',Validators.required],
-      mobile: ['',Validators.required],
-      subject: ['',Validators.required]
-     });
-     this.uploadInput = new EventEmitter<UploadInput>();
-  }
+	editorConfig: AngularEditorConfig = {
+		editable: true,
+		spellcheck: true,
+		height: 'auto',
+		minHeight: '220px',
+		maxHeight: 'auto',
+		width: 'auto',
+		minWidth: '0',
+		translate: 'yes',
+		enableToolbar: true,
+		showToolbar: true,
+		placeholder: 'Enter the applicant’s message or application details…',
+		defaultParagraphSeparator: '',
+		defaultFontName: '',
+		defaultFontSize: '',
+		fonts: [
+			{ class: 'career_box', name: 'Rajdhani sans-serif' },
+		],
+	};
 
-  public hasError = (controlName: string, errorName: string) => { 
-    return this.addCareerForm.controls[controlName].hasError(errorName);
-  };
+	constructor(
+		private formBuilder: FormBuilder,
+		private router: Router,
+		private route: ActivatedRoute,
+		private careerservice: CareerService,
+		private toastr: ToastrManager
+	) {
+		this.isEdit = this.route.snapshot.data.title === 'edit';
+		this.addCareerForm = this.formBuilder.group({
+			firstname: ['', Validators.required],
+			lastname: ['', Validators.required],
+			email: ['', [Validators.required, Validators.email]],
+			mobile: ['', Validators.required],
+			subject: ['', Validators.required]
+		});
+	}
 
-  ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
-    this.imagePath = environment.baseUrl + '/public/';
-    if (this.isEdit) 
-    {
-      this.patchingdata(this.id);
-      this.applyAction = 'Update';
-    }
-    else
-    {
-      this.applyAction = 'Add';
-    }
-  }
+	ngOnInit(): void {
+		this.id = this.route.snapshot.paramMap.get('id');
+		if (this.isEdit) {
+			if (this.id) {
+				this.patchingdata(this.id);
+			} else {
+				this.loadError = true;
+			}
+		}
+	}
 
-  patchingdata(id:any) { 
-    let obj = {id:id};
-    this.careerservice.getCareerWithId(obj).subscribe(
-      (response) => { 
-        if (response.code == 200) {
-          let data = response?.result;
-          this.document = data?.documents,
-           this.addCareerForm.patchValue({
-            firstname: data?.firstname,
-            lastname: data?.lastname,
-            email: data?.email,
-            mobile: data?.mobile,
-            subject: data?.subject
-          });
-       }else{
-          
-        }
-      },
-    );
-  
-  }
+	hasError(controlName: string, errorName: string): boolean {
+		return this.addCareerForm.controls[controlName].hasError(errorName);
+	}
 
-  onSubmit(){
-    this.submitted = true;
-    let obj = this.addCareerForm.value;
-    let id  = this.id;
-    if (this.addCareerForm.invalid){
-      return;
-    }
-    obj['documents'] = this.document;
-    if (!this.isEdit)
-    {
-      this.careerservice.addCareer(obj).subscribe(
-        (response) => {
-          if(response.code == 200) 
-          { 
-            // this.throw_msg   = response.message 
-            // this.msg_success = true;
-            this.toastr.successToastr(response.message);
-            setTimeout(()=>{                           
-              this.router.navigate(['/career/view']);
-            },2000);
-          }
-          else if(response.code == 400)
-          {   
-              // this.throw_msg  = response.message
-              // this.msg_danger = true;
-              this.toastr.errorToastr(response.message);
-          } 
-        },
-      );
-    }else{
+	patchingdata(id: string | null): void {
+		if (!id) {
+			this.loadError = true;
+			return;
+		}
+		this.isLoading = true;
+		this.loadError = false;
+		this.careerservice.getCareerWithId({ id }).subscribe({
+			next: (response: any) => {
+				this.isLoading = false;
+				if (!response || response.code !== 200 || !response.result) {
+					this.loadError = true;
+					console.error('Unable to load career application:', response && response.message);
+					return;
+				}
+				const data = response.result;
+				this.document = data.documents || null;
+				this.addCareerForm.patchValue({
+					firstname: data.firstname,
+					lastname: data.lastname,
+					email: data.email,
+					mobile: data.mobile,
+					subject: data.subject
+				});
+			},
+			error: error => {
+				console.error('Error loading career application:', error);
+				this.isLoading = false;
+				this.loadError = true;
+			}
+		});
+	}
 
-      this.careerservice.editcareerdata(obj,id).subscribe(
-        (response) => {
-          if(response.code == 200) 
-          {
-            // this.throw_msg = response.message 
-            // this.msg_success = true;
-            this.toastr.successToastr(response.message);
-            setTimeout(()=>{                           
-                this.router.navigate(['/career/view']);
-            },2000);  
-          } else {
-            this.toastr.errorToastr(response.message);
-          } 
-        },
-      );
+	onSubmit(): void {
+		this.submitted = true;
+		if (this.addCareerForm.invalid || this.isSaving || this.isUploading) {
+			this.addCareerForm.markAllAsTouched();
+			return;
+		}
 
-    }
-  }
+		const payload = {
+			...this.addCareerForm.value,
+			documents: this.document
+		};
+		this.isSaving = true;
+		const saveRequest = this.isEdit
+			? this.careerservice.editcareerdata(payload, this.id)
+			: this.careerservice.addCareer(payload);
 
-  onCancel(){
-    this.router.navigate(['/career/view']);
-  }
+		saveRequest.subscribe({
+			next: (response: any) => {
+				if (response && response.code === 200) {
+					this.toastr.successToastr(response.message || 'Career application saved successfully.');
+					setTimeout(() => this.router.navigate(['/career/view']), 1200);
+					return;
+				}
+				this.isSaving = false;
+				const message = response && response.message ? response.message : 'Unable to save this career application.';
+				this.toastr.errorToastr(message);
+			},
+			error: error => {
+				console.error('Error saving career application:', error);
+				this.isSaving = false;
+				this.toastr.errorToastr('Unable to save this career application. Please try again.');
+			}
+		});
+	}
 
-  onUploadFile(output: UploadOutput): void {
-    this.selectedFile = output;
-    if (output.type === 'allAddedToQueue') {
-      const event: UploadInput = {
-        type: 'uploadAll',
-        url: environment.baseUrl + '/api/career/addNewDocument',
-        method: 'POST',
-        data: {},
-      };
-      this.uploadInput.emit(event);
-    }
-    else if (output.type === 'done' && typeof output.file !== 'undefined') {
-      this.document = output.file.response.result;
-      this.throw_msg = output.file.response.message;
-      this.msg_success = true;
-    }
-  }
+	onCancel(): void {
+		this.router.navigate(['/career/view']);
+	}
 
-  
+	onUploadFile(output: UploadOutput): void {
+		if (output.type === 'allAddedToQueue') {
+			this.isUploading = true;
+			this.uploadError = '';
+			const event: UploadInput = {
+				type: 'uploadAll',
+				url: environment.baseUrl + '/api/career/addNewDocument',
+				method: 'POST',
+				data: {},
+			};
+			this.uploadInput.emit(event);
+			return;
+		}
 
+		if (output.type === 'done' && output.file) {
+			this.isUploading = false;
+			const response = output.file.response;
+			if (output.file.responseStatus && output.file.responseStatus >= 400) {
+				this.uploadError = 'The document could not be uploaded. Please try again.';
+				console.error('Career document upload failed:', response);
+				return;
+			}
+			if (!response || !response.result) {
+				this.uploadError = 'The upload did not return a document. Please try again.';
+				console.error('Career document upload returned an invalid response:', response);
+				return;
+			}
+			this.document = response.result;
+			this.uploadError = '';
+			return;
+		}
 
+		if (output.type === 'rejected') {
+			this.isUploading = false;
+			this.uploadError = 'This file could not be selected. Choose another document and try again.';
+		}
+	}
 }

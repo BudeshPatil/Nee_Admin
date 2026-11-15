@@ -1,17 +1,6 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { environment } from '../../../../environments/environment'
-
-// Services
+import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 import { TestimonialService } from '../../../providers/testimonial/testimonial.service';
-import { from } from 'rxjs';
 
 @Component({
   selector: 'app-view-testimonial',
@@ -19,142 +8,110 @@ import { from } from 'rxjs';
   styleUrls: ['./view-testimonial.component.css']
 })
 export class ViewTestimonialComponent implements OnInit {
-  msg_danger: boolean = false;
-  testimonialData: any;
-  imagePath : any;
-  searchText;
-  // pagination
-  currentPage: number  = 1;
-  initialized: boolean = false;
-  currentLimit: number = 10;
-  totalRecord: number  = 0;
-  config = {
-    value: true,
-    name: '',
-    disabled: false,
-    height: 25,
-    width: 90,
-    margin: 3,
-    fontSize: 10,
-    speed: 300,
-    color: {
-      checked: '#36aef5',
-      unchecked: '#423f3f',
-    },
-    switchColor: {
-      checked: '#3366FF',
-      unchecked: 'crimson',
-    },
-    labels: {
-      unchecked: 'Deactive',
-      checked: 'Active',
-    },
-    checkedLabel: '',
-    uncheckedLabel: '',
-    fontColor: {
-      checked: '#fafafa',
-      unchecked: '#ffffff',
-    },
-  };
-  isactive :any ;
+  testimonialData: any[] = [];
+  imagePath = environment.baseUrl + '/public/testimonial/';
+  searchText = '';
+  currentPage = 1;
+  currentLimit = 10;
+  totalRecord = 0;
+  isactive: 'all' | boolean = 'all';
+  isLoading = false;
+  loadError = false;
+  private searchTimer: ReturnType<typeof setTimeout> | null = null;
+  private loadRequestId = 0;
 
-  constructor(
-    private router: Router,
-    private testimonialservice:TestimonialService
-  )
-  {
-    this.imagePath = environment.baseUrl+'/public/testimonial/';
-    this.config.switchColor.checked = '#dcdcdc';
-    this.config.color.checked = '#dcdcdc';
-    this.config.labels.checked = 'Change';
-    this.isactive = 'none';
-  }
+  constructor(private testimonialservice: TestimonialService) { }
 
   ngOnInit(): void {
     this.get_testimonialData();
   }
 
-  get_testimonialData()
-  {
-    const obj = {
-      limit: this.currentLimit,
-      page: this.currentPage,
-    };
-    this.testimonialservice.getTestimonialDetails(obj).subscribe(
-        (response)=> {
-          if (response.code == 200)
-          {
-            if(response.result != null && response.result != '')
-            {
-              this.testimonialData = response.result;
-              this.totalRecord     = response?.count;
-              window.scroll(0,0);
-            }
-            else
-            {
-              this.msg_danger   = true;
-            }
-          }
-        },
-      );
+  get filteredTestimonials(): any[] {
+    const query = this.searchText.trim().toLowerCase();
+    return this.testimonialData.filter(item => {
+      const searchable = `${item.name || ''} ${item.title || ''} ${item.location || ''} ${item.text || ''}`.toLowerCase();
+      const active = item.status === true || item.status === 'true';
+      return (!query || searchable.includes(query)) &&
+        (this.isactive === 'all' || active === this.isactive);
+    });
   }
 
-  onListChangePage(event:any) {
+  get hasFilters(): boolean {
+    return !!this.searchText.trim() || this.isactive !== 'all';
+  }
+
+  get_testimonialData(): void {
+    const requestId = ++this.loadRequestId;
+    this.isLoading = true;
+    this.loadError = false;
+    this.testimonialservice.getTestimonialDetails({
+      limit: this.currentLimit,
+      page: this.currentPage
+    }).subscribe({
+      next: (response: any) => {
+        if (requestId !== this.loadRequestId) {
+          return;
+        }
+        this.isLoading = false;
+        if (response.code !== 200) {
+          this.loadError = true;
+          this.testimonialData = [];
+          return;
+        }
+        this.testimonialData = Array.isArray(response.result) ? response.result : [];
+        this.totalRecord = Number(response.count) || this.testimonialData.length;
+      },
+      error: (error: any) => {
+        if (requestId !== this.loadRequestId) {
+          return;
+        }
+        console.error('Error loading testimonials:', error);
+        this.isLoading = false;
+        this.loadError = true;
+        this.testimonialData = [];
+      }
+    });
+  }
+
+  onListChangePage(event: number): void {
     this.currentPage = event;
     this.get_testimonialData();
   }
 
-  deleteTestimonial(listid:any)
-  {
-    if(confirm("Are you sure to delete this testimonial"))
-    {
-      var mylist = {id:listid};
-      this.testimonialservice.deleteTestimonial(mylist).subscribe(
-        (response)=> {
-          if (response.code == 200)
-          {
-            this.get_testimonialData();
-            this.router.navigate(['/testimonial/view']);
-          }
-        },
-      );
+  searchProduct(): void {
+    if (this.searchTimer) {
+      clearTimeout(this.searchTimer);
     }
+    this.currentPage = 1;
+    this.currentLimit = this.hasFilters ? 1000 : 10;
+    this.searchTimer = setTimeout(() => this.get_testimonialData(), 250);
   }
-  searchProduct(){
-    if(this.searchText){
-      this.currentLimit = 1000;
-      this.currentPage = 1;
-    } else {
-      this.currentLimit = 10;
+
+  clearFilters(): void {
+    this.searchText = '';
+    this.isactive = 'all';
+    this.searchProduct();
+  }
+
+  deleteTestimonial(id: string): void {
+    if (!confirm('Are you sure you want to delete this testimonial?')) {
+      return;
     }
-    this.get_testimonialData();
-  }0
+    this.testimonialservice.deleteTestimonial({ id }).subscribe({
+      next: (response: any) => {
+        if (response.code === 200) {
+          this.get_testimonialData();
+        } else {
+          console.error('Unable to delete testimonial:', response.message);
+        }
+      },
+      error: error => console.error('Error deleting testimonial:', error)
+    });
+  }
 
-  changeStatus(){
-    if(this.isactive != 'none'){
-      this.config.switchColor.checked = '#ffffff';
-      this.config.color.checked = 'green';
-      this.config.labels.checked = 'Active';
-    } else {
-      if(this.isactive){
-        this.isactive = false;
-        this.config.switchColor.unchecked = 'crimson';
-        this.config.color.unchecked = '#423f3f';
-        this.config.labels.unchecked = 'Deactive';
-      } else {
-        this.isactive = true
-      }
-    }
-	}
-
-  resetFilter(){
-		this.config.switchColor.checked = '#dcdcdc';
-    this.config.color.checked = '#dcdcdc';
-    this.config.labels.checked = 'Change';
-    this.config.switchColor.unchecked = '#dcdcdc';
-    this.config.color.unchecked = '#dcdcdc';
-    this.config.labels.unchecked = 'Change';
-    this.isactive = 'none';
-	}
-
+  onImageError(event: Event): void {
+    const image = event.target as HTMLImageElement;
+    image.onerror = null;
+    image.src = 'assets/img/placeholder.webp';
+  }
 }

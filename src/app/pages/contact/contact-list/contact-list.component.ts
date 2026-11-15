@@ -1,11 +1,16 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { environment } from '../../../../environments/environment'
-import { MatDialog } from '@angular/material/dialog';
-
-// Services
+import { Component, HostListener, OnInit } from '@angular/core';
 import { TestimonialService } from '../../../providers/testimonial/testimonial.service';
-import { from } from 'rxjs';
+
+interface ContactRecord {
+	_id?: string;
+	firstname?: string;
+	lastname?: string;
+	email?: string;
+	phone?: string;
+	subject?: string;
+	message?: string;
+	created_at?: string | Date;
+}
 
 @Component({
 	selector: 'app-contact-list',
@@ -13,87 +18,101 @@ import { from } from 'rxjs';
 	styleUrls: ['./contact-list.component.css']
 })
 export class ContactListComponent implements OnInit {
-	selectedContact: any = null;
+	selectedContact: ContactRecord | null = null;
 	isMessageOpen = false;
+	contactData: ContactRecord[] = [];
 
-	msg_danger: boolean = false;
-	contactData: any;
-
-	// pagination
-	currentPage: number = 1;
-	initialized: boolean = false;
-	currentLimit: number = 10;
-	totalRecord: number = 0;
+	currentPage = 1;
+	currentLimit = 10;
+	totalRecord = 0;
 	searchText = '';
+	isLoading = false;
+	loadError = false;
+	actionError = '';
 
-	constructor(
-		private router: Router,
-		private testimonialservice: TestimonialService
-	) { }
+	constructor(private testimonialservice: TestimonialService) { }
 
 	ngOnInit(): void {
 		this.get_contactData();
 	}
 
-	get_contactData() {
-		const obj = {
-			limit: this.currentLimit,
-			page: this.currentPage,
-		};
-		this.testimonialservice.getcontactDetails(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					if (response.result != null && response.result != '') {
-						// this.contactData = response.result;
-						if(response.result.length > 0 ){
-						this.contactData = response.result.filter((item: any) => {
-						if(item.subject != 'price_on_request'){
-							return true; // Keep items with subject "Price On Request"th
-						}  
-						});
-						}
-						this.totalRecord = response?.count;
-					}
-					else {
-						this.msg_danger = true;
-					}
+	get filteredContacts(): ContactRecord[] {
+		const query = this.searchText.trim().toLowerCase();
+		return this.contactData.filter(contact => {
+			const searchable = [
+				contact.firstname,
+				contact.lastname,
+				contact.email,
+				contact.phone,
+				contact.subject,
+				contact.message
+			].filter(Boolean).join(' ').toLowerCase();
+			return !query || searchable.includes(query);
+		});
+	}
+
+	get displayedContacts(): ContactRecord[] {
+		const start = (this.currentPage - 1) * this.currentLimit;
+		return this.filteredContacts.slice(start, start + this.currentLimit);
+	}
+
+	get_contactData(): void {
+		this.isLoading = true;
+		this.loadError = false;
+		this.actionError = '';
+		this.testimonialservice.getcontactDetails({ limit: 1000, page: 1 }).subscribe({
+			next: (response: any) => {
+				this.isLoading = false;
+				if (!response || response.code !== 200 || !Array.isArray(response.result)) {
+					this.loadError = true;
+					this.contactData = [];
+					this.totalRecord = 0;
+					return;
+				}
+				this.contactData = response.result.filter((contact: ContactRecord) => contact.subject !== 'price_on_request');
+				this.totalRecord = this.contactData.length;
+				this.clampCurrentPage();
+			},
+			error: error => {
+				console.error('Error loading contact enquiries:', error);
+				this.isLoading = false;
+				this.loadError = true;
+				this.contactData = [];
+				this.totalRecord = 0;
+			}
+		});
+	}
+
+	onListChangePage(page: number): void {
+		this.currentPage = page;
+	}
+
+	deletecontact(id: string | undefined): void {
+		if (!id || !confirm('Are you sure you want to delete this contact enquiry?')) {
+			return;
+		}
+		this.actionError = '';
+		this.testimonialservice.deletecontact({ id }).subscribe({
+			next: (response: any) => {
+				if (response.code === 200) {
+					this.get_contactData();
+				} else {
+					this.actionError = 'This enquiry could not be deleted. Please try again.';
+					console.error('Unable to delete contact enquiry:', response.message);
 				}
 			},
-		);
+			error: error => {
+				this.actionError = 'This enquiry could not be deleted. Please try again.';
+				console.error('Error deleting contact enquiry:', error);
+			}
+		});
 	}
 
-	onListChangePage(event: any) {
-		this.currentPage = event;
-		this.get_contactData();
+	searchContact(): void {
+		this.currentPage = 1;
 	}
 
-	deletecontact(listid: any) {
-		if (confirm("Are you sure to delete this Contact")) {
-			var mylist = { id: listid };
-			this.testimonialservice.deletecontact(mylist).subscribe(
-				(response) => {
-					if (response.code == 200) {
-						this.get_contactData();
-						this.router.navigate(['/contact/list']);
-					}
-				},
-			);
-		}
-	}
-
-	searchContact() {
-		if (this.searchText) {
-			this.currentLimit = 1000;
-			this.currentPage = 1;
-		} else {
-			this.currentLimit = 10;
-		}
-		this.get_contactData();
-	}
-
-
-
-	openMessage(contact: any): void {
+	openMessage(contact: ContactRecord): void {
 		this.selectedContact = contact;
 		this.isMessageOpen = true;
 	}
@@ -103,5 +122,15 @@ export class ContactListComponent implements OnInit {
 		this.selectedContact = null;
 	}
 
+	@HostListener('document:keydown.escape')
+	onEscapeKey(): void {
+		if (this.isMessageOpen) {
+			this.closeMessage();
+		}
+	}
 
+	private clampCurrentPage(): void {
+		const pageCount = Math.max(1, Math.ceil(this.filteredContacts.length / this.currentLimit));
+		this.currentPage = Math.min(this.currentPage, pageCount);
+	}
 }

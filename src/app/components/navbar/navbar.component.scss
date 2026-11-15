@@ -1,0 +1,199 @@
+:host {
+	position: sticky;
+	top: 0;
+	z-index: 1020;
+	display: block;
+}
+
+#navbar-main {
+	min-height: 76px;
+	padding: .7rem clamp(1rem, 3vw, 2.5rem);
+	background: rgba(255, 255, 255, .96);
+	border-bottom: 1px solid #e7eaf0;
+	box-shadow: 0 4px 18px rgba(16, 24, 40, .035);
+	backdrop-filter: blur(12px);
+}
+
+.admin-topbar-content {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.admin-topbar-title {
+	min-width: 0;
+}
+
+.admin-topbar-title > span {
+	display: block;
+	margin-bottom: .15rem;
+	color: #94702b;
+	font-size: .62rem;
+	font-weight: 750;
+	letter-spacing: .13em;
+}
+
+.admin-topbar-title h1 {
+	overflow: hidden;
+	margin: 0;
+	color: #1d2939;
+	font-size: 1.05rem;
+	font-weight: 700;
+	letter-spacing: -.02em;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.admin-topbar-actions {
+	display: flex;
+	align-items: center;
+}
+
+.admin-account-menu {
+	position: relative;
+}
+
+.admin-account-trigger {
+	display: flex;
+	align-items: center;
+	gap: .65rem;
+	padding: .35rem .55rem;
+	border: 1px solid transparent;
+	border-radius: 11px;
+	background: transparent;
+	color: #344054;
+	text-align: left;
+	transition: background-color .18s ease, border-color .18s ease;
+}
+
+.admin-account-trigger:hover,
+.admin-account-trigger[aria-expanded="true"] {
+	border-color: #e7eaf0;
+	background: #f8f9fb;
+}
+
+.admin-account-trigger:focus-visible {
+	outline: 3px solid rgba(179, 138, 53, .24);
+	outline-offset: 2px;
+}
+
+.admin-account-avatar {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border: 1px solid #eee4cc;
+	border-radius: 12px;
+	background: #f7f1e4;
+	color: #94702b;
+	font-size: 1.1rem;
+}
+
+.admin-account-copy {
+	display: grid;
+	gap: .12rem;
+}
+
+.admin-account-copy small {
+	color: #98a2b3;
+	font-size: .66rem;
+	font-weight: 500;
+}
+
+.admin-account-copy strong {
+	max-width: 150px;
+	overflow: hidden;
+	color: #344054;
+	font-size: .8rem;
+	font-weight: 650;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.admin-account-chevron {
+	color: #98a2b3;
+	font-size: .62rem;
+}
+
+.admin-account-dropdown {
+	min-width: 220px;
+	margin-top: .55rem;
+	padding: .45rem;
+	border: 1px solid #e7eaf0;
+	border-radius: 12px;
+	box-shadow: 0 12px 30px rgba(16, 24, 40, .12);
+}
+
+.admin-dropdown-heading {
+	display: grid;
+	gap: .2rem;
+	padding: .65rem .75rem .8rem;
+}
+
+.admin-dropdown-heading strong {
+	overflow: hidden;
+	color: #1d2939;
+	font-size: .82rem;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.admin-dropdown-heading span {
+	color: #98a2b3;
+	font-size: .72rem;
+}
+
+.admin-account-dropdown .dropdown-item {
+	display: flex;
+	align-items: center;
+	gap: .65rem;
+	padding: .6rem .75rem;
+	border-radius: 8px;
+	font-size: .82rem;
+}
+
+.admin-account-dropdown .dropdown-item i {
+	width: 1rem;
+	color: #98a2b3;
+	text-align: center;
+}
+
+.admin-account-dropdown .admin-logout {
+	width: 100%;
+	border: 0;
+	background: transparent;
+	color: #b42318;
+	text-align: left;
+}
+
+.admin-account-dropdown .admin-logout i {
+	color: #b42318;
+}
+
+@media (max-width: 767.98px) {
+	#navbar-main {
+		min-height: 64px;
+		padding: .5rem .85rem;
+	}
+
+	.admin-account-trigger {
+		gap: .45rem;
+		padding: .25rem;
+	}
+
+	.admin-account-avatar {
+		width: 36px;
+		height: 36px;
+	}
+
+	.admin-account-copy small,
+	.admin-account-chevron {
+		display: none;
+	}
+
+	.admin-account-copy strong {
+		max-width: 90px;
+	}
+}

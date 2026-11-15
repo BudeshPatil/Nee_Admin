@@ -1,163 +1,122 @@
-<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 400px;  background-size: cover; background-position: center top;">
-  <!-- Mask -->
-  <span class="mask bg-gradient-info opacity-8"></span>
-  <!-- Header container -->
-  <div class="container-fluid d-flex align-items-center">
-    <div class="row">
-      <div class="col-lg-7 col-md-10">
-        <h1 class="display-2">Hello {{user.username}}</h1>
-        <p class="mt-0 mb-5">This is your profile page, where you can track your work progress and manage your projects or assigned tasks.</p>
-        <!-- <a href="#!" class="btn btn-info">Edit profile</a> -->
-      </div>
-    </div>
-  </div>
-</div>
-<div class="container-fluid mt--7">
-  <div class="row">
-    <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
-      <div class="card card-profile shadow">
-        <div class="row justify-content-center">
-          <div class="col-lg-3 order-lg-2">
-            <div class="card-profile-image">
-              <a href="javascript:void(0)">
-                <img src="assets/img/avatar.png" class="rounded-circle">
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-          <div class="d-flex justify-content-between">
-            <a href="javascript:void(0)" class="btn btn-sm btn-info mr-4">Connect</a>
-            <a href="javascript:void(0)" class="btn btn-sm btn-default float-right">Message</a>
-          </div>
-        </div>
-        <div class="card-body pt-0 pt-md-4">
-          <div class="row">
-            <div class="col">
-              <div class="card-profile-stats d-flex justify-content-center mt-md-5">
-                <!-- <div>
-                  <span class="heading">22</span>
-                  <span class="description">Friends</span>
-                </div>
-                <div>
-                  <span class="heading">10</span>
-                  <span class="description">Photos</span>
-                </div>
-                <div>
-                  <span class="heading">89</span>
-                  <span class="description">Comments</span>
-                </div> -->
-              </div>
-            </div>
-          </div>
-          <div class="text-center">
-            <h3>
-              {{user.username}}<span class="font-weight-light"></span>
-            </h3>
-            <div class="h5 font-weight-300">
-              <i class="ni location_pin mr-2"></i>{{user.address}},{{user.city}},{{user.country}}
-            </div>
-            <div class="h5 mt-4">
-              <i class="ni business_briefcase-24 mr-2"></i>{{user.role}}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-8 order-xl-1">
-      <div class="card bg-secondary shadow">
-        <div class="card-header bg-white border-0">
-          <div class="row align-items-center">
-            <div class="col-8">
-              <h3 class="mb-0">My account</h3>
-            </div>
-            <!-- <div class="col-4 text-right">
-              <a href="#!" class="btn btn-sm btn-primary">Settings</a>
-            </div> -->
-          </div>
-        </div>
-        <div class="card-body">
-          <form [formGroup]="addProfileForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-            <h6 class="heading-small text-muted mb-4">User information</h6>
-            <div class="pl-lg-4">
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-username">Username</label>
-                    <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" name="username" autocomplete="off" formControlName="username">
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-email">Email address</label>
-                    <input type="email" id="input-email" class="form-control form-control-alternative" name="email" autocomplete="off" formControlName="email" placeholder="jesse@example.com">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-first-name">First name</label>
-                    <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" name="first_name" autocomplete="off" formControlName="first_name" >
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-last-name">Last name</label>
-                    <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Last name" name="last_name" autocomplete="off" formControlName="last_name">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr class="my-4" />
-            <!-- Address -->
-            <h6 class="heading-small text-muted mb-4">Contact information</h6>
-            <div class="pl-lg-4">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-address">Address</label>
-                    <input id="input-address" class="form-control form-control-alternative" placeholder="Home Address" name="address" autocomplete="off" formControlName="address" type="text">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-4">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-city">City</label>
-                    <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="City" name="city" autocomplete="off" formControlName="city">
-                  </div>
-                </div>
-                <div class="col-lg-4">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-country">Country</label>
-                    <input type="text" id="input-country" class="form-control form-control-alternative" placeholder="Country" name="country" autocomplete="off" formControlName="country">
-                  </div>
-                </div>
-                <div class="col-lg-4">
-                  <div class="form-group">
-                    <label class="form-control-label" for="input-country">Postal code</label>
-                    <input type="number" id="input-postal-code" class="form-control form-control-alternative" placeholder="Postal code" name="postal_code" autocomplete="off" formControlName="postal_code">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr class="my-4" />
-            <!-- Description -->
-            <h6 class="heading-small text-muted mb-4">About me</h6>
-            <div class="pl-lg-4">
-              <div class="form-group">
-                <label>About Me</label>
-                <textarea rows="4" class="form-control form-control-alternative" placeholder="A few words about you ..." name="about" autocomplete="off" formControlName="about"></textarea>
-              </div>
-            </div>
-            <div class="box-footer">
-              <button type="submit" class="btn btn-primary">Submit</button>
-              <button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
-          </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="container-fluid profile-page">
+	<header class="page-heading">
+		<div>
+			<p class="eyebrow">ACCOUNT SETTINGS</p>
+			<h1>My profile</h1>
+			<p class="page-description">Manage your account details and the information shown to your team.</p>
+		</div>
+	</header>
+
+	<div class="profile-layout">
+		<aside class="profile-summary-card">
+			<div class="profile-cover"></div>
+			<div class="profile-summary-body">
+				<div class="avatar" aria-hidden="true">{{ profileInitials }}</div>
+				<h2>{{ profileName }}</h2>
+				<a *ngIf="user?.email" class="profile-email" [href]="'mailto:' + user.email">{{ user.email }}</a>
+				<span class="role-badge" *ngIf="user?.role">{{ user.role }}</span>
+				<div class="profile-divider"></div>
+				<div class="profile-fact"><i class="fa fa-map-marker" aria-hidden="true"></i><span>{{ locationLabel }}</span></div>
+				<div class="profile-fact"><i class="fa fa-at" aria-hidden="true"></i><span>{{ user?.username || 'Username not set' }}</span></div>
+				<p class="profile-note">Keep your contact details current so your account information stays up to date.</p>
+			</div>
+		</aside>
+
+		<section class="account-card">
+			<header class="account-card-heading">
+				<div><h2>Account details</h2><p>Update your profile information below.</p></div>
+				<span class="secure-badge"><i class="fa fa-lock" aria-hidden="true"></i>Private account</span>
+			</header>
+
+			<div *ngIf="isLoading" class="state-panel" role="status"><span class="loading-spinner"></span><strong>Loading your profile…</strong><p>Your account details will appear shortly.</p></div>
+			<div *ngIf="loadError" class="state-panel error-state" role="alert">
+				<span class="state-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+				<strong>{{ id ? 'Unable to load your profile' : 'Profile details unavailable' }}</strong>
+				<p>{{ id ? 'Check your connection and try again.' : 'Your account details are not available. Return to the dashboard and try again.' }}</p>
+				<button *ngIf="id" type="button" class="secondary-action" (click)="patchingdata(id)">Try again</button>
+				<a *ngIf="!id" class="secondary-action" routerLink="/dashboard">Back to dashboard</a>
+			</div>
+
+			<form *ngIf="!isLoading && !loadError" [formGroup]="addProfileForm" (ngSubmit)="onSubmit()" novalidate>
+				<div class="form-content">
+					<div class="form-section-heading">
+						<span class="section-icon"><i class="fa fa-user-o" aria-hidden="true"></i></span>
+						<div><h3>Personal information</h3><p>Basic details associated with your admin account.</p></div>
+					</div>
+					<div class="form-grid">
+						<div class="field-group">
+							<label for="profile-username">Username <span>*</span></label>
+							<input id="profile-username" type="text" name="username" formControlName="username" autocomplete="username" placeholder="Choose a username" [class.invalid]="submitted && hasError('username', 'required')" [attr.aria-invalid]="submitted && hasError('username', 'required')">
+							<span class="field-error" *ngIf="submitted && hasError('username', 'required')">Username is required.</span>
+						</div>
+						<div class="field-group">
+							<label for="profile-email">Email address <span>*</span></label>
+							<input id="profile-email" type="email" name="email" formControlName="email" autocomplete="email" placeholder="name@example.com" [class.invalid]="submitted && (hasError('email', 'required') || hasError('email', 'email'))" [attr.aria-invalid]="submitted && (hasError('email', 'required') || hasError('email', 'email'))">
+							<span class="field-error" *ngIf="submitted && hasError('email', 'required')">Email address is required.</span>
+							<span class="field-error" *ngIf="submitted && !hasError('email', 'required') && hasError('email', 'email')">Enter a valid email address.</span>
+						</div>
+						<div class="field-group">
+							<label for="profile-firstname">First name <span>*</span></label>
+							<input id="profile-firstname" type="text" name="first_name" formControlName="first_name" autocomplete="given-name" placeholder="Enter your first name" [class.invalid]="submitted && hasError('first_name', 'required')" [attr.aria-invalid]="submitted && hasError('first_name', 'required')">
+							<span class="field-error" *ngIf="submitted && hasError('first_name', 'required')">First name is required.</span>
+						</div>
+						<div class="field-group">
+							<label for="profile-lastname">Last name <span>*</span></label>
+							<input id="profile-lastname" type="text" name="last_name" formControlName="last_name" autocomplete="family-name" placeholder="Enter your last name" [class.invalid]="submitted && hasError('last_name', 'required')" [attr.aria-invalid]="submitted && hasError('last_name', 'required')">
+							<span class="field-error" *ngIf="submitted && hasError('last_name', 'required')">Last name is required.</span>
+						</div>
+					</div>
+
+					<div class="form-divider"></div>
+					<div class="form-section-heading">
+						<span class="section-icon"><i class="fa fa-map-o" aria-hidden="true"></i></span>
+						<div><h3>Contact information</h3><p>Your location and postal details.</p></div>
+					</div>
+					<div class="form-grid">
+						<div class="field-group full-width">
+							<label for="profile-address">Address <span>*</span></label>
+							<input id="profile-address" type="text" name="address" formControlName="address" autocomplete="street-address" placeholder="Street address" [class.invalid]="submitted && hasError('address', 'required')" [attr.aria-invalid]="submitted && hasError('address', 'required')">
+							<span class="field-error" *ngIf="submitted && hasError('address', 'required')">Address is required.</span>
+						</div>
+						<div class="field-group">
+							<label for="profile-city">City <span>*</span></label>
+							<input id="profile-city" type="text" name="city" formControlName="city" autocomplete="address-level2" placeholder="City" [class.invalid]="submitted && hasError('city', 'required')" [attr.aria-invalid]="submitted && hasError('city', 'required')">
+							<span class="field-error" *ngIf="submitted && hasError('city', 'required')">City is required.</span>
+						</div>
+						<div class="field-group">
+							<label for="profile-country">Country <span>*</span></label>
+							<input id="profile-country" type="text" name="country" formControlName="country" autocomplete="country-name" placeholder="Country" [class.invalid]="submitted && hasError('country', 'required')" [attr.aria-invalid]="submitted && hasError('country', 'required')">
+							<span class="field-error" *ngIf="submitted && hasError('country', 'required')">Country is required.</span>
+						</div>
+						<div class="field-group">
+							<label for="profile-postal">Postal code <span>*</span></label>
+							<input id="profile-postal" type="text" name="postal_code" formControlName="postal_code" autocomplete="postal-code" placeholder="Postal code" [class.invalid]="submitted && hasError('postal_code', 'required')" [attr.aria-invalid]="submitted && hasError('postal_code', 'required')">
+							<span class="field-error" *ngIf="submitted && hasError('postal_code', 'required')">Postal code is required.</span>
+						</div>
+					</div>
+
+					<div class="form-divider"></div>
+					<div class="form-section-heading">
+						<span class="section-icon"><i class="fa fa-align-left" aria-hidden="true"></i></span>
+						<div><h3>About you</h3><p>Add a short introduction to your profile.</p></div>
+					</div>
+					<div class="field-group about-field">
+						<label for="profile-about">About me <span>*</span></label>
+						<textarea id="profile-about" name="about" formControlName="about" rows="6" placeholder="Write a few words about yourself…" [class.invalid]="submitted && hasError('about', 'required')" [attr.aria-invalid]="submitted && hasError('about', 'required')"></textarea>
+						<span class="field-error" *ngIf="submitted && hasError('about', 'required')">About me is required.</span>
+					</div>
+					<p class="save-error" *ngIf="saveError" role="alert">{{ saveError }}</p>
+				</div>
+
+				<footer class="form-footer">
+					<button type="button" class="secondary-action" (click)="onCancel()" [disabled]="isSaving">Cancel</button>
+					<button type="submit" class="primary-action" [disabled]="isSaving">
+						<span *ngIf="isSaving" class="button-spinner"></span>
+						<i *ngIf="!isSaving" class="fa fa-check" aria-hidden="true"></i>
+						{{ isSaving ? 'Saving…' : 'Save changes' }}
+					</button>
+				</footer>
+			</form>
+		</section>
+	</div>
 </div>

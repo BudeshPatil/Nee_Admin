@@ -1,13 +1,112 @@
-.custom-logo {
-	max-height: 100% !important;
-	max-width: 180px !important;
-	width: 90% !important;
-	// @media(max-width:767px){
-	// 	max-width: 70% !important;
-	// }
+:host {
+	display: block;
 }
-.navbar-vertical .navbar-brand{
-	@media(max-width:767px){
-		text-align: center;
+
+#sidenav-main {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+#sidenav-main > .container-fluid {
+	display: flex;
+	flex-direction: column;
+}
+
+.admin-sidebar-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 84px;
+	border-bottom: 1px solid #e7eaf0;
+}
+
+.admin-sidebar-header .navbar-brand {
+	display: flex;
+	align-items: center;
+	gap: .65rem;
+	min-width: 0;
+	margin: 0 !important;
+	padding: 0;
+}
+
+#sidenav-main .admin-sidebar-header .navbar-brand {
+	min-height: 0;
+}
+
+.custom-logo {
+	display: block;
+	width: auto !important;
+	max-width: 150px !important;
+	max-height: 48px !important;
+	object-fit: contain;
+}
+
+.admin-sidebar-brand-label {
+	padding: .3rem .45rem;
+	border: 1px solid #eee4cc;
+	border-radius: 6px;
+	background: #fbf8f0;
+	color: #806020;
+	font-size: .58rem;
+	font-weight: 750;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+}
+
+.admin-sidebar-header .navbar-toggler {
+	padding: .4rem;
+	border: 1px solid #e7eaf0;
+	border-radius: 8px;
+}
+
+.admin-sidebar-mobile-title {
+	margin: .75rem 1rem .35rem;
+	color: #98a2b3;
+	font-size: .68rem;
+	font-weight: 700;
+	letter-spacing: .09em;
+	text-transform: uppercase;
+}
+
+#sidenav-main .navbar-collapse {
+	padding-top: .6rem;
+	padding-bottom: 1.5rem;
+}
+
+#sidenav-main .navbar-heading {
+	margin-top: .25rem;
+}
+
+@media (min-width: 768px) {
+	.admin-sidebar-header .navbar-toggler {
+		display: none;
+	}
+}
+
+@media (max-width: 767.98px) {
+	#sidenav-main {
+		position: relative;
+		z-index: 1030;
+		width: 100%;
+		max-width: none;
+		padding: 0 .85rem;
+		border-right: 0;
+		border-bottom: 1px solid #e7eaf0;
+		border-radius: 0;
+		box-shadow: 0 4px 16px rgba(16, 24, 40, .045);
+	}
+
+	#sidenav-main > .container-fluid {
+		padding: 0;
+	}
+
+	.admin-sidebar-header {
+		min-height: 62px;
+	}
+
+	#sidenav-main .navbar-collapse {
+		max-height: calc(100vh - 62px);
+		overflow-y: auto;
+		padding-bottom: .85rem;
 	}
 }

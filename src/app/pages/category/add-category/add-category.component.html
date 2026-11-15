@@ -1,79 +1,152 @@
-<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
-	style="min-height: 400px;  background-size: cover; background-position: center top;">
-	<!-- Mask -->
-	<span class="mask bg-gradient-info opacity-8"></span>
-	<!-- Header container -->
-	<div class="container-fluid d-flex align-items-center">
-		<div class="row">
-			<div class="col-lg-7 col-md-10">
-				<!-- <h1 class="display-2 text-white">Services </h1>
-				<p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with
-					your work and manage your projects or assigned tasks</p> -->
-				<!-- <a href="#!" class="btn btn-info">Edit Pages</a> -->
-			</div>
+<main class="category-edit-page">
+	<header class="category-edit-header">
+		<div>
+			<p class="category-edit-eyebrow">PROJECT MANAGEMENT</p>
+			<h1>{{ isEdit ? 'Edit project status' : 'Add project status' }}</h1>
+			<p class="category-edit-intro">Create and organize the status labels used by your projects.</p>
 		</div>
+		<a class="category-edit-back-link" routerLink="/category/view">
+			<i class="ni ni-bold-left" aria-hidden="true"></i>
+			Back to project statuses
+		</a>
+	</header>
+
+	<div *ngIf="msg_success" class="category-edit-alert category-edit-alert-success" role="status">
+		<i class="ni ni-check-bold" aria-hidden="true"></i>
+		<span>{{throw_msg || 'Project status saved successfully.'}}</span>
 	</div>
-</div>
-<div class="container-fluid mt--7">
-	<div class="row">
-		<div class="col-xl-12 order-xl-1">
-			<div class="card bg-secondary shadow">
-				<div class="card-header bg-white border-0">
-					<div class="row align-items-center">
-						<div class="col-8">
-							<!-- <h3 class="mb-0">Update/Edit Services</h3> -->
-							<h3 class="mb-0" *ngIf="id">Update/Edit Project Status</h3>
-							<h3 class="mb-0" *ngIf="!id">Add New Project Status</h3>
-						</div>
-					</div>
-					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
-						{{throw_msg}}
-					</div>
-					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
-						{{throw_msg}}
+	<div *ngIf="msg_danger" class="category-edit-alert category-edit-alert-danger" role="alert">
+		<i class="ni ni-fat-remove" aria-hidden="true"></i>
+		<span>{{throw_msg || 'The project status could not be saved. Please try again.'}}</span>
+	</div>
+
+	<div *ngIf="isEdit && isLoading" class="category-edit-state" role="status">
+		<span class="spinner-border" aria-hidden="true"></span>
+		<strong>Loading project status…</strong>
+		<span>Please wait while the current details are retrieved.</span>
+	</div>
+	<div *ngIf="isEdit && loadError && !isLoading" class="category-edit-state category-edit-state-error" role="alert">
+		<strong>We couldn’t load this project status.</strong>
+		<span>Check your connection and try again.</span>
+		<button type="button" class="category-edit-secondary-button" (click)="patchingdata(id)">Try again</button>
+	</div>
+
+	<form
+		*ngIf="!isEdit || (!isLoading && !loadError)"
+		class="category-edit-form"
+		[formGroup]="addcategoryForm"
+		(ngSubmit)="onSubmit()"
+		novalidate>
+		<div class="category-edit-layout">
+			<section class="category-edit-card">
+				<div class="category-edit-card-heading">
+					<span class="category-edit-step">01</span>
+					<div>
+						<h2>Project status details</h2>
+						<p>Choose a clear name and URL key so the status is easy to identify.</p>
 					</div>
 				</div>
-				<div class="card-body">
-					<!-- form start -->
-					<form [formGroup]="addcategoryForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-						<div class="box-body">
-							<div class="form-group">
-								<label for="exampleInputEmail1">Project Status Name <span>*</span></label>
-								<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
-									placeholder="Project Status">
-								<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Service Name is
-									required</span>
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Sequence Number</label>
-								<input type="number" name="sequence_number" autocomplete="off" formControlName="sequence_number"
-									class="form-control" placeholder="Sequence Number">
-								<span *ngIf="submitted && hasError('sequence_number','required')" class="alert-danger">Sequence Number
-									is required</span>
-							</div>
 
-							<div class="form-group">
-								<label for="exampleInputEmail1">Status </label>
-								<select name="status" formControlName="status" class="form-control">
-									<option value="true">Active</option>
-									<option value="false">InActive</option>
-								</select>
-								<span *ngIf="submitted && hasError('status','required')" class="alert-danger">Please Select
-									Status</span>
-							</div>
+				<div class="category-edit-fields">
+					<div class="category-edit-field">
+						<label for="category-name">Project status name <span class="category-required">*</span></label>
+						<input
+							id="category-name"
+							type="text"
+							formControlName="name"
+							class="form-control"
+							placeholder="For example, In Progress"
+							autocomplete="off"
+							[attr.aria-invalid]="submitted && hasError('name', 'required')">
+						<small *ngIf="submitted && hasError('name', 'required')" class="category-field-error">
+							Project status name is required.
+						</small>
+					</div>
 
+					<div class="category-edit-field">
+						<div class="category-edit-label-row">
+							<label for="category-short-description">Description</label>
+							<span class="category-field-hint">Optional summary for this status</span>
 						</div>
-						<div class="box-footer">
-							<button type="submit" class="btn btn-primary">Submit</button>
-							<button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
-						</div>
-					</form>
+						<textarea
+							id="category-short-description"
+							formControlName="short_desc"
+							class="form-control category-edit-textarea"
+							rows="5"
+							placeholder="Describe when this status should be used">
+						</textarea>
+					</div>
+
+					<div class="category-edit-field">
+						<label for="category-url-key">URL key</label>
+						<input
+							id="category-url-key"
+							type="text"
+							formControlName="url_key"
+							class="form-control"
+							placeholder="Optional URL-friendly identifier"
+							autocomplete="off">
+						<span class="category-field-hint">Use a short, URL-friendly value when one is needed.</span>
+					</div>
 				</div>
-			</div>
-		</div>
-	</div>
-</div>
+			</section>
 
+			<aside class="category-edit-sidebar">
+				<section class="category-edit-card category-edit-publishing-card">
+					<div class="category-edit-card-heading">
+						<span class="category-edit-step">02</span>
+						<div>
+							<h2>Display settings</h2>
+							<p>Control the order and visibility of this status.</p>
+						</div>
+					</div>
+
+					<div class="category-edit-field">
+						<label for="category-sequence">Sequence number</label>
+						<input
+							id="category-sequence"
+							type="number"
+							min="1"
+							formControlName="sequence_number"
+							class="form-control"
+							placeholder="1">
+						<span class="category-field-hint">Lower numbers appear earlier in the list.</span>
+					</div>
+
+					<div class="category-edit-field">
+						<label for="category-status">Status</label>
+						<select id="category-status" formControlName="status" class="form-control">
+							<option value="">Select status</option>
+							<option value="true">Active</option>
+							<option value="false">Inactive</option>
+						</select>
+						<span class="category-field-hint">Inactive statuses remain saved but are hidden from active workflows.</span>
+					</div>
+				</section>
+
+				<div class="category-edit-tip">
+					<i class="ni ni-bulb-61" aria-hidden="true"></i>
+					<div>
+						<strong>Keep labels consistent</strong>
+						<p>Use short, familiar names so project teams can recognize each status at a glance.</p>
+					</div>
+				</div>
+			</aside>
+		</div>
+
+		<footer class="category-edit-actions">
+			<a class="category-edit-secondary-button" routerLink="/category/view">Cancel</a>
+			<button
+				type="submit"
+				class="category-edit-save-button"
+				[disabled]="isSaving">
+				<span *ngIf="isSaving" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+				<i *ngIf="!isSaving" class="ni ni-check-bold" aria-hidden="true"></i>
+				{{isSaving ? 'Saving…' : (isEdit ? 'Save changes' : 'Create status')}}
+			</button>
+		</footer>
+	</form>
+</main>
 
 <!-- Image/Model Popup -->
 <ng-template #media let-modal>

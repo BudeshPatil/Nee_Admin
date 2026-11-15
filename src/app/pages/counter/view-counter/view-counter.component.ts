@@ -1,10 +1,7 @@
-import { Component, OnInit, ViewEncapsulation, EventEmitter, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl, AbstractControl } from '@angular/forms';
-import { UploadOutput, UploadInput, UploadFile, humanizeBytes, UploaderOptions } from 'ngx-uploader';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { CounterService } from 'src/app/providers/counter/counter.service';
-
 
 @Component({
 	selector: 'app-view-counter',
@@ -12,31 +9,22 @@ import { CounterService } from 'src/app/providers/counter/counter.service';
 	styleUrls: ['./view-counter.component.scss']
 })
 export class ViewCounterComponent implements OnInit {
-	@ViewChild('uploader', { read: ElementRef }) fileInput: ElementRef;
-
-	// Data Assign
 	addForm: FormGroup;
-	throw_msg: any;
-	submitted: boolean = false;
-	msg_success: boolean = false;
-	msg_danger: boolean = false;
-	token: any;
-
-	// Edit Action Here
-	id: any;
-	CounterData: any;
-
-	// pagination
-	currentPage: number = 1;
-	currentLimit: number = 10;
-	totalRecord: number = 0;
+	throw_msg = '';
+	msg_success = false;
+	token: string;
+	CounterData: any[] = [];
+	currentPage = 1;
+	currentLimit = 10;
+	totalRecord = 0;
+	isLoading = true;
+	isSaving = false;
+	loadError = false;
 
 	constructor(
-		private router: Router,
 		private counterService: CounterService,
-		private route: ActivatedRoute,
 		private formBuilder: FormBuilder,
-		private toastr: ToastrManager,
+		private toastr: ToastrManager
 	) {
 		this.addForm = this.formBuilder.group({
 			total_plots: [''],
@@ -46,11 +34,9 @@ export class ViewCounterComponent implements OnInit {
 			total_experience: [''],
 			experience_desc: [''],
 			total_projects: [''],
-			projects_desc: [''],
+			projects_desc: ['']
 		});
 		this.token = localStorage.getItem('neelgund-admin-token');
-
-
 	}
 
 	ngOnInit(): void {
@@ -58,65 +44,82 @@ export class ViewCounterComponent implements OnInit {
 	}
 
 	get_CounterData() {
-		const obj = {
+		this.isLoading = true;
+		this.loadError = false;
+		this.msg_success = false;
+
+		const request = {
 			limit: this.currentLimit,
 			page: this.currentPage,
-			token: this.token,
+			token: this.token
 		};
-		this.counterService.getData(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					if (response.result != null && response.result != '') {
-						this.CounterData = response.result;
-						this.totalRecord = response?.count;
-						let data = this.CounterData[0];
-						this.addForm.patchValue({
-							total_plots: data?.total_plots,
-							plots_desc: data?.plots_desc,
-							total_clients: data?.total_clients,
-							clients_desc: data?.clients_desc,
-							total_experience: data?.total_experience,
-							experience_desc: data?.experience_desc,
-							total_projects: data?.total_projects,
-							projects_desc: data?.projects_desc,
-						});
-						window.scroll(0, 0);
-					}
-					else {
-						this.msg_danger = true;
-					}
 
+		this.counterService.getData(request).subscribe({
+			next: (response) => {
+				this.isLoading = false;
+
+				if (response.code !== 200) {
+					this.CounterData = [];
+					this.totalRecord = 0;
+					this.loadError = true;
+					this.toastr.errorToastr(response.message || 'Counter settings could not be loaded.');
+					return;
 				}
+
+				this.CounterData = Array.isArray(response.result) ? response.result : [];
+				this.totalRecord = Number(response.count) || 0;
+
+				if (this.CounterData.length === 0) {
+					this.addForm.reset();
+					return;
+				}
+
+				this.addForm.patchValue(this.CounterData[0]);
 			},
-		);
+			error: () => {
+				this.isLoading = false;
+				this.CounterData = [];
+				this.totalRecord = 0;
+				this.loadError = true;
+				this.toastr.errorToastr('Counter settings could not be loaded.');
+			}
+		});
 	}
 
 	onSubmit() {
-		this.submitted = true;
-		let obj = this.addForm.value;
-		let id = this.CounterData[0]._id;
-		obj['neelgund-admin-token'] = this.token;
-		if (this.addForm.invalid) {
+		const counter = this.CounterData[0];
+		if (!counter || !counter._id) {
+			this.toastr.errorToastr('Counter settings are unavailable.');
 			return;
 		}
-		this.counterService.editCounterdata(obj, id).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					this.throw_msg = response.message
+
+		if (this.addForm.invalid || this.isSaving) {
+			return;
+		}
+
+		this.isSaving = true;
+		const payload = {
+			...this.addForm.value,
+			'neelgund-admin-token': this.token
+		};
+
+		this.counterService.editCounterdata(payload, counter._id).subscribe({
+			next: (response) => {
+				this.isSaving = false;
+
+				if (response.code === 200) {
+					this.throw_msg = response.message || 'Counter settings saved.';
 					this.msg_success = true;
-					setTimeout(() => {
-						this.router.navigate(['/counter/view']);
-						this.toastr.successToastr(response.message);
-					}, 2000);
-				} else {
-					this.toastr.errorToastr(response.message);
+					this.toastr.successToastr(this.throw_msg);
+					return;
 				}
+
+				this.toastr.errorToastr(response.message || 'Counter settings could not be saved.');
 			},
-		);
+			error: () => {
+				this.isSaving = false;
+				this.toastr.errorToastr('Counter settings could not be saved.');
+			}
+		});
 	}
-
-	public hasError = (controlName: string, errorName: string) => {
-		return this.addForm.controls[controlName].hasError(errorName);
-	};
-
 }
