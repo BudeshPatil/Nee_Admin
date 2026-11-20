@@ -1,0 +1,139 @@
+<main class="banner-page">
+	<header class="banner-page-header">
+		<div>
+			<p class="banner-eyebrow">HOMEPAGE CONTENT</p>
+			<h1>Banner images</h1>
+			<p class="banner-page-description">Manage the images and videos displayed across your site.</p>
+		</div>
+		<a class="banner-add-button" routerLink="/banner-images/add">
+			<i class="ni ni-fat-add" aria-hidden="true"></i>
+			Add banner
+		</a>
+	</header>
+
+	<section class="banner-list-card" aria-label="Banner image list">
+		<div class="banner-toolbar">
+			<label class="banner-search">
+				<i class="fa fa-search" aria-hidden="true"></i>
+				<input class="form-control" type="search" name="search" [(ngModel)]="searchText"
+					(ngModelChange)="searchBanner()" autocomplete="off" placeholder="Search banner names"
+					aria-label="Search banner names">
+			</label>
+			<span class="banner-result-count">{{totalRecord}} banner{{totalRecord === 1 ? '' : 's'}}</span>
+		</div>
+
+		<div class="banner-table-wrap">
+			<table class="table banner-table">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Banner</th>
+						<th scope="col">Preview</th>
+						<th scope="col">Created</th>
+						<th scope="col">Updated</th>
+						<th scope="col">Status</th>
+						<th scope="col" class="banner-actions-heading">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngIf="isLoading">
+						<td colspan="7">
+							<div class="banner-empty-state" role="status">
+								<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+								Loading banners…
+							</div>
+						</td>
+					</tr>
+					<tr *ngIf="!isLoading && loadError">
+						<td colspan="7">
+							<div class="banner-empty-state" role="alert">
+								<strong>Couldn’t load banners</strong>
+								<span>Please try again.</span>
+								<button class="banner-retry-button" type="button" (click)="get_BannerData()">Retry</button>
+							</div>
+						</td>
+					</tr>
+					<tr *ngIf="!isLoading && !loadError && filteredBannerData.length === 0">
+						<td colspan="7">
+							<div class="banner-empty-state">
+								<span class="banner-empty-icon"><i class="ni ni-image" aria-hidden="true"></i></span>
+								<strong>{{searchText ? 'No banners match your search' : 'No banners yet'}}</strong>
+								<span>{{searchText ? 'Try another name or clear the search.' : 'Add a banner to get started.'}}</span>
+								<a *ngIf="!searchText && totalRecord === 0" routerLink="/banner-images/add">Add your first banner</a>
+							</div>
+						</td>
+					</tr>
+					<tr *ngFor="let listBanner of filteredBannerData; let i = index">
+						<td class="banner-row-number">
+							{{i + 1 + ((currentPage - 1) * currentLimit)}}
+						</td>
+						<td>
+							<strong class="banner-name">{{listBanner.name}}</strong>
+						</td>
+						<td>
+							<div class="banner-media">
+								<ng-container *ngIf="listBanner.media_data?.length"
+									[ngSwitch]="listBanner.media_data[0].file_type">
+									<img *ngSwitchCase="'image'" [src]="imagePath + listBanner.media_data[0].src"
+										[alt]="'Preview of ' + listBanner.name">
+									<video *ngSwitchCase="'video'" [src]="imagePath + listBanner.media_data[0].src"
+										controls preload="metadata" [attr.aria-label]="'Preview of ' + listBanner.name">
+									</video>
+									<span *ngSwitchDefault class="banner-no-media">Unsupported format</span>
+								</ng-container>
+								<span *ngIf="!listBanner.media_data?.length" class="banner-no-media">
+									<i class="ni ni-image" aria-hidden="true"></i>
+									No preview
+								</span>
+							</div>
+						</td>
+						<td class="banner-date">{{listBanner.created_at | date: 'dd MMM yyyy, hh:mm a'}}</td>
+						<td class="banner-date">{{listBanner.updated_at | date: 'dd MMM yyyy, hh:mm a'}}</td>
+						<td>
+							<span class="banner-status" [class.banner-status-active]="listBanner.status == true">
+								{{listBanner.status == true ? 'Active' : 'Inactive'}}
+							</span>
+						</td>
+						<td class="banner-row-actions">
+							<a class="banner-icon-button" routerLink="/banner-images/edit/{{listBanner._id}}"
+								[attr.aria-label]="'Edit ' + listBanner.name" title="Edit banner">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+							</a>
+							<button class="banner-icon-button banner-delete-button" type="button"
+								(click)="open(content, listBanner)" [attr.aria-label]="'Delete ' + listBanner.name"
+								title="Delete banner">
+								<i class="fa fa-trash" aria-hidden="true"></i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="neelgund-pagination" *ngIf="totalRecord > 0 && !searchText">
+			<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
+				(changePage)="onListChangePage($event)"></app-pagination>
+		</div>
+	</section>
+</main>
+
+<ng-template #content let-modal>
+	<div class="modal-header banner-delete-modal-header">
+		<div>
+			<span class="banner-delete-icon"><i class="fa fa-trash" aria-hidden="true"></i></span>
+			<h2 class="modal-title" id="modal-title">Delete banner?</h2>
+		</div>
+		<button type="button" class="banner-modal-close" aria-label="Close dialog"
+			(click)="modal.dismiss('Cross click')">
+			<i class="fa fa-times" aria-hidden="true"></i>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Are you sure you want to delete <strong>{{selectedBanner?.name}}</strong>?</p>
+		<p class="banner-delete-note">This action cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+		<button type="button" class="btn btn-danger" (click)="deleteBanner()">Delete banner</button>
+	</div>
+</ng-template>

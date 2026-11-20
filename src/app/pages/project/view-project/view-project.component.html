@@ -1,0 +1,221 @@
+<div class="container-fluid project-page">
+	<div *ngIf="toastMessage" class="feedback-toast" role="status" aria-live="polite" [class.toast-success]="toastType === 'success'" [class.toast-error]="toastType === 'error'" [class.toast-info]="toastType === 'info'">
+		<span class="toast-icon">{{ getToastIcon(toastType) }}</span>
+		<span>{{ toastMessage }}</span>
+	</div>
+
+	<header class="page-heading">
+		<div>
+			<p class="eyebrow">PORTFOLIO MANAGEMENT</p>
+			<h1>Projects</h1>
+			<p class="page-description">Manage project details, publishing status and homepage visibility.</p>
+		</div>
+		<div class="page-actions">
+			<a class="button button-secondary" routerLink="/category/add">
+				<i class="fa fa-tags" aria-hidden="true"></i>
+				<span>Add Project Status</span>
+			</a>
+			<a class="button button-primary" routerLink="/project/add">
+				<i class="fa fa-plus" aria-hidden="true"></i>
+				<span>Add Project</span>
+			</a>
+		</div>
+	</header>
+
+	<section class="summary-card" aria-label="Project summary">
+		<div class="summary-icon"><i class="fa fa-folder-open-o" aria-hidden="true"></i></div>
+		<div>
+			<p>Total projects</p>
+			<strong>{{ totalRecord | number }}</strong>
+		</div>
+		<span class="summary-note">in your portfolio</span>
+	</section>
+
+	<section class="list-card">
+		<div class="list-heading">
+			<div>
+				<h2>Project list</h2>
+				<p>Search, sort and manage the projects shown on your site.</p>
+			</div>
+			<span class="result-count" *ngIf="!isLoading">
+				{{ filteredProjects.length }} shown
+			</span>
+		</div>
+
+		<div class="toolbar">
+			<label class="search-control">
+				<i class="fa fa-search" aria-hidden="true"></i>
+				<input
+					type="search"
+					name="search"
+					[(ngModel)]="searchText"
+					(ngModelChange)="searchProject()"
+					autocomplete="off"
+					placeholder="Search project names"
+					aria-label="Search project names">
+				<button *ngIf="searchText" type="button" class="clear-search" (click)="clearSearch()" aria-label="Clear search">
+					<i class="fa fa-times" aria-hidden="true"></i>
+				</button>
+			</label>
+
+			<label class="status-control">
+				<span>Status</span>
+				<select name="statusFilter" [(ngModel)]="isactive" (ngModelChange)="applyStatusFilter()">
+					<option [ngValue]="'none'">All statuses</option>
+					<option [ngValue]="true">Active</option>
+					<option [ngValue]="false">Inactive</option>
+				</select>
+			</label>
+
+			<button *ngIf="hasActiveFilters" type="button" class="reset-button" (click)="clearFilters()">
+				Clear filters
+			</button>
+		</div>
+
+		<p class="filter-hint" *ngIf="hasActiveFilters">
+			Filters are applied to the loaded project results.
+		</p>
+
+		<div class="table-responsive">
+			<table class="table project-table">
+				<thead>
+					<tr>
+						<th scope="col" class="number-column">
+							<button type="button" class="sort-button" (click)="sortBy('slno')" [class.sort-active]="isSortActive('slno')">
+								<span>#</span><span class="sort-icon">{{ getSortIcon('slno') }}</span>
+							</button>
+						</th>
+						<th scope="col">
+							<button type="button" class="sort-button" (click)="sortBy('name')" [class.sort-active]="isSortActive('name')">
+								<span>Project</span><span class="sort-icon">{{ getSortIcon('name') }}</span>
+							</button>
+						</th>
+						<th scope="col">
+							<button type="button" class="sort-button" (click)="sortBy('category')" [class.sort-active]="isSortActive('category')">
+								<span>Project status</span><span class="sort-icon">{{ getSortIcon('category') }}</span>
+							</button>
+						</th>
+						<th scope="col">
+							<button type="button" class="sort-button" (click)="sortBy('sequence')" [class.sort-active]="isSortActive('sequence')">
+								<span>Sequence</span><span class="sort-icon">{{ getSortIcon('sequence') }}</span>
+							</button>
+						</th>
+						<th scope="col">
+							<button type="button" class="sort-button" (click)="sortBy('doh')" [class.sort-active]="isSortActive('doh')">
+								<span>Homepage</span><span class="sort-icon">{{ getSortIcon('doh') }}</span>
+							</button>
+						</th>
+						<th scope="col">
+							<button type="button" class="sort-button" (click)="sortBy('status')" [class.sort-active]="isSortActive('status')">
+								<span>Status</span><span class="sort-icon">{{ getSortIcon('status') }}</span>
+							</button>
+						</th>
+						<th scope="col">
+							<button type="button" class="sort-button" (click)="sortBy('created')" [class.sort-active]="isSortActive('created')">
+								<span>Created</span><span class="sort-icon">{{ getSortIcon('created') }}</span>
+							</button>
+						</th>
+						<th scope="col" class="actions-column">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngIf="isLoading">
+						<td colspan="8" class="state-cell">
+							<span class="inline-spinner" aria-hidden="true"></span>
+							<span>Loading projects…</span>
+						</td>
+					</tr>
+					<tr *ngIf="!isLoading && loadError">
+						<td colspan="8" class="state-cell">
+							<div class="empty-state">
+								<span class="empty-icon error-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+								<strong>Projects couldn't be loaded</strong>
+								<p>Please check your connection and try again.</p>
+								<button type="button" class="button button-secondary" (click)="get_projectData()">Try again</button>
+							</div>
+						</td>
+					</tr>
+					<tr *ngIf="!isLoading && !loadError && filteredProjects.length === 0">
+						<td colspan="8" class="state-cell">
+							<div class="empty-state">
+								<span class="empty-icon"><i class="fa fa-folder-open-o" aria-hidden="true"></i></span>
+								<strong>{{ totalRecord === 0 ? 'No projects yet' : 'No matching projects' }}</strong>
+								<p>{{ totalRecord === 0 ? 'Add your first project to start building your portfolio.' : 'Try a different search or clear the selected filters.' }}</p>
+								<button *ngIf="hasActiveFilters" type="button" class="button button-secondary" (click)="clearFilters()">Clear filters</button>
+								<a *ngIf="totalRecord === 0" class="button button-primary" routerLink="/project/add">Add project</a>
+							</div>
+						</td>
+					</tr>
+					<ng-container *ngIf="!isLoading">
+					<tr *ngFor="let listProject of filteredProjects; let i = index">
+						<td class="number-cell">{{ i + 1 + ((currentPage - 1) * currentLimit) }}</td>
+						<td>
+							<div class="project-identity">
+								<img
+									class="project-image"
+									[src]="imagePath + 'project/' + listProject.image"
+									[alt]="listProject.name || 'Project image'"
+									(error)="onProjectImageError($event)">
+								<div class="project-copy">
+									<strong>{{ listProject.name || 'Untitled project' }}</strong>
+									<span>{{ listProject.category_name || 'Uncategorized' }}</span>
+								</div>
+							</div>
+						</td>
+						<td><span class="category-pill">{{ listProject.category_name || 'Uncategorized' }}</span></td>
+						<td><span class="sequence-value">{{ listProject.sequence_number != null ? listProject.sequence_number : '—' }}</span></td>
+						<td>
+							<span class="visibility-value" [class.visible]="listProject.display_on_home == true">
+								<i class="fa" [ngClass]="listProject.display_on_home == true ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+								{{ listProject.display_on_home == true ? 'Visible' : 'Hidden' }}
+							</span>
+						</td>
+						<td>
+							<span class="status-badge" [class.status-active]="isProjectActive(listProject)" [class.status-inactive]="!isProjectActive(listProject)">
+								<span class="status-dot"></span>
+								{{ isProjectActive(listProject) ? 'Active' : 'Inactive' }}
+							</span>
+						</td>
+						<td class="date-cell">{{ listProject.created_at | date: 'dd MMM yyyy' }}</td>
+						<td>
+							<div class="row-actions">
+								<a class="icon-button edit-action" [routerLink]="['/project/edit', listProject._id]" [attr.aria-label]="'Edit ' + listProject.name" title="Edit project">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+								</a>
+								<button type="button" class="icon-button delete-action" (click)="openDeleteModal(deleteModal, listProject)" [attr.aria-label]="'Delete ' + listProject.name" title="Delete project">
+									<i class="fa fa-trash" aria-hidden="true"></i>
+								</button>
+							</div>
+						</td>
+					</tr>
+					</ng-container>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="neelgund-pagination" *ngIf="totalRecord > 0 && !hasActiveFilters">
+			<app-pagination
+				#pagination
+				[initialPage]="currentPage"
+				[count]="totalRecord"
+				[perPage]="currentLimit"
+				(changePage)="onListChangePage($event)">
+			</app-pagination>
+		</div>
+	</section>
+</div>
+
+<ng-template #deleteModal let-modal>
+	<div class="delete-modal">
+		<div class="modal-icon"><i class="fa fa-trash" aria-hidden="true"></i></div>
+		<h2 id="project-delete-title">Delete this project?</h2>
+		<p><strong>{{ selectedProject?.name }}</strong> will be permanently removed. This action can't be undone.</p>
+		<div class="modal-actions">
+			<button type="button" class="button button-secondary" (click)="modal.dismiss()" [disabled]="isDeleting">Cancel</button>
+			<button type="button" class="button button-danger" (click)="deleteProject()" [disabled]="isDeleting">
+				<span *ngIf="isDeleting" class="button-spinner" aria-hidden="true"></span>
+				{{ isDeleting ? 'Deleting…' : 'Delete project' }}
+			</button>
+		</div>
+	</div>
+</ng-template>

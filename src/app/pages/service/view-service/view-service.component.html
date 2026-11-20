@@ -1,0 +1,80 @@
+<div class="container-fluid service-page">
+	<header class="page-heading">
+		<div>
+			<p class="eyebrow">WEBSITE CONTENT</p>
+			<h1>Services</h1>
+			<p class="page-description">Manage the services and content displayed on your website.</p>
+		</div>
+		<a class="primary-action" routerLink="/service/add">
+			<i class="fa fa-plus" aria-hidden="true"></i>
+			Add service
+		</a>
+	</header>
+
+	<section class="overview-strip" aria-label="Service overview">
+		<div class="overview-icon"><i class="fa fa-briefcase" aria-hidden="true"></i></div>
+		<div class="overview-copy"><span>Service catalogue</span><strong>{{ totalRecord | number }} <small>total services</small></strong></div>
+		<div class="overview-divider"></div>
+		<p><i class="fa fa-info-circle" aria-hidden="true"></i> Keep your service details and imagery up to date.</p>
+	</section>
+
+	<section class="catalogue-card">
+		<div class="catalogue-heading">
+			<div><h2>All services</h2><p>Browse, search and edit your service entries.</p></div>
+			<span class="result-count" *ngIf="!isLoading">{{ filteredServices.length }} shown</span>
+		</div>
+
+		<div class="catalogue-toolbar">
+			<label class="search-control">
+				<i class="fa fa-search" aria-hidden="true"></i>
+				<input type="search" name="search" [(ngModel)]="searchText" (ngModelChange)="searchService()" placeholder="Search services by name or description" autocomplete="off" aria-label="Search services">
+				<button *ngIf="searchText" type="button" class="clear-search" (click)="clearFilters()" aria-label="Clear search"><i class="fa fa-times" aria-hidden="true"></i></button>
+			</label>
+			<div class="toolbar-right">
+				<label class="filter-control"><span>Status</span>
+					<select [(ngModel)]="isactive" (ngModelChange)="applyStatusFilter()" aria-label="Filter by service status">
+						<option [ngValue]="'all'">All statuses</option>
+						<option [ngValue]="true">Active</option>
+						<option [ngValue]="false">Inactive</option>
+					</select>
+				</label>
+				<button *ngIf="hasFilters" type="button" class="reset-button" (click)="clearFilters()">Clear filters</button>
+			</div>
+		</div>
+
+		<div *ngIf="isLoading" class="state-panel"><span class="loading-spinner"></span><strong>Loading services…</strong><p>Your catalogue will be ready in a moment.</p></div>
+		<div *ngIf="!isLoading && loadError" class="state-panel"><span class="state-icon error-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span><strong>Services couldn't be loaded</strong><p>Check your connection and try again.</p><button class="secondary-action" type="button" (click)="get_serviceData()">Try again</button></div>
+		<div *ngIf="!isLoading && !loadError && filteredServices.length === 0" class="state-panel">
+			<span class="state-icon"><i class="fa fa-briefcase" aria-hidden="true"></i></span>
+			<strong>{{ totalRecord === 0 ? 'No services yet' : 'No matching services' }}</strong>
+			<p>{{ totalRecord === 0 ? 'Add your first service to get started.' : 'Try a different search or clear the selected filters.' }}</p>
+			<button *ngIf="hasFilters" class="secondary-action" type="button" (click)="clearFilters()">Clear filters</button>
+			<a *ngIf="totalRecord === 0" class="secondary-action" routerLink="/service/add">Add your first service</a>
+		</div>
+
+		<div class="service-grid" *ngIf="!isLoading && !loadError && filteredServices.length > 0">
+			<article class="service-card" *ngFor="let service of filteredServices">
+				<div class="service-cover">
+					<img [src]="imagePath + service.image" [alt]="service.name || 'Service image'" (error)="onImageError($event)">
+					<span class="status-badge" [class.active]="isServiceActive(service)" [class.inactive]="!isServiceActive(service)"><i></i>{{ isServiceActive(service) ? 'Active' : 'Inactive' }}</span>
+					<a class="edit-cover-action" [routerLink]="['/service/edit', service._id]" [attr.aria-label]="'Edit ' + service.name" title="Edit service"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+				</div>
+				<div class="service-card-body">
+					<div class="service-card-heading">
+						<h3>{{ service.name || 'Untitled service' }}</h3>
+						<span class="service-price" *ngIf="service.price">{{ service.price }}</span>
+					</div>
+					<p class="service-description">{{ service.short_desc || 'No short description has been added yet.' }}</p>
+				</div>
+				<footer class="service-card-footer">
+					<span><i class="fa fa-calendar-o" aria-hidden="true"></i>{{ service.created_at ? (service.created_at | date: 'dd MMM yyyy') : 'Date not available' }}</span>
+					<a [routerLink]="['/service/edit', service._id]">Edit details <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+				</footer>
+			</article>
+		</div>
+
+		<div class="catalogue-pagination" *ngIf="totalRecord > 0 && !hasFilters">
+			<app-pagination [initialPage]="currentPage" [count]="totalRecord" [perPage]="currentLimit" (changePage)="onListChangePage($event)"></app-pagination>
+		</div>
+	</section>
+</div>

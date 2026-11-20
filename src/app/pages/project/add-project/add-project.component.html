@@ -1,0 +1,519 @@
+<div class="container-fluid project-editor-page">
+	<header class="editor-heading">
+		<div class="heading-copy">
+			<a routerLink="/project/view" class="back-link">
+				<i class="fa fa-arrow-left" aria-hidden="true"></i>
+				<span>Back to projects</span>
+			</a>
+			<p class="eyebrow">PORTFOLIO MANAGEMENT</p>
+			<h1>{{ isEdit ? 'Edit project' : 'Create a project' }}</h1>
+			<p class="heading-description">Add the project information, imagery and publishing details for your portfolio.</p>
+		</div>
+	</header>
+
+	<div *ngIf="categoryLoadError" class="editor-alert alert-warning" role="alert">
+		<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+		<span>Project statuses couldn't be loaded.</span>
+		<button type="button" class="text-button" (click)="get_categorydata()">Try again</button>
+	</div>
+
+	<div *ngIf="isLoadingData" class="state-card" role="status" aria-live="polite">
+		<span class="loading-spinner" aria-hidden="true"></span>
+		<strong>Loading project details…</strong>
+		<p>Please wait while the existing project is retrieved.</p>
+	</div>
+
+	<div *ngIf="loadError && !isLoadingData" class="state-card error-state" role="alert">
+		<span class="state-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+		<strong>Project details couldn't be loaded</strong>
+		<p>Check your connection and try again.</p>
+		<button type="button" class="editor-button button-secondary" (click)="addData(id)">Retry</button>
+	</div>
+
+	<form *ngIf="!isLoadingData && !loadError" [formGroup]="addProjectForm" (ngSubmit)="onSubmit()" novalidate>
+		<div *ngIf="msg_success" class="editor-alert alert-success" role="status" aria-live="polite">
+			<i class="fa fa-check-circle" aria-hidden="true"></i>{{ throw_msg }}
+		</div>
+		<div *ngIf="msg_danger" class="editor-alert alert-danger" role="alert">
+			<i class="fa fa-exclamation-circle" aria-hidden="true"></i>{{ throw_msg }}
+		</div>
+
+		<div *ngIf="relatedProjectsLoadError" class="editor-alert alert-warning" role="alert">
+			<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+			<span>Related projects couldn't be loaded.</span>
+			<button type="button" class="text-button" (click)="getAllProjects()">Try again</button>
+		</div>
+
+		<div class="editor-layout">
+			<div class="editor-main">
+				<section class="editor-card">
+					<div class="section-heading">
+						<div class="section-icon"><i class="fa fa-info-circle" aria-hidden="true"></i></div>
+						<div>
+							<h2>Project information</h2>
+							<p>Core details used to identify and organize this project.</p>
+						</div>
+					</div>
+
+					<div class="field-grid">
+						<div class="field-group field-span-2">
+							<label for="project-name">Project name <span class="required-mark">*</span></label>
+							<input id="project-name" type="text" autocomplete="off" formControlName="name" class="form-control" placeholder="e.g. Riverside Residences" [class.invalid-control]="submitted && hasError('name', 'required')">
+							<small class="field-error" *ngIf="submitted && hasError('name', 'required')">Project name is required.</small>
+							<small class="field-error" *ngIf="submitted && hasError('name', 'maxlength')">Project name must be 255 characters or fewer.</small>
+						</div>
+
+						<div class="field-group">
+							<label for="project-category">Project status <span class="required-mark">*</span></label>
+							<select id="project-category" formControlName="category" class="form-control" [class.invalid-control]="submitted && hasError('category', 'required')">
+								<option value="">Select a project status</option>
+								<option *ngFor="let cat of categoryData" [value]="cat._id">{{ cat.name }}</option>
+							</select>
+							<small class="field-error" *ngIf="submitted && hasError('category', 'required')">Select a project status.</small>
+							<small class="field-hint" *ngIf="!isLoadingCategories && !categoryLoadError && categoryData.length === 0">No project statuses are available. <a routerLink="/category/add">Add a project status</a>.</small>
+						</div>
+
+						<div class="field-group">
+							<label for="project-year">Year <span class="required-mark">*</span></label>
+							<input id="project-year" type="text" autocomplete="off" formControlName="year" class="form-control" placeholder="e.g. 2025" [class.invalid-control]="submitted && hasError('year', 'required')">
+							<small class="field-error" *ngIf="submitted && hasError('year', 'required')">Year is required.</small>
+						</div>
+
+						<div class="field-group">
+							<label for="project-location">Location <span class="required-mark">*</span></label>
+							<input id="project-location" type="text" autocomplete="off" formControlName="location" class="form-control" placeholder="City or area" [class.invalid-control]="submitted && hasError('location', 'required')">
+							<small class="field-error" *ngIf="submitted && hasError('location', 'required')">Location is required.</small>
+						</div>
+
+						<div class="field-group">
+							<label for="project-area">Area</label>
+							<input id="project-area" type="text" autocomplete="off" formControlName="area" class="form-control" placeholder="e.g. 12 acres">
+						</div>
+
+						<div class="field-group">
+							<label for="project-plots">Number of plots</label>
+							<input id="project-plots" type="text" autocomplete="off" formControlName="noofplots" class="form-control" placeholder="Number of plots">
+						</div>
+
+						<div class="field-group">
+							<label for="project-amenities">Amenities</label>
+							<input id="project-amenities" type="text" autocomplete="off" formControlName="amenties" class="form-control" placeholder="e.g. Clubhouse, garden">
+						</div>
+
+						<div class="field-group">
+							<label for="project-dimensions">Dimensions</label>
+							<input id="project-dimensions" type="text" autocomplete="off" formControlName="dimentions" class="form-control" placeholder="Plot or unit dimensions">
+						</div>
+
+						<div class="field-group">
+							<label for="project-price">Price</label>
+							<input id="project-price" type="text" autocomplete="off" formControlName="price" class="form-control" placeholder="Optional price or range">
+						</div>
+
+						<div class="field-group">
+							<label for="project-map">Map / map URL <span class="required-mark">*</span></label>
+							<input id="project-map" type="text" autocomplete="off" formControlName="map" class="form-control" placeholder="Paste a map URL or embed value" [class.invalid-control]="submitted && hasError('map', 'required')">
+							<small class="field-error" *ngIf="submitted && hasError('map', 'required')">Map information is required.</small>
+						</div>
+
+						<div class="field-group field-span-2">
+							<label for="project-link">Project link</label>
+							<input id="project-link" type="url" autocomplete="off" formControlName="link" class="form-control" placeholder="https://example.com/project">
+						</div>
+					</div>
+				</section>
+
+				<section class="editor-card">
+					<div class="section-heading">
+						<div class="section-icon"><i class="fa fa-align-left" aria-hidden="true"></i></div>
+						<div>
+							<h2>Project content</h2>
+							<p>Write the overview and supporting descriptions for the project page.</p>
+						</div>
+					</div>
+
+					<div class="field-group">
+						<label>Project overview <span class="required-mark">*</span></label>
+						<angular-editor name="desc" formControlName="desc" [config]="editorConfig"></angular-editor>
+						<small class="field-error" *ngIf="submitted && hasError('desc', 'required')">Project overview is required.</small>
+					</div>
+
+					<div class="field-grid content-grid">
+						<div class="field-group field-span-2">
+							<label for="project-brief">Project brief</label>
+							<textarea id="project-brief" rows="5" formControlName="the_brief" class="form-control" placeholder="Add a concise summary of the project"></textarea>
+						</div>
+						<div class="field-group field-span-2">
+							<label for="project-scope">Scope of work</label>
+							<textarea id="project-scope" rows="5" formControlName="scope_of_work" class="form-control" placeholder="Describe the work included in this project"></textarea>
+						</div>
+						<div class="field-group field-span-2">
+							<label for="project-key-features">Key features</label>
+							<textarea id="project-key-features" rows="5" formControlName="key_features" class="form-control" placeholder="List the notable features of this project"></textarea>
+						</div>
+						<div class="field-group">
+							<label for="project-desc-1">Additional description 1</label>
+							<textarea id="project-desc-1" rows="5" formControlName="desc_1" class="form-control" placeholder="Optional supporting description"></textarea>
+						</div>
+						<div class="field-group">
+							<label for="project-desc-2">Additional description 2</label>
+							<textarea id="project-desc-2" rows="5" formControlName="desc_2" class="form-control" placeholder="Optional supporting description"></textarea>
+						</div>
+						<div class="field-group">
+							<label for="project-desc-3">Additional description 3</label>
+							<textarea id="project-desc-3" rows="5" formControlName="desc_3" class="form-control" placeholder="Optional supporting description"></textarea>
+						</div>
+						<div class="field-group">
+							<label for="project-scope-label">Scope</label>
+							<textarea id="project-scope-label" rows="5" formControlName="scope" class="form-control" placeholder="Optional scope details"></textarea>
+						</div>
+					</div>
+				</section>
+
+				<section class="editor-card">
+					<div class="section-heading">
+						<div class="section-icon"><i class="fa fa-list-ol" aria-hidden="true"></i></div>
+						<div>
+							<h2>Project phases</h2>
+							<p>Add and manage the individual phases associated with this project.</p>
+						</div>
+						<button type="button" class="phase-add-button" (click)="addPhase()">
+							<i class="fa fa-plus" aria-hidden="true"></i> Add phase
+						</button>
+					</div>
+
+					<div formArrayName="phases" class="phase-list">
+						<div *ngFor="let phase of phases.controls; let i = index" [formGroupName]="i" class="phase-card">
+							<div class="phase-card-heading">
+								<strong>Phase {{ i + 1 }}</strong>
+								<div class="phase-card-actions">
+									<button type="button" class="phase-action-button" (click)="togglePhase(i)">
+										{{ phaseExpanded[i] ? 'Collapse' : 'Expand' }}
+									</button>
+									<button type="button" class="phase-action-button phase-remove-button" (click)="removePhase(i)">Remove</button>
+								</div>
+							</div>
+
+							<div *ngIf="phaseExpanded[i]" class="phase-card-body">
+								<div class="field-grid">
+									<div class="field-group">
+										<label [for]="'phase-name-' + i">Phase name <span class="required-mark">*</span></label>
+										<input [id]="'phase-name-' + i" type="text" formControlName="name" class="form-control" placeholder="e.g. Phase 1">
+										<small class="field-error" *ngIf="submitted && phaseHasError(i, 'name', 'required')">Phase name is required.</small>
+										<small class="field-error" *ngIf="submitted && phaseHasError(i, 'name', 'maxlength')">Phase name must be 255 characters or fewer.</small>
+									</div>
+									<div class="field-group">
+										<label [for]="'phase-slug-' + i">Phase URL key</label>
+										<input [id]="'phase-slug-' + i" type="text" formControlName="slug" class="form-control" placeholder="Optional URL-friendly key">
+									</div>
+									<div class="field-group">
+										<label [for]="'phase-area-' + i">Area</label>
+										<input [id]="'phase-area-' + i" type="text" formControlName="area" class="form-control" placeholder="Area">
+									</div>
+									<div class="field-group">
+										<label [for]="'phase-plots-' + i">Number of plots</label>
+										<input [id]="'phase-plots-' + i" type="text" formControlName="noofplots" class="form-control" placeholder="Number of plots">
+									</div>
+									<div class="field-group">
+										<label [for]="'phase-dimensions-' + i">Dimensions</label>
+										<input [id]="'phase-dimensions-' + i" type="text" formControlName="dimensions" class="form-control" placeholder="Dimensions">
+									</div>
+									<div class="field-group">
+										<label [for]="'phase-amenities-' + i">Amenities</label>
+										<input [id]="'phase-amenities-' + i" type="text" formControlName="amenties" class="form-control" placeholder="Amenities">
+									</div>
+									<div class="field-group">
+										<label [for]="'phase-price-' + i">Price</label>
+										<input [id]="'phase-price-' + i" type="text" formControlName="price" class="form-control" placeholder="Price">
+									</div>
+									<div class="field-group">
+										<label [for]="'phase-location-' + i">Location</label>
+										<input [id]="'phase-location-' + i" type="text" formControlName="location" class="form-control" placeholder="Location">
+									</div>
+									<div class="field-group field-span-2">
+										<label [for]="'phase-map-' + i">Map URL</label>
+										<input [id]="'phase-map-' + i" type="text" formControlName="map" class="form-control" placeholder="Google Maps URL">
+									</div>
+								</div>
+
+								<div class="phase-media-grid">
+									<div class="phase-media-item">
+										<strong>Phase image</strong>
+										<label class="upload-button">
+											<i class="fa fa-upload" aria-hidden="true"></i> Choose image
+											<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutputPhaseImage($event, i)" [uploadInput]="uploadInput">
+										</label>
+										<div class="phase-image-preview" *ngIf="phases.at(i).get('image')?.value">
+											<img [src]="imagePath + 'project/' + phases.at(i).get('image')?.value" alt="Phase image preview">
+											<button type="button" class="remove-media" (click)="removePhaseImage(i, 'image')">Remove</button>
+										</div>
+									</div>
+									<div class="phase-media-item">
+										<strong>Phase thumbnail</strong>
+										<label class="upload-button">
+											<i class="fa fa-upload" aria-hidden="true"></i> Choose image
+											<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutputPhaseThumb($event, i)" [uploadInput]="uploadInput">
+										</label>
+										<div class="phase-image-preview" *ngIf="phases.at(i).get('image_thumbnail')?.value">
+											<img [src]="imagePath + 'project/' + phases.at(i).get('image_thumbnail')?.value" alt="Phase thumbnail preview">
+											<button type="button" class="remove-media" (click)="removePhaseImage(i, 'image_thumbnail')">Remove</button>
+										</div>
+									</div>
+									<div class="phase-media-item phase-gallery-item">
+										<strong>Phase gallery</strong>
+										<label class="upload-button">
+											<i class="fa fa-upload" aria-hidden="true"></i> Add image
+											<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutputPhaseGallery($event, i)" [uploadInput]="uploadInput">
+										</label>
+										<div class="phase-gallery-grid" *ngIf="phases.at(i).get('project_images')?.value?.length">
+											<div class="phase-image-preview" *ngFor="let image of phases.at(i).get('project_images')?.value; let imageIndex = index">
+												<img [src]="imagePath + 'project/' + image" alt="Phase gallery image">
+												<button type="button" class="remove-media" (click)="removePhaseGalleryImage(i, imageIndex)">Remove</button>
+											</div>
+										</div>
+										<span class="phase-media-empty" *ngIf="!phases.at(i).get('project_images')?.value?.length">No phase images uploaded</span>
+									</div>
+								</div>
+
+								<div class="phase-settings">
+									<div>
+										<strong>Featured phase</strong>
+										<ui-switch formControlName="featured" [disabled]="config.disabled" color="#315fd5"></ui-switch>
+									</div>
+									<div class="field-group">
+										<label [for]="'phase-status-' + i">Phase status</label>
+										<select [id]="'phase-status-' + i" formControlName="status" class="form-control">
+											<option [ngValue]="true">Active</option>
+											<option [ngValue]="false">Inactive</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="phase-empty-state" *ngIf="phases.length === 0">
+						No project phases have been added.
+					</div>
+				</section>
+
+				<section class="editor-card">
+					<div class="section-heading">
+						<div class="section-icon"><i class="fa fa-picture-o" aria-hidden="true"></i></div>
+						<div>
+							<h2>Project media</h2>
+							<p>Upload clear project images at the recommended dimensions.</p>
+						</div>
+					</div>
+
+					<div class="media-grid">
+						<div class="upload-card">
+							<div class="upload-card-heading">
+								<div>
+									<h3>Thumbnail image</h3>
+									<p>Recommended: 510 × 720 px</p>
+								</div>
+								<label class="upload-button">
+									<i class="fa fa-upload" aria-hidden="true"></i> Choose image
+									<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutputProjectThumb($event)" [uploadInput]="uploadInput">
+								</label>
+							</div>
+							<div class="media-preview" *ngIf="projectImageThumb">
+								<img [src]="imagePath + 'project/' + projectImageThumb" alt="Project thumbnail preview">
+								<button type="button" class="remove-media" (click)="removeImageThumb(projectImageThumb)" aria-label="Remove thumbnail"><i class="fa fa-trash" aria-hidden="true"></i> Remove</button>
+							</div>
+							<div class="upload-placeholder" *ngIf="!projectImageThumb">
+								<i class="fa fa-image" aria-hidden="true"></i><span>No thumbnail uploaded</span>
+							</div>
+						</div>
+
+						<div class="upload-card">
+							<div class="upload-card-heading">
+								<div>
+									<h3>Banner image</h3>
+									<p>Recommended: 1920 × 1080 px</p>
+								</div>
+								<label class="upload-button">
+									<i class="fa fa-upload" aria-hidden="true"></i> Choose image
+									<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput">
+								</label>
+							</div>
+							<div class="media-preview" *ngIf="projectImage">
+								<img [src]="imagePath + 'project/' + projectImage" alt="Project banner preview">
+								<button type="button" class="remove-media" (click)="removeImage(projectImage)" aria-label="Remove banner"><i class="fa fa-trash" aria-hidden="true"></i> Remove</button>
+							</div>
+							<div class="upload-placeholder" *ngIf="!projectImage">
+								<i class="fa fa-image" aria-hidden="true"></i><span>No banner uploaded</span>
+							</div>
+						</div>
+
+						<div class="upload-card">
+							<div class="upload-card-heading">
+								<div>
+									<h3>Project gallery</h3>
+									<p>Add supporting project images.</p>
+								</div>
+								<label class="upload-button">
+									<i class="fa fa-upload" aria-hidden="true"></i> Add image
+									<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutputProjectImage($event)" [uploadInput]="uploadInput">
+								</label>
+							</div>
+							<div class="media-preview-grid" *ngIf="projectMultiImages?.length">
+								<div class="media-preview compact-preview" *ngFor="let image of projectMultiImages; let i = index">
+									<img [src]="imagePath + 'project/' + image" alt="Project gallery image">
+									<button type="button" class="remove-media" (click)="removeImageHover(i)" [attr.aria-label]="'Remove gallery image ' + (i + 1)"><i class="fa fa-trash" aria-hidden="true"></i> Remove</button>
+								</div>
+							</div>
+							<div class="upload-placeholder" *ngIf="!projectMultiImages?.length">
+								<i class="fa fa-picture-o" aria-hidden="true"></i><span>No gallery images uploaded</span>
+							</div>
+						</div>
+
+						<div class="upload-card">
+							<div class="upload-card-heading">
+								<div>
+									<h3>Design images</h3>
+									<p>Recommended: 780 × 700 px</p>
+								</div>
+								<label class="upload-button">
+									<i class="fa fa-upload" aria-hidden="true"></i> Add image
+									<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutputProjectDesignImage($event)" [uploadInput]="uploadInput">
+								</label>
+							</div>
+							<div class="media-preview-grid" *ngIf="projectDesignImages?.length">
+								<div class="media-preview compact-preview" *ngFor="let image of projectDesignImages; let i = index">
+									<img [src]="imagePath + 'project/' + image" alt="Project design image">
+									<button type="button" class="remove-media" (click)="removeDesignImage(i)" [attr.aria-label]="'Remove design image ' + (i + 1)"><i class="fa fa-trash" aria-hidden="true"></i> Remove</button>
+								</div>
+							</div>
+							<div class="upload-placeholder" *ngIf="!projectDesignImages?.length">
+								<i class="fa fa-object-group" aria-hidden="true"></i><span>No design images uploaded</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="legacy-media">
+						<h3>Optional detail images</h3>
+						<div class="legacy-media-grid">
+							<div class="legacy-media-item">
+								<div class="upload-card-heading">
+									<div><strong>Detail image 1</strong></div>
+									<label class="upload-button compact-upload">Choose<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutputD1($event)" [uploadInput]="uploadInput"></label>
+								</div>
+								<div class="legacy-preview" *ngIf="designImage1">
+									<img [src]="imagePath + 'project/' + designImage1" alt="Project detail image 1">
+									<button type="button" class="remove-media" (click)="removeD1Image(0)" aria-label="Remove detail image 1"><i class="fa fa-trash" aria-hidden="true"></i></button>
+								</div>
+							</div>
+							<div class="legacy-media-item">
+								<div class="upload-card-heading">
+									<div><strong>Detail image 2</strong></div>
+									<label class="upload-button compact-upload">Choose<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutputD2($event)" [uploadInput]="uploadInput"></label>
+								</div>
+								<div class="legacy-preview" *ngIf="designImage2">
+									<img [src]="imagePath + 'project/' + designImage2" alt="Project detail image 2">
+									<button type="button" class="remove-media" (click)="removeD2Image(0)" aria-label="Remove detail image 2"><i class="fa fa-trash" aria-hidden="true"></i></button>
+								</div>
+							</div>
+							<div class="legacy-media-item">
+								<div class="upload-card-heading">
+									<div><strong>Detail image 3</strong></div>
+									<label class="upload-button compact-upload">Choose<input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutputD5($event)" [uploadInput]="uploadInput"></label>
+								</div>
+								<div class="legacy-preview" *ngIf="designImage5">
+									<img [src]="imagePath + 'project/' + designImage5" alt="Project detail image 3">
+									<button type="button" class="remove-media" (click)="removeD5Image(0)" aria-label="Remove detail image 3"><i class="fa fa-trash" aria-hidden="true"></i></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section class="editor-card">
+					<div class="section-heading">
+						<div class="section-icon"><i class="fa fa-link" aria-hidden="true"></i></div>
+						<div>
+							<h2>Related projects</h2>
+							<p>Optionally connect this project to other portfolio entries.</p>
+						</div>
+					</div>
+					<div class="field-group">
+						<label for="related-projects">Select related projects</label>
+						<ng-select
+							id="related-projects"
+							class="project-related-select"
+							[items]="projectListData"
+							bindLabel="name"
+							placeholder="Choose one or more projects"
+							[multiple]="true"
+							[compareWith]="compareRelatedProjects"
+							[loading]="isLoadingRelatedProjects"
+							[closeOnSelect]="false"
+							[hideSelected]="true"
+							notFoundText="No related projects available"
+							formControlName="related_prjects">
+						</ng-select>
+						<small class="field-hint" *ngIf="projectListData.length === 0 && !isLoadingRelatedProjects && !relatedProjectsLoadError">No other projects are available to link.</small>
+					</div>
+				</section>
+			</div>
+
+			<aside class="editor-sidebar">
+				<section class="editor-card sidebar-card">
+					<div class="section-heading compact-heading">
+						<div class="section-icon"><i class="fa fa-sliders" aria-hidden="true"></i></div>
+						<div>
+							<h2>Publishing</h2>
+							<p>Control where this project appears.</p>
+						</div>
+					</div>
+
+					<div class="toggle-list">
+						<div class="toggle-row">
+							<div><strong>Project status</strong><span>Enable or hide this project</span></div>
+							<select aria-label="Project status" formControlName="status" class="status-select">
+								<option value="true">Active</option>
+								<option value="false">Inactive</option>
+							</select>
+						</div>
+						<div class="toggle-row">
+							<div><strong>Homepage feature</strong><span>Show in homepage project section</span></div>
+							<ui-switch formControlName="display_on_home" [disabled]="config.disabled" color="#315fd5"></ui-switch>
+						</div>
+						<div class="toggle-row">
+							<div><strong>Service feature</strong><span>Show on the service page</span></div>
+							<ui-switch formControlName="display_on_service" [disabled]="config.disabled" color="#315fd5"></ui-switch>
+						</div>
+						<div class="toggle-row">
+							<div><strong>Featured project</strong><span>Mark this project as featured</span></div>
+							<ui-switch formControlName="featured" [disabled]="config.disabled" color="#315fd5"></ui-switch>
+						</div>
+					</div>
+
+					<div class="field-group sidebar-field">
+						<label for="project-sequence">Sequence number</label>
+						<input id="project-sequence" type="number" autocomplete="off" formControlName="sequence_number" class="form-control" placeholder="Optional order">
+					</div>
+
+					<div class="field-group sidebar-field">
+						<label for="project-url-key">URL key <span class="required-mark">*</span></label>
+						<input id="project-url-key" type="text" autocomplete="off" formControlName="url_key" class="form-control" placeholder="project-url-key" [class.invalid-control]="submitted && hasError('url_key', 'required')">
+						<small class="field-hint">Use a unique, URL-friendly project key.</small>
+						<small class="field-error" *ngIf="submitted && hasError('url_key', 'required')">URL key is required.</small>
+					</div>
+				</section>
+
+				<section class="editor-card action-card">
+					<h2>{{ isEdit ? 'Save your changes' : 'Ready to publish?' }}</h2>
+					<p>Review the project details before saving.</p>
+					<button type="submit" class="editor-button button-primary" [disabled]="isSaving || isLoadingData || msg_success">
+						<span *ngIf="isSaving" class="button-spinner" aria-hidden="true"></span>
+						<i *ngIf="!isSaving" class="fa fa-check" aria-hidden="true"></i>
+						{{ isSaving ? 'Saving…' : (isEdit ? 'Update project' : 'Create project') }}
+					</button>
+					<button type="button" class="editor-button button-secondary" (click)="onCancel()" [disabled]="isSaving">Cancel</button>
+				</section>
+			</aside>
+		</div>
+	</form>
+</div>

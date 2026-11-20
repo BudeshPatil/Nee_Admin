@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { LoginService } from 'src/app/providers/auth/login.service';
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { ResponseService } from '../../../providers/response/response.service';
 
@@ -14,12 +13,13 @@ import { BlogcategoryService } from 'src/app/providers/blogcategory/blogcategory
 	styleUrls: ['./view-blog-category.component.scss']
 })
 export class ViewCategoryComponent implements OnInit {
-	msg_danger: boolean = false;
-	CategoryData: any;
+	CategoryData: any[] = [];
 	imagePath: any;
 	token: any;
-	VendorData: any;
-	vendorid: any = '';
+	isLoading = true;
+	loadError = false;
+	searchText = '';
+	isDeleting = false;
 
 	// pagination
 	currentPage: number = 1;
@@ -28,16 +28,11 @@ export class ViewCategoryComponent implements OnInit {
 	totalRecord: number = 0;
 	selectedCategory: any;
 	closeResult = '';
-  modalReference = null;
-  selectedCustomergroup : any;
+	modalReference: Promise<any> | null = null;
 	constructor(
 		private router: Router,
-		private loginService: LoginService,
-
-
 		private categoryService: BlogcategoryService,
 		private modalService: NgbModal,
-		private activeModal: NgbActiveModal,
 		public toastr: ToastrManager,
 		public responseService: ResponseService
 	) {
@@ -50,67 +45,95 @@ export class ViewCategoryComponent implements OnInit {
 	}
 
 	get_CategoryData() {
+		this.isLoading = true;
+		this.loadError = false;
 		const obj = {
 			limit: this.currentLimit,
 			page: this.currentPage,
 			token: this.token,
 		};
-		this.categoryService.getCategoryDetails(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
-					if (response.result != null && response.result != '') {
-						this.CategoryData = response.result;
-						this.totalRecord = response?.count;
-					}
-					else {
-						this.msg_danger = true;
-					}
-
+		this.categoryService.getCategoryDetails(obj).subscribe({
+			next: (response) => {
+				this.isLoading = false;
+				if (response.code === 200) {
+					this.CategoryData = Array.isArray(response.result) ? response.result : [];
+					this.totalRecord = Number(response.count) || 0;
+					return;
 				}
+
+				this.CategoryData = [];
+				this.totalRecord = 0;
+				this.loadError = true;
+				this.toastr.errorToastr(response.message || 'Blog categories could not be loaded.');
 			},
+			error: () => {
+				this.isLoading = false;
+				this.CategoryData = [];
+				this.totalRecord = 0;
+				this.loadError = true;
+				this.toastr.errorToastr('Blog categories could not be loaded.');
+			}
+		});
+	}
+
+	get filteredCategories(): any[] {
+		const query = this.searchText.trim().toLowerCase();
+		if (!query) {
+			return this.CategoryData;
+		}
+
+		return this.CategoryData.filter((category) =>
+			String(category.name || '').toLowerCase().includes(query)
 		);
 	}
 
-	deleteCategory()
-  {
-    if (this.selectedCategory) {
-			var mylist = { id: this.selectedCategory._id };
+	deleteCategory() {
+		if (this.selectedCategory && !this.isDeleting) {
+			this.isDeleting = true;
+			const mylist: any = { id: this.selectedCategory._id };
 			mylist['token'] = this.token;
-      this.categoryService.deletecategory(mylist).subscribe(
-        (response)=> {
-          if (response.code == 200)
-          {
+			this.categoryService.deletecategory(mylist).subscribe({
+				next: (response) => {
+					this.isDeleting = false;
+					if (response.code === 200) {
 						this.modalService.dismissAll();
-            this.get_CategoryData();
+						this.toastr.successToastr(response.message || 'Blog category deleted.');
 						this.deleteMediaData();
-            this.router.navigate(['/blog-category/view']);
-          } else {
+						if (this.CategoryData.length === 1 && this.currentPage > 1) {
+							this.currentPage--;
+						}
+						this.get_CategoryData();
+						this.router.navigate(['/blog-category/view']);
+					} else {
 						this.modalService.dismissAll();
-						this.toastr.errorToastr(response.message);
+						this.toastr.errorToastr(response.message || 'Blog category could not be deleted.');
 						this.CreateErrorResponse(response);
 					}
-        },
-      );
-    }
-  }
+				},
+				error: (error) => {
+					this.isDeleting = false;
+					this.toastr.errorToastr(error?.error?.message || 'Blog category could not be deleted.');
+				}
+			});
+		}
+	}
 
 	onListChangePage(event: any) {
 		this.currentPage = event;
 		this.get_CategoryData();
 	}
 
-	open(content,data) {
-    this.selectedCategory = data;
+	open(content: any, data: any) {
+		this.selectedCategory = data;
 		if (this.selectedCategory) {
-		var mylist = { id: this.selectedCategory._id };
-		this.modalReference = this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+			this.modalReference = this.modalService.open(content, { ariaLabelledBy: 'modal-title' }).result.then(
 			(result) => {
 				this.closeResult = `Closed with: ${result}`;
 			},
 			(reason) => {
 				this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
 			},
-		);
+			);
 		}
 	}
 
@@ -123,10 +146,6 @@ export class ViewCategoryComponent implements OnInit {
 			return `with: ${reason}`;
 		}
 	}
-
-  closeModal(){
-    this.activeModal.close();
-  }
 
 	deleteMediaFile(){
     let obj = {	};

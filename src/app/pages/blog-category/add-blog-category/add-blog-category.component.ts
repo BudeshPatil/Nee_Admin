@@ -36,6 +36,9 @@ export class AddCategoryComponent implements OnInit {
 	submitted: boolean = false;
 	msg_success: boolean = false;
 	msg_danger: boolean = false;
+	isLoading = false;
+	isSaving = false;
+	loadError = false;
 	token: any;
 	// Edit Action Here
 	applyAction: any;
@@ -45,7 +48,7 @@ export class AddCategoryComponent implements OnInit {
 		editable: true,
 		spellcheck: true,
 		height: 'auto',
-		minHeight: '200px',
+		minHeight: '240px',
 		maxHeight: 'auto',
 		width: 'auto',
 		minWidth: '0',
@@ -99,7 +102,7 @@ export class AddCategoryComponent implements OnInit {
 		this.uploadInput = new EventEmitter<UploadInput>();
 		this.addcategoryForm = this.formBuilder.group({
 			name: ['', Validators.required],
-			status: ['', Validators.required],
+			status: ['true', Validators.required],
 			description: ['', Validators.required],
 			short_desc: [''],
 			url_key: ['', Validators.required],
@@ -176,10 +179,13 @@ export class AddCategoryComponent implements OnInit {
 	}
 
 	patchingdata(id: any) {
+		this.isLoading = true;
+		this.loadError = false;
 		let obj = { id: id };
-		this.categoryService.getCategoryWithId(obj).subscribe(
-			(response) => {
-				if (response.code == 200) {
+		this.categoryService.getCategoryWithId(obj).subscribe({
+			next: (response) => {
+				this.isLoading = false;
+				if (response.code === 200 && response.result) {
 					let data = response?.result;
 					this.categoryData = data;
 					this.categoryImage = data?.image;
@@ -205,7 +211,7 @@ export class AddCategoryComponent implements OnInit {
 					}
 					this.addcategoryForm.patchValue({
 						name: data?.name,
-						status: data?.status,
+						status: data?.status === true || data?.status === 'true' ? 'true' : 'false',
 						short_desc: data?.short_desc,
 						description: data?.description,
 						url_key: data?.url_key,
@@ -216,88 +222,70 @@ export class AddCategoryComponent implements OnInit {
 						collection_id: data?.collection_id
 					});
 				} else {
-
+					this.loadError = true;
+					this.toastr.errorToastr(response.message || 'Blog category could not be loaded.');
 				}
 			},
-		);
+			error: () => {
+				this.isLoading = false;
+				this.loadError = true;
+				this.toastr.errorToastr('Blog category could not be loaded.');
+			}
+		});
 	}
 
 	onSubmit() {
 		this.submitted = true;
-		let obj = this.addcategoryForm.value;
-		let id = this.id;
-		obj['token'] = this.token;
+		if (this.addcategoryForm.invalid || this.isSaving) {
+			return;
+		}
+
+		this.isSaving = true;
+		const obj: any = {
+			...this.addcategoryForm.value,
+			token: this.token,
+			gallery_image: this.gallery_images
+		};
 		if (this.mediaData) {
 			obj['image'] = this.mediaData._id;
 		}
-		obj['gallery_image'] = this.gallery_images;
-		// let subcategory_Data: any = [];
-		// if (this.addcategoryForm.value.sub_categories && this.addcategoryForm.value.sub_categories.length > 0) {
-		// 	this.addcategoryForm.value.sub_categories.forEach((subcategory) => {
-		// 		let obj = {
-		// 			sub_category_id: subcategory._id,
-		// 			sub_category_name: subcategory.name
-		// 		};
-		// 		subcategory_Data.push(obj);
-		// 	})
-		// }
-		if (this.addcategoryForm.invalid) {
-			return;
-		}
-		// obj['sub_categories'] = subcategory_Data;
-		if (!this.isEdit) {
-			this.categoryService.addCategory(obj).subscribe(
-				(response) => {
-					if (response.code == 200) {
-						this.toastr.successToastr(response.message);
-						this.throw_msg = response.message
-						this.msg_success = true;
-						this.isUploaded = true;
-						if (this.isMediaDeleted) {
-							this.deleteMediaData();
-						}
-						if (this.isMediaFileDeleted) {
-							this.deleteMediaFile();
-						}
-						setTimeout(() => {
-							this.router.navigate(['/blog-category/view']);
-						}, 2000);
+		const saveRequest = this.isEdit
+			? this.categoryService.editCategorydata(obj, this.id)
+			: this.categoryService.addCategory(obj);
+
+		saveRequest.subscribe({
+			next: (response) => {
+				this.isSaving = false;
+				if (response.code === 200) {
+					this.throw_msg = response.message || `Blog category ${this.isEdit ? 'updated' : 'created'}.`;
+					this.msg_success = true;
+					this.msg_danger = false;
+					this.isUploaded = true;
+					if (this.isMediaDeleted) {
+						this.deleteMediaData();
 					}
-					else {
-						this.throw_msg = response.message
-						this.msg_danger = true;
-						this.toastr.errorToastr(response.message);
-						this.CreateErrorResponse(response);
+					if (this.isMediaFileDeleted) {
+						this.deleteMediaFile();
 					}
-				},
-			);
-		}
-		else {
-			this.categoryService.editCategorydata(obj, id).subscribe(
-				(response) => {
-					if (response.code == 200) {
-						this.throw_msg = response.message
-						this.msg_success = true;
-						this.isUploaded = true;
-						if (this.isMediaDeleted) {
-							this.deleteMediaData();
-						}
-						if (this.isMediaFileDeleted) {
-							this.deleteMediaFile();
-						}
-						this.toastr.successToastr(response.message);
-						setTimeout(() => {
-							this.router.navigate(['/blog-category/view']);
-						}, 2000);
-					} else {
-						this.throw_msg = response.message
-						this.msg_danger = true;
-						this.toastr.errorToastr(response.message);
-						this.CreateErrorResponse(response);
-					}
-				},
-			);
-		}
+					this.toastr.successToastr(this.throw_msg);
+					setTimeout(() => this.router.navigate(['/blog-category/view']), 1200);
+					return;
+				}
+
+				this.throw_msg = response.message || 'Blog category could not be saved.';
+				this.msg_danger = true;
+				this.msg_success = false;
+				this.toastr.errorToastr(this.throw_msg);
+				this.CreateErrorResponse(response);
+			},
+			error: (error) => {
+				this.isSaving = false;
+				this.throw_msg = error?.error?.message || 'Blog category could not be saved. Please try again.';
+				this.msg_danger = true;
+				this.msg_success = false;
+				this.toastr.errorToastr(this.throw_msg);
+			}
+		});
 	}
 
 	get f() {

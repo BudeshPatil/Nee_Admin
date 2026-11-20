@@ -1,0 +1,303 @@
+<main class="banner-edit-page">
+	<header class="banner-edit-header">
+		<div>
+			<p class="banner-edit-eyebrow">SITE CONTENT</p>
+			<h1>{{ isEdit ? 'Edit banner' : 'Create a banner' }}</h1>
+			<p class="banner-edit-intro">Manage the banner copy, media, and visibility shown across your site.</p>
+		</div>
+		<a class="banner-edit-back-link" routerLink="/banner-images/view">
+			<i class="ni ni-bold-left" aria-hidden="true"></i>
+			Back to banners
+		</a>
+	</header>
+
+	<div *ngIf="msg_success" class="banner-edit-alert banner-edit-alert-success" role="status">
+		<i class="ni ni-check-bold" aria-hidden="true"></i>
+		<span>{{ throw_msg || 'Banner saved successfully.' }}</span>
+	</div>
+	<div *ngIf="msg_danger" class="banner-edit-alert banner-edit-alert-danger" role="alert">
+		<i class="ni ni-fat-remove" aria-hidden="true"></i>
+		<span>{{ throw_msg || 'The banner could not be saved. Please try again.' }}</span>
+	</div>
+
+	<div *ngIf="isEdit && isLoading" class="banner-edit-state" role="status">
+		<span class="spinner-border" aria-hidden="true"></span>
+		<strong>Loading banner…</strong>
+		<span>Please wait while the current banner is retrieved.</span>
+	</div>
+	<div *ngIf="isEdit && loadError && !isLoading" class="banner-edit-state banner-edit-state-error" role="alert">
+		<strong>We couldn’t load this banner.</strong>
+		<span>Check your connection and try again.</span>
+		<button type="button" class="banner-edit-secondary-button" (click)="patchingdata(id)">Try again</button>
+	</div>
+
+	<form
+		*ngIf="!isEdit || (!isLoading && !loadError)"
+		class="banner-edit-form"
+		[formGroup]="addbannerForm"
+		(ngSubmit)="onSubmit()"
+		novalidate>
+		<div class="banner-edit-layout">
+			<div class="banner-edit-main">
+				<section class="banner-edit-card">
+					<div class="banner-edit-card-heading">
+						<span class="banner-edit-step">01</span>
+						<div>
+							<h2>Banner content</h2>
+							<p>Use concise copy that is easy to read over the banner image.</p>
+						</div>
+					</div>
+
+					<div class="banner-edit-fields">
+						<div class="banner-edit-field">
+							<label for="banner-name">Name <span class="banner-required">*</span></label>
+							<input
+								id="banner-name"
+								type="text"
+								formControlName="name"
+								class="form-control"
+								placeholder="Enter an internal banner name"
+								autocomplete="off"
+								[attr.aria-invalid]="submitted && hasError('name', 'required')">
+							<small *ngIf="submitted && hasError('name', 'required')" class="banner-field-error">
+								Banner name is required.
+							</small>
+						</div>
+
+						<div class="banner-edit-field">
+							<div class="banner-edit-label-row">
+								<label for="banner-short-description">Short description</label>
+								<span class="banner-field-hint">Recommended: 180–200 characters</span>
+							</div>
+							<textarea
+								id="banner-short-description"
+								formControlName="short_desc"
+								class="form-control banner-edit-textarea banner-short-textarea"
+								rows="4"
+								placeholder="Add a short, attention-grabbing message">
+							</textarea>
+						</div>
+
+						<div class="banner-edit-field">
+							<div class="banner-edit-label-row">
+								<label for="banner-description">Description</label>
+								<span class="banner-field-hint">Recommended: 200–300 characters</span>
+							</div>
+							<textarea
+								id="banner-description"
+								formControlName="description"
+								class="form-control banner-edit-textarea"
+								rows="7"
+								placeholder="Add supporting details for this banner">
+							</textarea>
+						</div>
+					</div>
+				</section>
+
+				<section class="banner-edit-card">
+					<div class="banner-edit-card-heading">
+						<span class="banner-edit-step">02</span>
+						<div>
+							<h2>Banner media</h2>
+							<p>Choose a wide visual. Recommended image: 1482 × 584 px; video: 1920 × 1080 px.</p>
+						</div>
+					</div>
+
+					<div *ngIf="mediaData" class="banner-media-preview-card">
+						<div class="banner-media-preview">
+							<img
+								*ngIf="mediaData.file_type === 'image'"
+								[src]="imagePath + mediaData.src"
+								[alt]="mediaData.name || 'Banner image preview'">
+							<video
+								*ngIf="mediaData.file_type === 'video'"
+								[src]="imagePath + mediaData.src"
+								controls
+								preload="metadata"
+								aria-label="Banner video preview">
+							</video>
+							<div *ngIf="mediaData.file_type !== 'image' && mediaData.file_type !== 'video'"
+								class="banner-media-unsupported">
+								<i class="ni ni-image" aria-hidden="true"></i>
+								<span>Preview unavailable for this media type.</span>
+							</div>
+						</div>
+						<div class="banner-media-preview-footer">
+							<div class="banner-media-preview-info">
+								<span class="banner-media-type">{{ mediaData.file_type || 'Media' }}</span>
+								<strong>{{ mediaData.name || mediaData.src }}</strong>
+							</div>
+							<div class="banner-media-actions">
+								<button type="button" class="banner-edit-secondary-button" (click)="editMedia(media, mediaData, 'media')">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+									Edit media
+								</button>
+								<button type="button" class="banner-edit-remove-button" (click)="deleteMedia(0, 'media')">
+									<i class="fa fa-trash" aria-hidden="true"></i>
+									Remove
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div *ngIf="!mediaData" class="banner-media-empty">
+						<span class="banner-media-empty-icon"><i class="ni ni-image" aria-hidden="true"></i></span>
+						<strong>No banner media selected</strong>
+						<span>Upload an image or video to complete your banner.</span>
+						<button type="button" class="banner-edit-secondary-button" (click)="openMedia(media)">
+							<i class="ni ni-cloud-upload-96" aria-hidden="true"></i>
+							Choose media
+						</button>
+					</div>
+					<small *ngIf="mediaError" class="banner-field-error banner-media-error">
+						Select banner media before saving.
+					</small>
+				</section>
+			</div>
+
+			<aside class="banner-edit-sidebar">
+				<section class="banner-edit-card banner-publishing-card">
+					<div class="banner-edit-card-heading">
+						<span class="banner-edit-step">03</span>
+						<div>
+							<h2>Publishing</h2>
+							<p>Set the banner format and visibility.</p>
+						</div>
+					</div>
+
+					<div class="banner-edit-field">
+						<label for="banner-format">Format</label>
+						<select id="banner-format" formControlName="format" class="form-control">
+							<option value="image">Image</option>
+							<option value="video">Video</option>
+						</select>
+						<span class="banner-field-hint">Choose the format that matches your banner media.</span>
+					</div>
+
+					<div class="banner-edit-field">
+						<label for="banner-status">Status <span class="banner-required">*</span></label>
+						<select id="banner-status" formControlName="status" class="form-control">
+							<option [ngValue]="true">Active</option>
+							<option [ngValue]="false">Inactive</option>
+						</select>
+					</div>
+				</section>
+
+				<div class="banner-edit-tip">
+					<i class="ni ni-bulb-61" aria-hidden="true"></i>
+					<div>
+						<strong>Design tip</strong>
+						<p>Keep text short and make sure it remains readable against the chosen image or video.</p>
+					</div>
+				</div>
+			</aside>
+		</div>
+
+		<footer class="banner-edit-actions">
+			<a class="banner-edit-secondary-button" routerLink="/banner-images/view">Cancel</a>
+			<button
+				type="submit"
+				class="banner-edit-save-button"
+				[disabled]="isSaving || isUploadingMedia || isMediaSaving">
+				<span *ngIf="isSaving" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+				<i *ngIf="!isSaving" class="ni ni-check-bold" aria-hidden="true"></i>
+				{{ isSaving ? 'Saving…' : (isEdit ? 'Save changes' : 'Create banner') }}
+			</button>
+		</footer>
+	</form>
+</main>
+
+<ng-template #media let-modal>
+	<div class="banner-media-modal-header">
+		<div>
+			<p class="banner-edit-eyebrow">BANNER ASSET</p>
+			<h2>{{ isMediaEdit ? 'Edit media' : 'Add media' }}</h2>
+			<p>Upload a file and add the details used to manage it.</p>
+		</div>
+		<button type="button" class="banner-modal-close" aria-label="Close dialog" (click)="modal.dismiss('Cross click')">
+			<i class="fa fa-times" aria-hidden="true"></i>
+		</button>
+	</div>
+	<div class="banner-media-modal-body">
+		<form [formGroup]="addmediaForm" (ngSubmit)="onSubmitMedia(addmediaForm.value.file_type)" novalidate>
+			<div class="banner-media-modal-grid">
+				<div class="banner-edit-field">
+					<label for="media-name">Media name <span class="banner-required">*</span></label>
+					<input id="media-name" type="text" formControlName="name" class="form-control" placeholder="Enter a media name">
+					<small *ngIf="submittedMedia && hasMediaFormError('name', 'required')" class="banner-field-error">
+						Media name is required.
+					</small>
+				</div>
+				<div class="banner-edit-field">
+					<label for="media-file-type">File type</label>
+					<select id="media-file-type" formControlName="file_type" class="form-control">
+						<option value="image">Image</option>
+						<option value="video">Video</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="banner-edit-field banner-media-upload-field">
+				<label>{{ addmediaForm.value.file_type === 'video' ? 'Video file' : 'Image file' }}
+					<span class="banner-required">*</span>
+				</label>
+				<div class="banner-media-upload-box">
+					<input
+						*ngIf="addmediaForm.value.file_type === 'image'"
+						type="file"
+						#uploader
+						ngFileSelect
+						(uploadOutput)="onUploadOutput($event, 'image')"
+						[uploadInput]="uploadInput"
+						aria-label="Choose image file"
+						accept="image/*">
+					<input
+						*ngIf="addmediaForm.value.file_type === 'video'"
+						type="file"
+						#uploader
+						ngFileSelect
+						(uploadOutput)="onUploadOutput($event, 'video')"
+						[uploadInput]="uploadInput"
+						aria-label="Choose video file"
+						accept="video/*">
+					<i class="ni ni-cloud-upload-96" aria-hidden="true"></i>
+					<strong>{{ isUploadingMedia ? 'Uploading…' : 'Choose a file to upload' }}</strong>
+					<span>Recommended image 1482 × 584 px; video 1920 × 1080 px.</span>
+					<span *ngIf="mediaFile" class="banner-upload-selected">{{ mediaFile }}</span>
+					<span *ngIf="isUploadingMedia" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+				</div>
+				<div *ngIf="mediaFile && addmediaForm.value.file_type === 'image'" class="banner-modal-media-preview">
+					<img [src]="imagePath + mediaFile" alt="Selected banner image preview">
+				</div>
+				<div *ngIf="mediaFile && addmediaForm.value.file_type === 'video'" class="banner-modal-media-preview">
+					<video [src]="imagePath + mediaFile" controls preload="metadata" aria-label="Selected banner video preview"></video>
+				</div>
+				<small *ngIf="submittedMedia && hasMediaFormError('src', 'required')" class="banner-field-error">
+					Choose a file before saving this media.
+				</small>
+			</div>
+
+			<div class="banner-media-modal-grid">
+				<div class="banner-edit-field">
+					<label for="media-sequence">Sequence number</label>
+					<input id="media-sequence" type="number" formControlName="sequence_number" class="form-control" placeholder="Optional">
+				</div>
+				<div class="banner-edit-field">
+					<label for="media-status">Status</label>
+					<select id="media-status" formControlName="status" class="form-control">
+						<option [ngValue]="true">Active</option>
+						<option [ngValue]="false">Inactive</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="banner-media-modal-actions">
+				<button type="button" class="banner-edit-secondary-button" (click)="onCancelMedia()">Cancel</button>
+				<button type="submit" class="banner-edit-save-button" [disabled]="isUploadingMedia || isMediaSaving">
+					<span *ngIf="isMediaSaving" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+					{{ isMediaSaving ? 'Saving…' : (isMediaEdit ? 'Save media' : 'Add media') }}
+				</button>
+			</div>
+		</form>
+	</div>
+</ng-template>

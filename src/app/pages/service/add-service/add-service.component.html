@@ -1,0 +1,128 @@
+<div class="container-fluid service-editor">
+  <div class="editor-heading">
+    <div>
+      <a class="back-link" routerLink="/service/view"><i class="fa fa-arrow-left"></i> Back to services</a>
+      <p class="eyebrow">CONTENT MANAGEMENT</p>
+      <h1>{{ isEdit ? 'Edit service' : 'Create service' }}</h1>
+      <p class="heading-copy">Add the details and media that describe this service.</p>
+    </div>
+  </div>
+
+  <div *ngIf="loadError" class="editor-alert" role="alert">
+    <i class="fa fa-exclamation-circle"></i>
+    <span>{{ loadError }}</span>
+    <button type="button" class="alert-dismiss" (click)="loadError = ''" aria-label="Dismiss">×</button>
+  </div>
+
+  <div *ngIf="isLoadingData" class="loading-panel">
+    <span class="loading-spinner"></span> Loading service details…
+  </div>
+
+  <form *ngIf="!isLoadingData" [formGroup]="addServiceForm" (ngSubmit)="onSubmit()">
+    <div class="editor-layout">
+      <main class="editor-main">
+        <section class="form-card">
+          <div class="section-heading">
+            <span class="section-icon"><i class="fa fa-align-left"></i></span>
+            <div><h2>Service information</h2><p>Give this service a clear name and description.</p></div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field-group field-span-2">
+              <label for="service-name">Service name <span class="required-mark">*</span></label>
+              <input id="service-name" class="form-control" type="text" formControlName="name" placeholder="e.g. Interior design">
+              <small class="field-error" *ngIf="addServiceForm.get('name')?.touched && addServiceForm.get('name')?.invalid">Enter a service name.</small>
+            </div>
+
+            <div class="field-group field-span-2">
+              <label for="service-summary">Short description <span class="required-mark">*</span></label>
+              <textarea id="service-summary" class="form-control summary-input" rows="4" formControlName="short_desc" placeholder="A brief introduction to this service"></textarea>
+              <small class="field-error" *ngIf="addServiceForm.get('short_desc')?.touched && addServiceForm.get('short_desc')?.invalid">Enter a short description.</small>
+            </div>
+
+            <div class="field-group field-span-2">
+              <label>Full description</label>
+              <angular-editor formControlName="desc" [config]="editorConfig"></angular-editor>
+              <small class="field-error" *ngIf="addServiceForm.get('desc')?.touched && addServiceForm.get('desc')?.invalid">Enter a full description.</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-card">
+          <div class="section-heading">
+            <span class="section-icon"><i class="fa fa-image"></i></span>
+            <div><h2>Service media</h2><p>Upload an image to represent this service.</p></div>
+          </div>
+
+          <div class="media-grid">
+            <div class="field-group">
+              <label>Service image</label>
+              <div class="image-preview" *ngIf="serviceImageUrl">
+                <img [src]="serviceImageUrl" alt="Service preview">
+                <button type="button" class="remove-image" (click)="removeImage('service')" aria-label="Remove service image"><i class="fa fa-times"></i></button>
+              </div>
+              <label class="upload-zone" [class.has-preview]="serviceImageUrl">
+                <input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutput($event, 'service')" [uploadInput]="serviceUploadInput">
+                <i class="fa fa-cloud-upload"></i>
+                <strong>{{ serviceImageUrl ? 'Choose a different image' : 'Choose service image' }}</strong>
+                <span>PNG, JPG or WebP</span>
+              </label>
+            </div>
+            <div class="field-group">
+              <label>Home page image <span class="optional-label">Optional</span></label>
+              <div class="image-preview" *ngIf="homeImageUrl">
+                <img [src]="homeImageUrl" alt="Home page image preview">
+                <button type="button" class="remove-image" (click)="removeImage('home')" aria-label="Remove home image"><i class="fa fa-times"></i></button>
+              </div>
+              <label class="upload-zone" [class.has-preview]="homeImageUrl">
+                <input type="file" accept="image/*" ngFileSelect (uploadOutput)="onUploadOutput($event, 'home')" [uploadInput]="homeUploadInput">
+                <i class="fa fa-cloud-upload"></i>
+                <strong>{{ homeImageUrl ? 'Choose a different image' : 'Choose home page image' }}</strong>
+                <span>PNG, JPG or WebP</span>
+              </label>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="editor-sidebar">
+        <section class="form-card publish-card">
+          <div class="section-heading">
+            <span class="section-icon"><i class="fa fa-sliders"></i></span>
+            <div><h2>Publishing</h2><p>Control visibility and display order.</p></div>
+          </div>
+
+          <div class="field-group">
+            <label for="service-status">Status</label>
+            <select id="service-status" class="form-control" formControlName="status">
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="service-price">Price <span class="optional-label">Optional</span></label>
+            <input id="service-price" class="form-control" type="text" formControlName="price" placeholder="e.g. Starting from $500">
+          </div>
+          <div class="field-group">
+            <label for="service-link">URL key <span class="optional-label">Optional</span></label>
+            <input id="service-link" class="form-control" type="text" formControlName="link" placeholder="service-url">
+          </div>
+          <div class="field-group">
+            <label for="service-order">Display order</label>
+            <input id="service-order" class="form-control" type="number" formControlName="sequence_number" placeholder="0">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="save-button" [disabled]="isSaving">
+              <span *ngIf="isSaving" class="button-spinner"></span>
+              <i *ngIf="!isSaving" class="fa fa-check"></i>
+              {{ isSaving ? 'Saving…' : (edit ? 'Save changes' : 'Create service') }}
+            </button>
+            <a class="cancel-button" routerLink="/service/view">Cancel</a>
+          </div>
+        </section>
+        <p class="required-note"><span class="required-mark">*</span> Required fields</p>
+      </aside>
+    </div>
+  </form>
+</div>

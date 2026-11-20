@@ -1,151 +1,143 @@
-<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
-	style="min-height: 400px;  background-size: cover; background-position: center top;">
-	<!-- Mask -->
-	<span class="mask bg-gradient-info opacity-8"></span>
-	<!-- Header container -->
-	<div class="container-fluid d-flex align-items-center">
-		<div class="row">
-			<div class="col-lg-7 col-md-10">
-				<h1 class="display-2 text-white">Single Blog-Category </h1>
-				<p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with
-					your work and manage your projects or assigned tasks</p>
-				<!-- <a href="#!" class="btn btn-info">Edit Pages</a> -->
-			</div>
+<div class="category-form-page container-fluid">
+	<header class="page-heading">
+		<div>
+			<p class="eyebrow">WEBSITE CONTENT</p>
+			<h1>{{ isEdit ? 'Edit blog category' : 'Add blog category' }}</h1>
+			<p class="page-description">{{ isEdit ? 'Update category details, descriptions, and media.' : 'Create a category to organize related blog posts.' }}</p>
 		</div>
-	</div>
-</div>
-<div class="container-fluid mt--7">
-	<div class="row">
-		<div class="col-xl-12 order-xl-1">
-			<div class="card bg-secondary shadow">
-				<div class="card-header bg-white border-0">
-					<div class="row align-items-center">
-						<div class="col-8">
-							<h3 class="mb-0">Edit Blog-Category</h3>
-						</div>
+		<a class="back-link" routerLink="/blog-category/view">
+			<i class="fa fa-arrow-left" aria-hidden="true"></i>
+			Back to categories
+		</a>
+	</header>
+
+	<section class="form-card">
+		<header class="form-card-heading">
+			<div>
+				<h2>Category details</h2>
+				<p>Fields marked <span aria-hidden="true">*</span> are required.</p>
+			</div>
+		</header>
+
+		<div *ngIf="isLoading" class="state-panel" role="status">
+			<span class="loading-spinner"></span>
+			<strong>Loading category…</strong>
+		</div>
+		<div *ngIf="loadError" class="state-panel error-state" role="alert">
+			<span class="state-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+			<strong>Category couldn't be loaded</strong>
+			<p>Check your connection and try again.</p>
+			<button type="button" class="secondary-action" (click)="patchingdata(id)">Try again</button>
+		</div>
+
+		<form *ngIf="!isLoading && !loadError" [formGroup]="addcategoryForm" (ngSubmit)="onSubmit()" novalidate>
+			<div class="form-content">
+				<div class="form-section-heading">
+					<span class="section-icon"><i class="fa fa-folder-open-o" aria-hidden="true"></i></span>
+					<div><h3>Category information</h3><p>Give this category a clear name and useful description.</p></div>
+				</div>
+
+				<div class="form-grid">
+					<div class="field-group">
+						<label for="category-name">Category name <span>*</span></label>
+						<input id="category-name" type="text" name="name" formControlName="name" autocomplete="off" placeholder="e.g. Community updates" [class.invalid]="submitted && hasError('name', 'required')" [attr.aria-invalid]="submitted && hasError('name', 'required')">
+						<span class="field-error" *ngIf="submitted && hasError('name', 'required')">Category name is required.</span>
 					</div>
-					<div class="alert alert-success alert-dismissable" style="margin-left: 0;" *ngIf="msg_success">
-						{{throw_msg}}
+					<div class="field-group">
+						<label for="category-url-key">URL key <span>*</span></label>
+						<input id="category-url-key" type="text" name="url_key" formControlName="url_key" autocomplete="off" placeholder="e.g. community-updates" [class.invalid]="submitted && hasError('url_key', 'required')" [attr.aria-invalid]="submitted && hasError('url_key', 'required')">
+						<span class="field-error" *ngIf="submitted && hasError('url_key', 'required')">URL key is required.</span>
+						<span class="field-hint">Used in the category's public web address.</span>
 					</div>
-					<div class="alert alert-danger alert-dismissable" style="margin-left: 0;" *ngIf="msg_danger">
-						{{throw_msg}}
+					<div class="field-group field-span">
+						<label for="category-short-description">Short description</label>
+						<textarea id="category-short-description" name="short_desc" formControlName="short_desc" rows="4" placeholder="Add a short introduction to this category."></textarea>
+						<span class="field-hint">A concise summary helps visitors understand what these posts cover.</span>
+					</div>
+					<div class="field-group field-span">
+						<label for="category-description">Description <span>*</span></label>
+						<angular-editor id="category-description" name="description" formControlName="description" [config]="editorConfig"></angular-editor>
+						<span class="field-error" *ngIf="submitted && hasError('description', 'required')">Description is required.</span>
+					</div>
+					<div class="field-group">
+						<label for="category-sequence">Display sequence</label>
+						<input id="category-sequence" type="number" min="0" name="sequence_number" formControlName="sequence_number" placeholder="1">
+						<span class="field-hint">Lower numbers appear first.</span>
+					</div>
+					<div class="field-group">
+						<label for="category-status">Status <span>*</span></label>
+						<select id="category-status" name="status" formControlName="status" [class.invalid]="submitted && hasError('status', 'required')" [attr.aria-invalid]="submitted && hasError('status', 'required')">
+							<option value="true">Active</option>
+							<option value="false">Inactive</option>
+						</select>
+						<span class="field-error" *ngIf="submitted && hasError('status', 'required')">Choose a category status.</span>
 					</div>
 				</div>
-				<div class="card-body">
-					<!-- form start -->
-					<form [formGroup]="addcategoryForm" (ngSubmit)="onSubmit()" method="post" novalidate>
-						<div class="box-body">
-							<div class="form-group">
-								<label for="exampleInputEmail1">Name</label>
-								<input type="text" name="name" autocomplete="off" formControlName="name" class="form-control"
-									placeholder="Blog-Category Name">
-								<span *ngIf="submitted && hasError('name','required')" class="alert-danger">Blog-Category Name is
-									required</span>
-							</div>
 
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Short Description </label>
-								<textarea type="text" name="short_desc" id="short_desc" autocomplete="off" formControlName="short_desc"
-									class="form-control" placeholder="Short Description"> </textarea>
-								<span *ngIf="submitted && hasError('short_desc','required')" class="alert-danger">
-									Short Description is required
-								</span>
-							</div>
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Description</label>
-								<angular-editor name="description" formControlName="description"
-									[config]="editorConfig"></angular-editor>
-								<span *ngIf="submitted && hasError('description','required')" class="alert-danger">Description is
-									required</span>
-							</div>
-
-
-
-							<div class="form-group">
-								<h4 class="text-lg-start">Home Page - Thumbnail Image <span class="required">*</span></h4>
-								<!-- <label for="exampleInputEmail1">Home/Thumbnail Image</label> -->
-								<div class="row text-lg-start">
-									<div class="col-lg-3 col-md-4 col-6" *ngIf="mediaData">
-										<a class="cursor:pointer;text-center" (click)="deleteMedia('media', null, mediaData)">
-											<i class="ni ni-fat-remove" aria-hidden="true"></i></a>
-										<a class="d-block mb-4 h-100">
-											<img src="{{imagePath}}{{mediaData.src}}" class="img-fluid img-thumbnail"
-												*ngIf="mediaData && mediaData.file_type == 'image'" width="200" height="350"
-												(click)="editMedia(media,mediaData,'media')">
-											<video class="img-fluid img-thumbnail" *ngIf="mediaData && mediaData.file_type == 'video'"
-												width="200" height="350" (click)="editMedia(media,mediaData,'media')" controls>
-												<source src="{{imagePath}}{{mediaData.src}}" type="video/mp4">
-											</video>
-										</a>
-									</div>
-									<div class="col-lg-3 col-md-4 col-6">
-										<a (click)="openMedia(media)" class="d-block mb-4 h-100">
-											<img src="{{url}}/img/addimage.svg" class="img-fluid img-thumbnail" width="150" height="150">
-										</a>
-									</div>
-								</div>
-								<label for="exampleInputEmail1" style="display: block;">(Required Size for Image w510-px *
-									h-720px)</label>
-								<!-- <span *ngIf="submitted && hasError('product_gallery','required')" class="alert-danger">Gallery Images is required</span> -->
-							</div>
-							<hr>
-							<div class="form-group">
-								<h4 class="text-lg-start">Service Image <span class="required">*</span></h4>
-								<!-- <label for="exampleInputEmail1">Service Image</label> -->
-								<div class="row text-lg-start">
-									<div class="col-lg-3 col-md-4 col-6" *ngFor="let mediaval of galleryData;let i = index">
-										<a class="cursor:pointer;text-center" (click)="deleteMedia('gallery', i, mediaval)">
-											<i class="ni ni-fat-remove" aria-hidden="true"></i></a>
-										<a class="d-block mb-4 h-100">
-											<img src="{{imagePath}}{{mediaval.src}}" class="img-fluid img-thumbnail"
-												*ngIf="mediaval && mediaval.file_type == 'image'" width="200" height="350"
-												(click)="editMedia(gallery,mediaval,'gallery')">
-											<video class="img-fluid img-thumbnail" *ngIf="mediaval && mediaval.file_type == 'video'"
-												width="400" height="450" (click)="editMedia(gallery,mediaval,'gallery')" controls>
-												<source src="{{imagePath}}{{mediaval.src}}" type="video/mp4">
-											</video>
-										</a>
-									</div>
-									<div class="col-lg-3 col-md-4 col-6">
-										<a (click)="openMedia(gallery)" class="d-block mb-4 h-100">
-											<img src="{{url}}/img/addimage.svg" class="img-fluid img-thumbnail" width="150" height="150">
-										</a>
-									</div>
-								</div>
-								<label for="exampleInputEmail1" style="display: block;">(Required Size for Image w-1642px * h-711px)
-								</label>
-								<br>
-								<!-- <span *ngIf="submitted && hasError('product_gallery','required')" class="alert-danger">Gallery Images is required</span> -->
-							</div>
-							<hr>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Url Key</label>
-								<input type="text" name="url_key" autocomplete="off" formControlName="url_key" class="form-control"
-									placeholder="Url Key">
-								<span *ngIf="submitted && hasError('url_key','required')" class="alert-danger">URL Key is
-									required</span>
-							</div>
-
-							<div class="form-group">
-								<label for="exampleInputEmail1">Status</label>
-								<select name="status" formControlName="status" class="form-control">
-									<option value="true">Active</option>
-									<option value="false">InActive</option>
-								</select>
-							</div>
-
-						</div>
-						<div class="box-footer">
-							<button type="submit" class="btn btn-primary">Submit</button>
-							<button type="cancel" (click)="onCancel()" class="btn btn-danger">Cancel</button>
-						</div>
-					</form>
+				<div class="form-divider"></div>
+				<div class="form-section-heading">
+					<span class="section-icon"><i class="fa fa-picture-o" aria-hidden="true"></i></span>
+					<div><h3>Category media</h3><p>Add a thumbnail and optional supporting images or videos.</p></div>
 				</div>
+
+				<div class="media-grid">
+					<section class="media-section">
+						<div class="media-section-heading">
+							<div><h4>Thumbnail image</h4><p>Recommended dimensions: 510 × 720 px</p></div>
+							<span class="media-count">{{ mediaData ? '1 added' : 'Optional' }}</span>
+						</div>
+						<div class="media-items">
+							<article class="media-card" *ngIf="mediaData">
+								<button type="button" class="media-preview" (click)="editMedia(media, mediaData, 'media')" aria-label="Edit thumbnail">
+									<img *ngIf="mediaData.file_type === 'image'" [src]="imagePath + mediaData.src" alt="Blog category thumbnail">
+									<video *ngIf="mediaData.file_type === 'video'" [src]="imagePath + mediaData.src" preload="metadata"></video>
+									<span class="media-edit"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</span>
+								</button>
+								<button type="button" class="media-remove" (click)="deleteMedia('media', null, mediaData)" aria-label="Remove thumbnail"><i class="fa fa-times" aria-hidden="true"></i></button>
+							</article>
+							<button type="button" class="media-add-card" (click)="openMedia(media)">
+								<span><i class="fa fa-plus" aria-hidden="true"></i></span>
+								<strong>{{ mediaData ? 'Replace thumbnail' : 'Add thumbnail' }}</strong>
+							</button>
+						</div>
+					</section>
+
+					<section class="media-section">
+						<div class="media-section-heading">
+							<div><h4>Supporting media</h4><p>Recommended image dimensions: 1642 × 711 px</p></div>
+							<span class="media-count">{{ galleryData.length }} added</span>
+						</div>
+						<div class="media-items">
+							<article class="media-card" *ngFor="let item of galleryData; let i = index">
+								<button type="button" class="media-preview" (click)="editMedia(gallery, item, 'gallery')" [attr.aria-label]="'Edit supporting media ' + (i + 1)">
+									<img *ngIf="item.file_type === 'image'" [src]="imagePath + item.src" alt="Blog category supporting media">
+									<video *ngIf="item.file_type === 'video'" [src]="imagePath + item.src" preload="metadata"></video>
+									<span class="media-edit"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</span>
+								</button>
+								<button type="button" class="media-remove" (click)="deleteMedia('gallery', i, item)" [attr.aria-label]="'Remove supporting media ' + (i + 1)"><i class="fa fa-times" aria-hidden="true"></i></button>
+							</article>
+							<button type="button" class="media-add-card" (click)="openMedia(gallery)">
+								<span><i class="fa fa-plus" aria-hidden="true"></i></span>
+								<strong>Add media</strong>
+							</button>
+						</div>
+					</section>
+				</div>
+
+				<div *ngIf="msg_success" class="form-alert success-alert" role="status"><i class="fa fa-check-circle" aria-hidden="true"></i>{{ throw_msg }}</div>
+				<div *ngIf="msg_danger" class="form-alert danger-alert" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>{{ throw_msg }}</div>
 			</div>
-		</div>
-	</div>
+
+			<footer class="form-footer">
+				<button type="button" class="secondary-action" (click)="onCancel()">Cancel</button>
+				<button type="submit" class="primary-action" [disabled]="isSaving">
+					<span *ngIf="isSaving" class="button-spinner"></span>
+					<i *ngIf="!isSaving" class="fa fa-check" aria-hidden="true"></i>
+					{{ isSaving ? 'Saving…' : (isEdit ? 'Save changes' : 'Create category') }}
+				</button>
+			</footer>
+		</form>
+	</section>
 </div>
 
 
@@ -273,7 +265,7 @@
 			</div>
 			<div class="box-footer d-flex">
 				<button class="btn btn-button mr-2">Submit</button>
-				<button type="cancel" (click)="onCancelMedia()" class="btn btn-button">Cancel</button>
+				<button type="button" (click)="onCancelMedia()" class="btn btn-button">Cancel</button>
 			</div>
 		</form>
 	</div>
@@ -406,7 +398,7 @@
 			</div>
 			<div class="box-footer d-flex">
 				<button class="btn btn-button mr-2">Submit</button>
-				<button type="cancel" (click)="onCancelMedia()" class="btn btn-button">Cancel</button>
+				<button type="button" (click)="onCancelMedia()" class="btn btn-button">Cancel</button>
 			</div>
 		</form>
 	</div>

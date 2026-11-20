@@ -1,102 +1,161 @@
-<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
-	<div class="container-fluid">
-		<div class="header-body">
-			<!-- Card stats -->
+<div class="category-page container-fluid">
+  <header class="page-heading">
+    <div>
+      <p class="eyebrow">WEBSITE CONTENT</p>
+      <h1>Blog categories</h1>
+      <p class="page-description">Organize your articles into clear, easy-to-browse collections.</p>
+    </div>
+    <a class="primary-action" routerLink="/blog-category/add">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      Add category
+    </a>
+  </header>
 
-		</div>
-	</div>
-</div>
-<!-- Page content -->
-<div class="container-fluid mt--7">
-	<!-- Table -->
-	<div class="row">
-		<div class="col">
-			<div class="card shadow">
-				<div class="card-header border-0">
-					<h3 class="mb-0">Blog-Category List</h3>
-				</div>
-				<div class="col-md-12">
-					<div class="row">
-						<div class="col-md-6">
-							<h4 class="title"></h4>
-						</div>
-						<div class="col-md-6"><button type="button" class="btn btn-primary pull-right custom-btn"
-								routerLink="/blog-category/add">Add Blog-Category</button></div>
-					</div>
-					<div class="col-md-6">
-						<h4 class="title"></h4>
-					</div>
-				</div>
-				<div class="table-responsive">
-					<table class="table align-items-center table-flush">
-						<thead>
-							<tr>
-								<th>SL No</th>
-								<th>Collections Name</th>
-								<!-- <th>Collection Type</th> -->
-								<th>Status</th>
-								<!-- <th>Approved</th> -->
-								<th>Sequence Number</th>
-								<th>Created At</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<td colspan="5" *ngIf="msg_danger">
-								<div class="alert alert-dismissable" style="text-align: center;">
-									Blog-Category List is Empty
-								</div>
-							</td>
-							<tr *ngFor="let listCategory of CategoryData; let i = index">
-								<td *ngIf="currentPage == 1">{{i+1}}</td>
-								<td *ngIf="currentPage != 1">{{i+1+((currentPage - 1) * currentLimit)}}</td>
-								<td>{{listCategory.name}}</td>
-								<!-- <td>
-									<p *ngFor="let col of listCategory.collectiondata">{{col.name}}</p>
-								</td> -->
-								<td>{{listCategory.status == true ? 'Enabled':'Disable' }}</td>
-								<!-- <td>{{listCategory.isApproved == true ? 'Yes':'No'}}</td> -->
-								<td>{{listCategory.sequence_number}}</td>
-								<td>{{listCategory.created_at | date: 'dd/MMM/yyyy hh:mm a'}}</td>
-								<td>
-									<a routerLink="/blog-category/edit/{{listCategory._id}}" style="cursor:pointer"><i
-											class="fa fa-pencil-square-o" aria-hidden="true"></i>
-									</a>
-									<a style="cursor:pointer;padding-left: 15px;" (click)="open(content,listCategory)"><i
-											class="fa fa-trash-o" aria-hidden="true"></i></a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="neelgund-pagination" *ngIf="totalRecord > 0 ">
-						<app-pagination #pagination [initialPage]="currentPage" [count]="totalRecord"
-							(changePage)="onListChangePage($event)"></app-pagination>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+  <section class="overview-strip" aria-label="Blog category overview">
+    <div class="overview-icon"><i class="fa fa-folder-open-o" aria-hidden="true"></i></div>
+    <div class="overview-copy">
+      <span>Category library</span>
+      <strong>{{ totalRecord | number }} <small>total categories</small></strong>
+    </div>
+    <div class="overview-divider"></div>
+    <p><i class="fa fa-info-circle" aria-hidden="true"></i> Use categories to help visitors discover related articles.</p>
+  </section>
+
+  <section class="catalogue-card">
+    <div class="catalogue-heading">
+      <div>
+        <h2>All categories</h2>
+        <p>Review and manage the groups used across your blog.</p>
+      </div>
+      <span class="result-count" *ngIf="!isLoading">{{ filteredCategories.length }} shown</span>
+    </div>
+
+    <div class="catalogue-toolbar">
+      <label class="search-control">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        <input
+          type="search"
+          [(ngModel)]="searchText"
+          placeholder="Search category names"
+          aria-label="Search blog categories">
+        <button
+          *ngIf="searchText"
+          type="button"
+          class="clear-search"
+          (click)="searchText = ''"
+          aria-label="Clear search">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+      </label>
+      <span class="page-size-note">Showing up to {{ currentLimit }} per page</span>
+    </div>
+
+    <div *ngIf="isLoading" class="state-panel" role="status">
+      <span class="loading-spinner"></span>
+      <strong>Loading categories…</strong>
+      <p>Your category library will be ready in a moment.</p>
+    </div>
+
+    <div *ngIf="!isLoading && loadError" class="state-panel">
+      <span class="state-icon error-icon"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></span>
+      <strong>Categories couldn't be loaded</strong>
+      <p>Check your connection and try again.</p>
+      <button class="secondary-action" type="button" (click)="get_CategoryData()">Try again</button>
+    </div>
+
+    <div *ngIf="!isLoading && !loadError && filteredCategories.length === 0" class="state-panel">
+      <span class="state-icon"><i class="fa fa-folder-open-o" aria-hidden="true"></i></span>
+      <strong>{{ CategoryData.length === 0 ? 'No categories yet' : 'No matching categories' }}</strong>
+      <p>{{ CategoryData.length === 0 ? 'Add your first category to start organizing blog posts.' : 'Try another search term or clear your search.' }}</p>
+      <button *ngIf="searchText" class="secondary-action" type="button" (click)="searchText = ''">Clear search</button>
+      <a *ngIf="CategoryData.length === 0" class="secondary-action" routerLink="/blog-category/add">Add a category</a>
+    </div>
+
+    <div class="table-responsive" *ngIf="!isLoading && !loadError && filteredCategories.length > 0">
+      <table class="category-table">
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Status</th>
+            <th scope="col">Sequence</th>
+            <th scope="col">Created</th>
+            <th scope="col" class="actions-heading">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of filteredCategories; let i = index">
+            <td>
+              <div class="category-name">
+                <span class="category-avatar"><i class="fa fa-folder-o" aria-hidden="true"></i></span>
+                <div>
+                  <strong>{{ category.name || 'Untitled category' }}</strong>
+                  <small>Category {{ (currentPage - 1) * currentLimit + i + 1 }}</small>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="status-badge" [class.active]="category.status === true || category.status === 'true'">
+                <i></i>{{ category.status === true || category.status === 'true' ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td><span class="sequence-value">{{ category.sequence_number ?? '—' }}</span></td>
+            <td class="created-date">{{ category.created_at ? (category.created_at | date: 'dd MMM yyyy') : '—' }}</td>
+            <td>
+              <div class="row-actions">
+                <a
+                  class="icon-action"
+                  [routerLink]="['/blog-category/edit', category._id]"
+                  [attr.aria-label]="'Edit ' + (category.name || 'category')"
+                  title="Edit category">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                </a>
+                <button
+                  type="button"
+                  class="icon-action danger-action"
+                  (click)="open(content, category)"
+                  [attr.aria-label]="'Delete ' + (category.name || 'category')"
+                  title="Delete category">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="catalogue-pagination" *ngIf="totalRecord > currentLimit && !searchText">
+      <app-pagination
+        [initialPage]="currentPage"
+        [count]="totalRecord"
+        [perPage]="currentLimit"
+        (changePage)="onListChangePage($event)">
+      </app-pagination>
+    </div>
+  </section>
 </div>
 
-<!-- Delete Category popup modal -->
-<ng-template #content let-modal style="z-index: 0;">
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-title">Category</h4>
-		<button type="button" class="btn btn-button" aria-describedby="modal-title"
-			(click)="modal.dismiss('Cross click')">close</button>
-	</div>
-	<div class="modal-body">
-		<p *ngIf="selectedCategory">
-			<strong>Are you sure you want to delete <span class="text-primary">"{{selectedCategory.name}}"</span>
-				Blog-Category?</strong>
-		</p>
-		<p>
-			All information associated to this Blog-Category will be permanently deleted.
-			<span class="text-danger">This operation can not be undone.</span>
-		</p>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-button" (click)="modal.dismiss('cancel click')">Cancel</button>
-		<button type="button" class="btn btn-button" (click)="deleteCategory()">Ok</button>
-	</div>
+<ng-template #content let-modal>
+  <div class="modal-header delete-modal-header">
+    <div>
+      <p class="eyebrow">REMOVE CATEGORY</p>
+      <h2 class="modal-title" id="modal-title">Delete this category?</h2>
+    </div>
+    <button type="button" class="modal-close" aria-label="Close" (click)="modal.dismiss('cancel')">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p *ngIf="selectedCategory">
+      <strong>{{ selectedCategory.name }}</strong> will be permanently removed.
+    </p>
+    <p class="delete-warning">This action cannot be undone. Blog posts in this category may no longer be grouped with it.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="secondary-action" [disabled]="isDeleting" (click)="modal.dismiss('cancel')">Cancel</button>
+    <button type="button" class="delete-action" [disabled]="isDeleting" (click)="deleteCategory()">
+      <span *ngIf="isDeleting" class="button-spinner"></span>
+      {{ isDeleting ? 'Deleting…' : 'Delete category' }}
+    </button>
+  </div>
 </ng-template>
